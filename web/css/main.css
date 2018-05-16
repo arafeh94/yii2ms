@@ -1,0 +1,220 @@
+html,
+body {
+    height: 100%;
+}
+
+.wrap {
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+}
+
+.wrap > .container {
+    padding: 30px 15px 20px;
+    margin: 10px auto;
+
+}
+
+.effect7
+{
+    position:relative;
+    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.1) inset;
+    box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.1) inset;
+}
+.effect7:before, .effect7:after
+{
+    content:"";
+    position:absolute;
+    z-index:-1;
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    top:0;
+    bottom:0;
+    left:10px;
+    right:10px;
+    -moz-border-radius:100px / 10px;
+    border-radius:100px / 10px;
+}
+.effect7:after
+{
+    right:10px;
+    left:auto;
+    -webkit-transform:skew(8deg) rotate(3deg);
+    -moz-transform:skew(8deg) rotate(3deg);
+    -ms-transform:skew(8deg) rotate(3deg);
+    -o-transform:skew(8deg) rotate(3deg);
+    transform:skew(8deg) rotate(3deg);
+}
+
+
+
+
+.footer {
+    height: 60px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.jumbotron {
+    text-align: center;
+    background-color: transparent;
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+.not-set {
+    color: #c55;
+    font-style: italic;
+}
+
+/* add sorting icons to gridview sort links */
+a.asc:after, a.desc:after {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    padding-left: 5px;
+}
+
+a.asc:after {
+    content: /*"\e113"*/ "\e151";
+}
+
+a.desc:after {
+    content: /*"\e114"*/ "\e152";
+}
+
+.sort-numerical a.asc:after {
+    content: "\e153";
+}
+
+.sort-numerical a.desc:after {
+    content: "\e154";
+}
+
+.sort-ordinal a.asc:after {
+    content: "\e155";
+}
+
+.sort-ordinal a.desc:after {
+    content: "\e156";
+}
+
+.grid-view th {
+    white-space: nowrap;
+}
+
+.hint-block {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+/* align the logout "link" (button in form) of the navbar */
+.nav li > form > button.logout {
+    padding: 15px;
+    border: none;
+}
+
+@media (max-width: 767px) {
+    .nav li > form > button.logout {
+        display: block;
+        text-align: left;
+        width: 100%;
+        padding: 10px 15px;
+    }
+}
+
+.nav > li > form > button.logout:focus,
+.nav > li > form > button.logout:hover {
+    text-decoration: none;
+}
+
+.nav > li > form > button.logout:focus {
+    outline: none;
+}
+
+#header {
+    width: 100%;
+    background: #098653;
+    padding: 10px;
+    color: white;
+}
+
+#header button {
+    background: transparent;
+    border: none;
+}
+
+#header form {
+    display: inline;
+
+}
+
+#header .img {
+    height: 20px;
+}
+
+#header #topRightLinks {
+    text-align: right;
+    font-size: 16px;
+    font-style: italic;
+}
+
+#header ul {
+    padding: 0;
+    margin: 0;
+}
+
+#header ul li {
+    display: inline;
+    margin-left: 10px;
+}
+
+#header #title {
+    margin-left: 20px;
+}
+#header #title #mainTitle {
+    font-size: 30px;
+}
+
+#header #title #subTitle {
+    font-size: 12px;
+    font-style: italic;
+}
+
+#header #nav {
+    margin-top: 20px;
+}
+
+#header #nav a {
+    font-size: 20px;
+    margin: 5px;
+    padding: 5px;
+    color: white;
+}
+
+#header #nav a:hover, #header .activeLink {
+    text-shadow: 0 0 1px green, 0 0 1px green, 0 0 1px green;
+    font-style: normal;
+    text-decoration: none;
+    border-bottom: 6px solid white;
+}
