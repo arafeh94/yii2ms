@@ -30,38 +30,34 @@ AppAsset::register($this);
 
 <?php
 $navigation = [
-    ['label' => 'AdminAction1', 'url' => ['site/index'], 'type' => 1],
-    ['label' => 'AdminAction2', 'url' => ['site/about'], 'type' => 1],
-    ['label' => 'AdminAction3', 'url' => ['site/about'], 'type' => 1],
-    ['label' => 'UserAction1', 'url' => ['site/about'], 'type' => 2],
-    ['label' => 'UserAction2', 'url' => ['site/about'], 'type' => 2],
-    ['label' => 'UserAction3', 'url' => ['site/about'], 'type' => 2],
+    ['label' => 'Users', 'url' => ['user/index'], 'type' => 1],
+    ['label' => 'Cycle', 'url' => ['cycle/index'], 'type' => 1],
+    ['label' => 'School', 'url' => ['school/index'], 'type' => 1],
+    ['label' => 'Department', 'url' => ['department/index'], 'type' => 1],
+    ['label' => 'Major', 'url' => ['major/index'], 'type' => 1],
+    ['label' => 'Course', 'url' => ['course/index'], 'type' => 1],
+    ['label' => 'Instructor', 'url' => ['instructor/index'], 'type' => 1],
+    ['label' => 'Term', 'url' => ['term/index'], 'type' => 1],
+    ['label' => 'Evaluation', 'url' => ['evaluation/index'], 'type' => 1],
 ];
 ?>
 
 <div class="wrap">
 
     <div id="header">
-        <div id="topRightLinks">
-            <ul>
+        <div id="title">
 
-                <?php if (Yii::$app->user->isGuest): ?>
-                    <li><?php echo Html::a(Html::img('@web/images/header/login.svg', ['class' => 'img', 'alt' => 'Login']), Url::to(['/site/login'])) ?></li>
-                <?php endif; ?>
-
-
+            <div id="nav">
                 <?php if (!Yii::$app->user->isGuest): ?>
-                    <li><?php echo Html::a(Html::img('@web/images/header/settings.svg', ['class' => 'img', 'alt' => 'Settings']), Url::to(['/site/settings'])) ?></li>
-                    <li>
+                    <li class="rightItems"><?php echo Html::a(Html::img('@web/images/header/settings.svg', ['class' => 'img', 'alt' => ' Settings']) . ' Settings', Url::to(['/site/settings'])) ?>
+                    </li>
+                    <li class="rightItems">
                         <?php echo Html::beginForm(['/site/logout'], 'post')
-                            . Html::submitButton(Html::img('@web/images/header/logout.svg', ['class' => 'img', 'alt' => 'Logout']) . ' (' . Yii::$app->user->identity->Username . ')'
+                            . Html::submitButton(Html::img('@web/images/header/logout.svg', ['class' => 'img', 'alt' => 'Logout']) . ' Logout' . ' (' . Yii::$app->user->identity->Username . ')'
                                 . Html::endForm()); ?>
                     </li>
                 <?php endif; ?>
-
-            </ul>
-        </div>
-        <div id="title">
+            </div>
             <div id="mainTitle">
                 <?php echo Yii::$app->name; ?>
             </div>
@@ -71,18 +67,22 @@ $navigation = [
         </div>
         <div id="nav">
             <ul>
-
                 <?php if (!Yii::$app->user->isGuest): ?>
                     <?php foreach ($navigation as $n) : ?>
                         <?php if ($n['type'] >= Yii::$app->user->identity->Type): ?>
-                            <li><?=
-                                Html::a($n['label'], Url::to($n['url']),
-                                    $this->context->route == $n['url'][0] ? ['class' => 'activeLink'] : []
-                                ) ?>
-                            </li>
+                            <?php $o = $this->context->route == $n['url'][0] ? 'activeLink': ''; $li1="<li class='$o'>";?>
+                                <?= Html::a($li1.$n['label'].'</li>', Url::to($n['url'])) ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
+
+                <?php if (Yii::$app->user->isGuest): ?>
+                    <li><?php echo Html::a(Html::img('@web/images/header/login.svg', ['class' => 'img', 'alt' => 'Login']) . ' Login', Url::to(['/site/login'])) ?></li>
+                <?php endif; ?>
+
+
+
+
             </ul>
         </div>
     </div>
