@@ -12,23 +12,28 @@ namespace app\models\providers;
 use app\components\GridConfig;
 use app\models\Department;
 use app\models\search\DepartmentSearchModel;
+use app\models\search\SemesterSearchModel;
+use app\models\Season;
+use app\models\Semester;
+use kartik\grid\BooleanColumn;
 use kartik\grid\DataColumn;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
+use yii\grid\CheckboxColumn;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
-class DepartmentDataProvider extends ActiveDataProvider implements GridConfig
+class SemesterDataProvider extends ActiveDataProvider implements GridConfig
 {
     public $searchModel;
 
     public function init()
     {
         parent::init();
-        $this->query = Department::find()->innerJoinWith('school')->active();
-        $this->sort->attributes['school'] = [
-            'asc' => ['school.Name' => SORT_ASC],
-            'desc' => ['school.Name' => SORT_DESC],
+        $this->query = Semester::find()->innerJoinWith('season')->active();
+        $this->sort->attributes['season'] = [
+            'asc' => ['season.Name' => SORT_ASC],
+            'desc' => ['season.Name' => SORT_DESC],
         ];
     }
 
@@ -40,20 +45,35 @@ class DepartmentDataProvider extends ActiveDataProvider implements GridConfig
         return [
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'DepartmentId'
-            ],
-            [
-                'label' => 'Department Name',
-                'class' => DataColumn::className(),
-                'attribute' => 'Name',
+                'attribute' => 'Year',
             ],
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'school',
-                'label' => 'School Name',
+                'attribute' => 'season',
+                'label' => 'Season',
                 'value' => function ($model) {
-                    return $model->school->Name;
+                    return $model->season->Name;
                 }
+            ],
+            [
+                'class' => DataColumn::className(),
+                'attribute' => 'Year',
+                'format' => 'date',
+                'xlFormat' => "yyyy",
+            ],
+            [
+                'class' => DataColumn::className(),
+                'attribute' => 'StartDate',
+                'format' => 'date',
+            ],
+            [
+                'class' => DataColumn::className(),
+                'attribute' => 'EndDate',
+                'format' => 'date',
+            ],
+            [
+                'class' => BooleanColumn::className(),
+                'attribute' => 'IsCurrent',
             ],
             [
                 'class' => DataColumn::className(),
@@ -64,14 +84,14 @@ class DepartmentDataProvider extends ActiveDataProvider implements GridConfig
                 'template' => '{update} {delete}',
                 'buttons' => [
                     'update' => function ($key, $model, $index) {
-                        $url = Url::to(['department/view', 'id' => $model->getPrimaryKey()]);
+                        $url = Url::to(['term/view', 'id' => $model->getPrimaryKey()]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-pencil pointer",
                             'onclick' => "modalForm(this,'$url')",
                         ]);
                     },
                     'delete' => function ($key, $model, $index) {
-                        $url = Url::to(['department/delete', 'id' => $model->DepartmentId]);
+                        $url = Url::to(['term/delete', 'id' => $model->SemesterId]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-trash pointer",
                             'onclick' => "gridControl.delete(this,'$url')",
@@ -92,7 +112,7 @@ class DepartmentDataProvider extends ActiveDataProvider implements GridConfig
     public function searchModel($params = null)
     {
         if ($this->searchModel === null) {
-            $this->searchModel = new DepartmentSearchModel();
+            $this->searchModel = new SemesterSearchModel();
         }
 
         if ($params) {

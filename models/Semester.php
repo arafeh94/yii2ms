@@ -43,6 +43,7 @@ class Semester extends \yii\db\ActiveRecord
             [['StartDate', 'EndDate', 'DateAdded'], 'safe'],
             [['IsCurrent', 'IsDeleted'], 'boolean'],
             [['SeasonId'], 'exist', 'skipOnError' => true, 'targetClass' => Season::className(), 'targetAttribute' => ['SeasonId' => 'SeasonId']],
+            ['EndDate', 'compare', 'compareAttribute' => 'StartDate', 'operator' => '>='],
         ];
     }
 
@@ -54,7 +55,7 @@ class Semester extends \yii\db\ActiveRecord
         return [
             'SemesterId' => Yii::t('app', 'Semester ID'),
             'Year' => Yii::t('app', 'Year'),
-            'SeasonId' => Yii::t('app', 'Season ID'),
+            'SeasonId' => Yii::t('app', 'Season'),
             'StartDate' => Yii::t('app', 'Start Date'),
             'EndDate' => Yii::t('app', 'End Date'),
             'IsCurrent' => Yii::t('app', 'Is Current'),

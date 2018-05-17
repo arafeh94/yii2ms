@@ -10,6 +10,7 @@ use kartik\grid\GridView;
 echo ModalForm::widget(
     [
         'formPath' => '@app/views/major/_form',
+        'title' => 'Major',
         'formParams' => [
             'departments' => Department::find()->with('school')->active()->all()
         ]

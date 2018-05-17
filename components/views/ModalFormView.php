@@ -14,7 +14,7 @@ use yii\widgets\Pjax;
 
 ?>
 
-<?php Modal::begin(['id' => 'dialog-form', 'header' => '<h3>User</h3>']); ?>
+<?php Modal::begin(['id' => 'dialog-form', 'header' => "<h3>{$widget->title}</h3>"]); ?>
 <div class="modal-container">
     <div id="modal-container-loading" class="modal-container-loading">
         <div class="loader"></div>

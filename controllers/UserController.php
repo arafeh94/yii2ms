@@ -29,6 +29,7 @@ class UserController extends \yii\web\Controller
             $id = \Yii::$app->request->post('User')['UserId'];
             $model = $id === "" ? new User() : User::find()->active()->id($id)->one();
             if ($model->isNewRecord) $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
+            if ($model->isNewRecord) $model->Password = 'default';
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();

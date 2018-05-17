@@ -6,20 +6,16 @@
  * Time: 3:38 PM
  */
 
-/** @var $model Department */
-
-/** @var $schools School[] */
-
-/** @var $departments Department[] */
+/** @var $model Instructor */
 
 use app\models\Department;
-use app\models\Major;
+use app\models\Instructor;
 use app\models\School;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\helpers\ArrayHelper;
 
-if (!isset($model)) $model = new Major();
+if (!isset($model)) $model = new Instructor();
 ?>
 
 
@@ -30,16 +26,16 @@ if (!isset($model)) $model = new Major();
 
 <?php $form = ActiveForm::begin([
     'id' => 'model-form',
-    'action' => ['major/update'],
+    'action' => ['instructor/update'],
     'options' => ['data-pjax' => '']
 ]) ?>
-<?= $form->field($model, 'MajorId')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'DepartmentId')->dropDownList(ArrayHelper::map($departments, 'DepartmentId', function ($model) {
-    return $model->school->Name . ' - ' . $model->Name;
-})) ?>
-<?= $form->field($model, 'Name')->textInput() ?>
-<?= $form->field($model, 'Abbreviation')->textInput() ?>
-<?= $form->field($model, 'RequiredCredits')->textInput(['type' => 'number']) ?>
+<?= $form->field($model, 'InstructorId')->hiddenInput()->label(false) ?>
+<?= $form->field($model, 'UniversityId')->textInput() ?>
+<?= $form->field($model, 'Title')->dropDownList(['Mr' => 'Mr', 'Dr' => 'Dr', 'Mrs' => 'Mrs', 'Ms' => 'Ms']) ?>
+<?= $form->field($model, 'FirstName')->textInput() ?>
+<?= $form->field($model, 'LastName')->textInput() ?>
+<?= $form->field($model, 'Email')->textInput() ?>
+<?= $form->field($model, 'PhoneExtension')->textInput() ?>
 <?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-success']) ?>
 <?= \yii\bootstrap\Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger', 'onclick' => 'modalFormClose()']) ?>
 <?php ActiveForm::end(); ?>

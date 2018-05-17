@@ -32,8 +32,8 @@ if (!isset($model)) $model = new Course();
 <?= $form->field($model, 'CourseId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'MajorId')->dropDownList(ArrayHelper::map($majors, 'MajorId', 'Name'))->label('Major') ?>
 <?= $form->field($model, 'Name')->textInput() ?>
-<?= $form->field($model, 'Number')->textInput() ?>
-<?= $form->field($model, 'Credits')->textInput() ?>
+<?= $form->field($model, 'Number')->textInput(['type' => 'number']) ?>
+<?= $form->field($model, 'Credits')->textInput(['type' => 'number']) ?>
 <?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-success']) ?>
 <?= \yii\bootstrap\Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger', 'onclick' => 'modalFormClose()']) ?>
 <?php ActiveForm::end(); ?>

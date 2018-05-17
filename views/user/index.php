@@ -1,6 +1,7 @@
 <?php
 
 /** @var $this yii\web\View */
+
 /** @var $provider UserDataProvider */
 
 use app\components\GridViewBuilder;
@@ -10,7 +11,7 @@ use app\models\User;
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
 
-echo ModalForm::widget(['formPath' => '@app/views/user/_form']);
+echo ModalForm::widget(['formPath' => '@app/views/user/_form', 'title' => 'User']);
 
 ?>
 
