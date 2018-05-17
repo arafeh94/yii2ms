@@ -21,7 +21,7 @@ use yii\widgets\Pjax;
     </div>
     <div id="modal-container-form" class="modal-container-form" style="display: none">
         <?php Pjax::begin(['enablePushState' => false]) ?>
-        <?= $this->render($widget->formPath); ?>
+        <?= $this->render($widget->formPath, $widget->formParams); ?>
         <?php Pjax::end() ?>
     </div>
 </div>

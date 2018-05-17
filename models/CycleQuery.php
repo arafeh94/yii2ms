@@ -21,7 +21,7 @@ class CycleQuery extends \yii\db\ActiveQuery
 
     public function filter()
     {
-        return $this->select(['CycleId', 'Name']);
+        return $this->select(['CycleId', 'Name', 'DateAdded']);
     }
 
     /**

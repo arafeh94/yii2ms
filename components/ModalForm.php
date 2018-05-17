@@ -7,15 +7,18 @@
  */
 
 namespace app\components;
+
 use yii\base\Widget;
 
 class ModalForm extends Widget
 {
     public $formPath;
+    public $formParams;
 
     public function init()
     {
         parent::init();
+        if (!$this->formParams) $this->formParams = [];
     }
 
     public function run()

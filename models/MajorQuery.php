@@ -11,7 +11,17 @@ class MajorQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[IsDeleted]]=0');
+        return $this->andWhere('[[major.IsDeleted]]=0');
+    }
+
+    public function id($id)
+    {
+        return $this->andWhere(['MajorId' => $id]);
+    }
+
+    public function filter()
+    {
+        return $this->select(['MajorId', 'Name', 'DateAdded', 'DepartmentId', 'Abbreviation', 'RequiredCredits']);
     }
 
     /**

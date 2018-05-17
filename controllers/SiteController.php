@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\AppController;
 use app\models\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
@@ -9,7 +10,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 
-class SiteController extends Controller
+class SiteController extends AppController
 {
     /**
      * @inheritdoc
@@ -78,7 +79,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
                 $model->login();
-                return $this->goHome();
+                return $this->redirect(['site/index'], 200);
             }
         }
 
