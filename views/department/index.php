@@ -6,7 +6,7 @@ use app\models\providers\CycleDataProvider;
 use app\models\School;
 use kartik\grid\GridView;
 
-echo ModalForm::widget(['formPath' => '@app/views/department/_form', 'formParams' => ['schools' => School::find()->active()->all()]]);
+echo ModalForm::widget(['formPath' => '@app/views/department/_form', 'title' => 'Department', 'formParams' => ['schools' => School::find()->active()->all()]]);
 
 ?>
 

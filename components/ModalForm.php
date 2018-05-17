@@ -14,6 +14,7 @@ class ModalForm extends Widget
 {
     public $formPath;
     public $formParams;
+    public $title;
 
     public function init()
     {

@@ -13,9 +13,9 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
 --
@@ -30,19 +30,23 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `campus`;
 CREATE TABLE IF NOT EXISTS `campus` (
-  `CampusId` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `CampusId`  INT(11)                       NOT NULL AUTO_INCREMENT,
+  `Name`      VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `IsDeleted` BIT(1)                        NOT NULL DEFAULT b'0',
   PRIMARY KEY (`CampusId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 3
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 --
 -- Dumping data for table `campus`
 --
 
 INSERT INTO `campus` (`CampusId`, `Name`, `IsDeleted`) VALUES
-(1, 'Beirut', b'0'),
-(2, 'Byblos', b'0');
+  (1, 'Beirut', b'0'),
+  (2, 'Byblos', b'0');
 
 -- --------------------------------------------------------
 
@@ -52,17 +56,20 @@ INSERT INTO `campus` (`CampusId`, `Name`, `IsDeleted`) VALUES
 
 DROP TABLE IF EXISTS `course`;
 CREATE TABLE IF NOT EXISTS `course` (
-  `CourseId` int(11) NOT NULL AUTO_INCREMENT,
-  `MajorId` int(11) NOT NULL,
-  `Name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `Number` varchar(6) COLLATE utf8_bin NOT NULL,
-  `Credits` int(11) NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) DEFAULT b'0',
+  `CourseId`        INT(11)                       NOT NULL AUTO_INCREMENT,
+  `MajorId`         INT(11)                       NOT NULL,
+  `Name`            VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `Number`          VARCHAR(6) COLLATE utf8_bin   NOT NULL,
+  `Credits`         INT(11)                       NOT NULL,
+  `CreatedByUserId` INT(11)                       NOT NULL,
+  `DateAdded`       TIMESTAMP                     NULL     DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)                                 DEFAULT b'0',
   PRIMARY KEY (`CourseId`),
   KEY `MajorId` (`MajorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -72,13 +79,16 @@ CREATE TABLE IF NOT EXISTS `course` (
 
 DROP TABLE IF EXISTS `cycle`;
 CREATE TABLE IF NOT EXISTS `cycle` (
-  `CycleId` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) COLLATE utf8_bin NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `CycleId`         INT(11)                      NOT NULL AUTO_INCREMENT,
+  `Name`            VARCHAR(50) COLLATE utf8_bin NOT NULL,
+  `CreatedByUserId` INT(11)                      NOT NULL,
+  `DateAdded`       TIMESTAMP                    NULL     DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)                       NOT NULL DEFAULT b'0',
   PRIMARY KEY (`CycleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -88,15 +98,18 @@ CREATE TABLE IF NOT EXISTS `cycle` (
 
 DROP TABLE IF EXISTS `department`;
 CREATE TABLE IF NOT EXISTS `department` (
-  `DepartmentId` int(11) NOT NULL AUTO_INCREMENT,
-  `SchoolId` int(11) NOT NULL,
-  `Name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `DepartmentId`    INT(11)                       NOT NULL AUTO_INCREMENT,
+  `SchoolId`        INT(11)                       NOT NULL,
+  `Name`            VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `CreatedByUserId` INT(11)                       NOT NULL,
+  `DateAdded`       TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)                        NOT NULL DEFAULT b'0',
   PRIMARY KEY (`DepartmentId`),
   KEY `SchoolId` (`SchoolId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -106,17 +119,20 @@ CREATE TABLE IF NOT EXISTS `department` (
 
 DROP TABLE IF EXISTS `evaluationemail`;
 CREATE TABLE IF NOT EXISTS `evaluationemail` (
-  `EvaluationEmailId` int(11) DEFAULT NULL,
-  `SemesterId` int(11) NOT NULL,
-  `Date` date NOT NULL,
-  `Quarter` varchar(25) COLLATE utf8_bin NOT NULL,
-  `IsEnabled` bit(1) NOT NULL DEFAULT b'1',
-  `AvailableForInstructors` bit(1) NOT NULL DEFAULT b'0',
-  `Description` varchar(255) COLLATE utf8_bin NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `EvaluationEmailId`       INT(11)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      DEFAULT NULL,
+  `SemesterId`              INT(11)                       NOT NULL,
+  `Date`                    DATE    NOT NULL,
+  `Quarter`                 VARCHAR(25) COLLATE utf8_bin NOT NULL,
+  `IsEnabled`               BIT(1)                       NOT NULL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     DEFAULT b'1',
+  `AvailableForInstructors` BIT(1)                       NOT NULL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     DEFAULT b'0',
+  `Description`             VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `CreatedByUserId`         INT(11)                       NOT NULL,
+  `DateAdded`               TIMESTAMP                     NOT NULL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    DEFAULT CURRENT_TIMESTAMP,
   KEY `SemesterId` (`SemesterId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -126,18 +142,21 @@ CREATE TABLE IF NOT EXISTS `evaluationemail` (
 
 DROP TABLE IF EXISTS `instructor`;
 CREATE TABLE IF NOT EXISTS `instructor` (
-  `InstructorId` int(11) NOT NULL AUTO_INCREMENT,
-  `UniversityId` varchar(9) COLLATE utf8_bin NOT NULL,
-  `FirstName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `LastName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `Email` varchar(255) COLLATE utf8_bin NOT NULL,
-  `PhoneExtension` varchar(6) COLLATE utf8_bin NOT NULL,
-  `Title` varchar(3) COLLATE utf8_bin NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `InstructorId`    INT(11)                       NOT NULL AUTO_INCREMENT,
+  `UniversityId` VARCHAR(9) COLLATE utf8_bin NOT NULL,
+  `FirstName`    VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `LastName`     VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `Email`        VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `PhoneExtension` VARCHAR(6) COLLATE utf8_bin   NOT NULL,
+  `Title`          VARCHAR(3) COLLATE utf8_bin   NOT NULL,
+  `CreatedByUserId` INT(11)                       NOT NULL,
+  `DateAdded`       TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)                        NOT NULL DEFAULT b'0',
   PRIMARY KEY (`InstructorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -147,15 +166,18 @@ CREATE TABLE IF NOT EXISTS `instructor` (
 
 DROP TABLE IF EXISTS `instructorevaluationemail`;
 CREATE TABLE IF NOT EXISTS `instructorevaluationemail` (
-  `InstructorEvaluationEmailId` int(11) NOT NULL AUTO_INCREMENT,
-  `EvaluationEmailId` int(11) NOT NULL,
-  `InstructorId` int(11) NOT NULL,
-  `EvaluationCode` varchar(25) COLLATE utf8_bin NOT NULL,
-  `DateFilled` datetime DEFAULT NULL,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `InstructorEvaluationEmailId` INT(11)                      NOT NULL AUTO_INCREMENT,
+  `EvaluationEmailId`           INT(11) NOT NULL,
+  `InstructorId`                INT(11) NOT NULL,
+  `EvaluationCode`              VARCHAR(25) COLLATE utf8_bin NOT NULL,
+  `DateFilled`                  DATETIME                              DEFAULT NULL,
+  `IsDeleted`                   BIT(1)                       NOT NULL DEFAULT b'0',
   PRIMARY KEY (`InstructorEvaluationEmailId`),
   KEY `InstructorId` (`InstructorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -165,17 +187,20 @@ CREATE TABLE IF NOT EXISTS `instructorevaluationemail` (
 
 DROP TABLE IF EXISTS `major`;
 CREATE TABLE IF NOT EXISTS `major` (
-  `MajorId` int(11) NOT NULL AUTO_INCREMENT,
-  `DepartmentId` int(11) NOT NULL,
-  `Name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `Abbreviation` varchar(3) COLLATE utf8_bin NOT NULL,
-  `RequiredCredits` int(11) NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `MajorId`         INT(11)                       NOT NULL AUTO_INCREMENT,
+  `DepartmentId` INT(11) NOT NULL,
+  `Name`         VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `Abbreviation` VARCHAR(3) COLLATE utf8_bin   NOT NULL,
+  `RequiredCredits` INT(11)                       NOT NULL,
+  `CreatedByUserId` INT(11)                       NOT NULL,
+  `DateAdded`       TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)                        NOT NULL DEFAULT b'0',
   PRIMARY KEY (`MajorId`),
   KEY `DepartmentId` (`DepartmentId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -185,19 +210,22 @@ CREATE TABLE IF NOT EXISTS `major` (
 
 DROP TABLE IF EXISTS `offeredcourse`;
 CREATE TABLE IF NOT EXISTS `offeredcourse` (
-  `OfferedCourseId` int(11) NOT NULL AUTO_INCREMENT,
-  `CampusId` int(11) NOT NULL,
-  `SemesterId` int(11) NOT NULL,
-  `InstructorId` int(11) NOT NULL,
-  `CourseId` int(11) NOT NULL,
-  `CRN` int(11) NOT NULL,
-  `Section` int(11) NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `OfferedCourseId` INT(11)   NOT NULL AUTO_INCREMENT,
+  `CampusId`        INT(11) NOT NULL,
+  `SemesterId`      INT(11) NOT NULL,
+  `InstructorId`    INT(11) NOT NULL,
+  `CourseId`        INT(11) NOT NULL,
+  `CRN`             INT(11) NOT NULL,
+  `Section`         INT(11) NOT NULL,
+  `CreatedByUserId` INT(11) NOT NULL,
+  `DateAdded`       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)    NOT NULL DEFAULT b'0',
   PRIMARY KEY (`OfferedCourseId`),
   KEY `SemesterId` (`SemesterId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -207,13 +235,16 @@ CREATE TABLE IF NOT EXISTS `offeredcourse` (
 
 DROP TABLE IF EXISTS `school`;
 CREATE TABLE IF NOT EXISTS `school` (
-  `SchoolId` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `SchoolId`        INT(11)                       NOT NULL AUTO_INCREMENT,
+  `Name`     VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `CreatedByUserId` INT(11)                       NOT NULL,
+  `DateAdded`       TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)                        NOT NULL DEFAULT b'0',
   PRIMARY KEY (`SchoolId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -223,20 +254,24 @@ CREATE TABLE IF NOT EXISTS `school` (
 
 DROP TABLE IF EXISTS `season`;
 CREATE TABLE IF NOT EXISTS `season` (
-  `SeasonId` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `IsDeleted` bit(1) DEFAULT b'0',
+  `SeasonId`  INT(11) NOT NULL              AUTO_INCREMENT,
+  `Name`     VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
+  `IsDeleted` BIT(1)                        DEFAULT b'0',
   PRIMARY KEY (`SeasonId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 4
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 --
 -- Dumping data for table `season`
 --
 
 INSERT INTO `season` (`SeasonId`, `Name`, `IsDeleted`) VALUES
-(1, 'Spring', b'0'),
-(2, 'Fall', b'0'),
-(3, 'Summer', b'0');
+  (1, 'Spring', b'0'),
+  (2, 'Fall', b'0'),
+  (3, 'Summer', b'0');
 
 -- --------------------------------------------------------
 
@@ -246,18 +281,21 @@ INSERT INTO `season` (`SeasonId`, `Name`, `IsDeleted`) VALUES
 
 DROP TABLE IF EXISTS `semester`;
 CREATE TABLE IF NOT EXISTS `semester` (
-  `SemesterId` int(11) NOT NULL AUTO_INCREMENT,
-  `Year` int(11) NOT NULL,
-  `SeasonId` int(11) NOT NULL,
-  `StartDate` date NOT NULL,
-  `EndDate` date NOT NULL,
-  `IsCurrent` bit(1) NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `SemesterId`      INT(11)   NOT NULL AUTO_INCREMENT,
+  `Year`       INT(11) NOT NULL,
+  `SeasonId`   INT(11) NOT NULL,
+  `StartDate`  DATE    NOT NULL,
+  `EndDate`    DATE    NOT NULL,
+  `IsCurrent`  BIT(1)  NOT NULL,
+  `CreatedByUserId` INT(11) NOT NULL,
+  `DateAdded`       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)    NOT NULL DEFAULT b'0',
   PRIMARY KEY (`SemesterId`),
   KEY `SeasonId` (`SeasonId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -267,98 +305,101 @@ CREATE TABLE IF NOT EXISTS `semester` (
 
 DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
-  `StudentId` int(11) NOT NULL AUTO_INCREMENT,
-  `CycleId` int(11) NOT NULL,
-  `UniversityId` varchar(9) COLLATE utf8_bin NOT NULL,
-  `FirstName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `LastName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `FatherName` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `DOBMonth` int(11) DEFAULT NULL,
-  `DOBYear` int(11) DEFAULT NULL,
-  `Gender` varchar(1) COLLATE utf8_bin DEFAULT NULL,
-  `PhoneNumber` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Email` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Village` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Caza` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Mouhafaza` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `SchoolName` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `TwelveGrade` double DEFAULT NULL,
-  `TenGrade` double DEFAULT NULL,
-  `ElevenGrade` double DEFAULT NULL,
-  `EnglishExamScore` double DEFAULT NULL,
-  `IsDataEntryComplete` bit(1) DEFAULT NULL,
-  `IsInitialVettingDone` bit(1) DEFAULT NULL,
-  `VettingUpdated` bit(1) DEFAULT NULL,
-  `AntiTerrorismCertification` bit(1) DEFAULT NULL,
-  `StudentMOUSigned` bit(1) DEFAULT NULL,
-  `HasLaptop` bit(1) DEFAULT NULL,
-  `LaptopSerialNumber` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `ExpectedGraduation` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `SEESATScores` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `AdmissionSemester` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `AdmissionMajor` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `CurrentMajor` int(11) DEFAULT NULL,
-  `TD` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `SIIDate` date DEFAULT NULL,
-  `AcademicCoordinator` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `StudentMentor` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `CommunityDevelopmentProject` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `BankAccount` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Branch` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `IDPCompleted` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EligibilitySummer` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `SummersTakenCount` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `ReferredToCounselor` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `CSPCompleted` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `SchoolBackground` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `IsGraduated` bit(1) DEFAULT b'0',
-  `OverallImpression` varchar(255) COLLATE utf8_bin NOT NULL,
-  `Issues` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Faculty` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `OldMajor` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `ConditionsChangeMajor` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EnrolledTeachingDiploma` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `ParticipatedUSPSponsored` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EnrolledDoubleMajor` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EnrolledMajorMinor` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `CurrentEnrollmentStatus` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Probation` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `ProbationRemovalDeadline` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `MeritStatus` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Internship` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `InternshipHost` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EngagedWorkshops` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EngagedSoftSkills` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EngagedEntrepreneurship` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Duration` date DEFAULT NULL,
-  `Certificate` tinyint(1) DEFAULT NULL,
-  `LeadershipTraining` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `CivicEngagement` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `CommunityService` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `USPCompetition` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `StudentClub` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `NameOfClub` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `TookAcademicCourseLeadership` bit(1) DEFAULT NULL,
-  `IsUpdatingIDP` bit(1) DEFAULT NULL,
-  `EmploymentStatus` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EmploymentLocation` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `StartOfEmployment` date DEFAULT NULL,
-  `IsFullTimePosition` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `GraduateStudies` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `GraduateStudiesLocation` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `DateOfPhoneCall` date DEFAULT NULL,
-  `PhoneCallMadeBy` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `RemarkableAchievements` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EnrollmentConditions` varchar(255) COLLATE utf8_bin NOT NULL,
-  `SupportProgram` varchar(255) COLLATE utf8_bin NOT NULL,
-  `HousingTransportAllowance` varchar(255) COLLATE utf8_bin NOT NULL,
-  `PreparatorySemester` varchar(255) COLLATE utf8_bin NOT NULL,
-  `IsDeleted` bit(1) DEFAULT b'0',
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `StudentId`                    INT(11)                       NOT NULL AUTO_INCREMENT,
+  `CycleId`   INT(11) NOT NULL,
+  `UniversityId` VARCHAR(9) COLLATE utf8_bin NOT NULL,
+  `FirstName`    VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `LastName`     VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `FatherName`   VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `DOBMonth`     INT(11)                                DEFAULT NULL,
+  `DOBYear`      INT(11)                                DEFAULT NULL,
+  `Gender`       VARCHAR(1) COLLATE utf8_bin            DEFAULT NULL,
+  `PhoneNumber`  VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Email`        VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Village`      VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Caza`         VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Mouhafaza`    VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `SchoolName`   VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `TwelveGrade`  DOUBLE                                 DEFAULT NULL,
+  `TenGrade`     DOUBLE                                 DEFAULT NULL,
+  `ElevenGrade`  DOUBLE                                 DEFAULT NULL,
+  `EnglishExamScore` DOUBLE                                 DEFAULT NULL,
+  `IsDataEntryComplete` BIT(1)                                 DEFAULT NULL,
+  `IsInitialVettingDone` BIT(1)                                 DEFAULT NULL,
+  `VettingUpdated`       BIT(1)                                 DEFAULT NULL,
+  `AntiTerrorismCertification` BIT(1)                                 DEFAULT NULL,
+  `StudentMOUSigned`           BIT(1)                                 DEFAULT NULL,
+  `HasLaptop`                  BIT(1)                                 DEFAULT NULL,
+  `LaptopSerialNumber`         VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `ExpectedGraduation`         VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `SEESATScores`               VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `AdmissionSemester`          VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `AdmissionMajor`             VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `CurrentMajor`               INT(11)                                DEFAULT NULL,
+  `TD`                         BIT                                    DEFAULT NULL,
+  `SIIDate`                    DATE                                   DEFAULT NULL,
+  `AcademicCoordinator`        VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `StudentMentor`              VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `CommunityDevelopmentProject` VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `BankAccount`                 VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Branch`                      VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `IDPCompleted`                BIT                                    DEFAULT NULL,
+  `EligibilitySummer`           BIT                                    DEFAULT NULL,
+  `SummersTakenCount`           VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `ReferredToCounselor`         BIT                                    DEFAULT NULL,
+  `CSPCompleted`                BIT                                    DEFAULT NULL,
+  `SchoolBackground`            VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `IsGraduated`                 BIT(1)                                 DEFAULT b'0',
+  `OverallImpression`           VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Issues`                      VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Faculty`                     VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `OldMajor`                    VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `ConditionsChangeMajor`       VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `EnrolledTeachingDiploma`     VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `ParticipatedUSPSponsored`    VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `EnrolledDoubleMajor`         BIT                                    DEFAULT NULL,
+  `EnrolledMajorMinor`          BIT                                    DEFAULT NULL,
+  `CurrentEnrollmentStatus`     VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Probation`                   BIT                                    DEFAULT NULL,
+  `ProbationRemovalDeadline`    VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `MeritStatus`                 VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Internship`                  VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `InternshipHost`              VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `EngagedWorkshops`            VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `EngagedSoftSkills`           VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `EngagedEntrepreneurship`     VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `Duration`                    DATE                                   DEFAULT NULL,
+  `Certificate`                 BIT                                    DEFAULT NULL,
+  `LeadershipTraining`          VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `CivicEngagement`             VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `CommunityService`            VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `USPCompetition`              VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `StudentClub`                 VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `NameOfClub`                  VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `TookAcademicCourseLeadership` BIT(1)                                 DEFAULT NULL,
+  `IsUpdatingIDP`                BIT(1)                                 DEFAULT NULL,
+  `EmploymentStatus`             VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `EmploymentLocation`           VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `StartOfEmployment`            DATE                                   DEFAULT NULL,
+  `IsFullTimePosition`           BIT                                    DEFAULT NULL,
+  `GraduateStudies`              VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `GraduateStudiesLocation`      VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `DateOfPhoneCall`              DATE                                   DEFAULT NULL,
+  `PhoneCallMadeBy`              VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `RemarkableAchievements`       VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `EnrollmentConditions`         VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `SupportProgram`               VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `HousingTransportAllowance`    VARCHAR(255) COLLATE utf8_bin          DEFAULT NULL,
+  `PreparatorySemester`          BIT                                    DEFAULT NULL,
+  `IsDeleted`                    BIT(1)                                 DEFAULT b'0',
+  `CreatedByUserId`              INT(11)                       NOT NULL,
+  `DateAdded`                    TIMESTAMP                     NULL     DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`StudentId`),
   KEY `CycleId` (`CycleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -368,20 +409,22 @@ CREATE TABLE IF NOT EXISTS `student` (
 
 DROP TABLE IF EXISTS `studentcourseenrollment`;
 CREATE TABLE IF NOT EXISTS `studentcourseenrollment` (
-  `StudentCourseEnrollmentId` int(11) NOT NULL AUTO_INCREMENT,
-  `StudentId` int(11) NOT NULL,
-  `StudentSemesterEnrollmentId` int(11) NOT NULL,
-  `OfferedCourseId` int(11) NOT NULL,
-  `FinalGrade` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `IsDropped` bit(1) NOT NULL DEFAULT b'0',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `StudentCourseEnrollmentId`   INT(11)   NOT NULL              AUTO_INCREMENT,
+  `StudentSemesterEnrollmentId` INT(11) NOT NULL,
+  `OfferedCourseId`             INT(11) NOT NULL,
+  `FinalGrade`                  VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
+  `IsDropped`                   BIT(1)  NOT NULL              DEFAULT b'0',
+  `IsDeleted`                   BIT(1)  NOT NULL              DEFAULT b'0',
+  `CreatedByUserId`             INT(11) NOT NULL,
+  `DateAdded`                   TIMESTAMP NOT NULL              DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`StudentCourseEnrollmentId`),
   KEY `StudentId` (`StudentId`),
   KEY `StudentSemesterEnrollmentId` (`StudentSemesterEnrollmentId`),
   KEY `OfferedCourseId` (`OfferedCourseId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -391,26 +434,29 @@ CREATE TABLE IF NOT EXISTS `studentcourseenrollment` (
 
 DROP TABLE IF EXISTS `studentcourseevaluation`;
 CREATE TABLE IF NOT EXISTS `studentcourseevaluation` (
-  `StudentCourseEvaluationId` int(11) NOT NULL AUTO_INCREMENT,
-  `StudentCourseEnrollmentId` int(11) NOT NULL,
-  `InstructorEvaluationEmailId` int(11) NOT NULL,
-  `StudentId` int(11) NOT NULL,
-  `NumberOfAbsences` int(11) DEFAULT NULL,
-  `Grade` double DEFAULT NULL,
-  `HomeWork` double DEFAULT NULL,
-  `Participation` varchar(20) COLLATE utf8_bin DEFAULT NULL,
-  `Effort` varchar(20) COLLATE utf8_bin DEFAULT NULL,
-  `Attitude` varchar(20) COLLATE utf8_bin DEFAULT NULL,
-  `Evaluation` varchar(20) COLLATE utf8_bin DEFAULT NULL,
-  `InstructorNotes` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `UserNote` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `AdminNote` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `StudentCourseEvaluationId`   INT(11)   NOT NULL              AUTO_INCREMENT,
+  `StudentCourseEnrollmentId` INT(11) NOT NULL,
+  `InstructorEvaluationEmailId` INT(11) NOT NULL,
+  `StudentId`                   INT(11) NOT NULL,
+  `NumberOfAbsences`            INT(11)                       DEFAULT NULL,
+  `Grade`                       DOUBLE                        DEFAULT NULL,
+  `HomeWork`                    DOUBLE                        DEFAULT NULL,
+  `Participation`               VARCHAR(20) COLLATE utf8_bin  DEFAULT NULL,
+  `Effort`                      VARCHAR(20) COLLATE utf8_bin  DEFAULT NULL,
+  `Attitude`                    VARCHAR(20) COLLATE utf8_bin  DEFAULT NULL,
+  `Evaluation`                  VARCHAR(20) COLLATE utf8_bin  DEFAULT NULL,
+  `InstructorNotes`             VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
+  `UserNote`                    VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
+  `AdminNote`                   VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
+  `IsDeleted`                   BIT(1)  NOT NULL              DEFAULT b'0',
+  `DateAdded`                   TIMESTAMP NOT NULL              DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`StudentCourseEvaluationId`),
   KEY `InstructorEvaluationEmailId` (`InstructorEvaluationEmailId`),
   KEY `StudentId` (`StudentId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -420,14 +466,17 @@ CREATE TABLE IF NOT EXISTS `studentcourseevaluation` (
 
 DROP TABLE IF EXISTS `studentplan`;
 CREATE TABLE IF NOT EXISTS `studentplan` (
-  `StudentPlanId` int(11) NOT NULL AUTO_INCREMENT,
-  `MajorId` int(11) NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `StudentPlanId`   INT(11)   NOT NULL AUTO_INCREMENT,
+  `MajorId`       INT(11) NOT NULL,
+  `CreatedByUserId` INT(11) NOT NULL,
+  `DateAdded`       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`       BIT(1)    NOT NULL DEFAULT b'0',
   PRIMARY KEY (`StudentPlanId`),
   KEY `MajorId` (`MajorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -437,17 +486,20 @@ CREATE TABLE IF NOT EXISTS `studentplan` (
 
 DROP TABLE IF EXISTS `studentplanrow`;
 CREATE TABLE IF NOT EXISTS `studentplanrow` (
-  `StudentPlanRowId` int(11) NOT NULL AUTO_INCREMENT,
-  `StudentPlanId` int(11) NOT NULL,
-  `CourseLetter` varchar(8) COLLATE utf8_bin NOT NULL,
-  `Year` tinyint(1) NOT NULL,
-  `Season` varchar(8) COLLATE utf8_bin NOT NULL,
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
+  `StudentPlanRowId` INT(11)                     NOT NULL AUTO_INCREMENT,
+  `StudentPlanId`    INT(11) NOT NULL,
+  `CourseLetter`     VARCHAR(8) COLLATE utf8_bin NOT NULL,
+  `Year`             TINYINT(1)                  NOT NULL,
+  `Season`           VARCHAR(8) COLLATE utf8_bin NOT NULL,
+  `CreatedByUserId`  INT(11)                     NOT NULL,
+  `DateAdded`        TIMESTAMP                   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IsDeleted`        BIT(1)                      NOT NULL DEFAULT b'0',
   PRIMARY KEY (`StudentPlanRowId`),
   KEY `StudentPlanId` (`StudentPlanId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -457,16 +509,19 @@ CREATE TABLE IF NOT EXISTS `studentplanrow` (
 
 DROP TABLE IF EXISTS `studentsemesterenrollment`;
 CREATE TABLE IF NOT EXISTS `studentsemesterenrollment` (
-  `StudentSemesterEnrollmentId` int(11) NOT NULL AUTO_INCREMENT,
-  `StudentId` int(11) NOT NULL,
-  `SemesterId` int(11) NOT NULL,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `StudentSemesterEnrollmentId` INT(11)   NOT NULL AUTO_INCREMENT,
+  `StudentId`                   INT(11) NOT NULL,
+  `SemesterId`                  INT(11) NOT NULL,
+  `IsDeleted`                   BIT(1)  NOT NULL DEFAULT b'0',
+  `CreatedByUserId`             INT(11) NOT NULL,
+  `DateAdded`                   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`StudentSemesterEnrollmentId`),
   KEY `StudentId` (`StudentId`),
   KEY `SemesterId` (`SemesterId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -476,26 +531,31 @@ CREATE TABLE IF NOT EXISTS `studentsemesterenrollment` (
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
-  `UserId` int(11) NOT NULL AUTO_INCREMENT,
-  `Username` varchar(255) COLLATE utf8_bin NOT NULL,
-  `Password` varchar(255) COLLATE utf8_bin NOT NULL,
-  `Email` varchar(255) COLLATE utf8_bin NOT NULL,
-  `FirstName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `LastName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `Type` int(11) NOT NULL,
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0',
-  `CreatedByUserId` int(11) NOT NULL,
-  `DateAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `UserId`          INT(11)                       NOT NULL AUTO_INCREMENT,
+  `Username` VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `Password` VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `Email`    VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `FirstName` VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `LastName`  VARCHAR(255) COLLATE utf8_bin NOT NULL,
+  `Type`      INT(11)                       NOT NULL,
+  `IsDeleted` BIT(1)                        NOT NULL DEFAULT b'0',
+  `CreatedByUserId` INT(11)                       NOT NULL,
+  `DateAdded`       TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`UserId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 3
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`UserId`, `Username`, `Password`, `Email`, `FirstName`, `LastName`, `Type`, `IsDeleted`, `CreatedByUserId`, `DateAdded`) VALUES
-(1, 'admin', 'admin', 'admin@admin.com', 'Admin', 'Admin', 1, b'1', 0, '2018-05-15 17:04:57'),
-(2, 'user', 'user', 'user@user.com', 'User', 'User', 2, b'1', 0, '2018-05-15 17:06:17');
+INSERT INTO `user` (`UserId`, `Username`, `Password`, `Email`, `FirstName`, `LastName`, `Type`, `IsDeleted`, `CreatedByUserId`, `DateAdded`)
+VALUES
+  (1, 'admin', 'admin', 'admin@admin.com', 'Admin', 'Admin', 1, b'1', 0, '2018-05-15 17:04:57'),
+  (2, 'user', 'user', 'user@user.com', 'User', 'User', 2, b'1', 0, '2018-05-15 17:06:17');
 
 --
 -- Constraints for dumped tables
@@ -535,7 +595,9 @@ ALTER TABLE `major`
 -- Constraints for table `offeredcourse`
 --
 ALTER TABLE `offeredcourse`
-  ADD CONSTRAINT `offeredcourse_ibfk_1` FOREIGN KEY (`SemesterId`) REFERENCES `semester` (`SemesterId`);
+  ADD CONSTRAINT `offeredcourse_ibfk_1` FOREIGN KEY (`SemesterId`) REFERENCES `semester` (`SemesterId`),
+  ADD CONSTRAINT `offeredcourse_ibfk_2` FOREIGN KEY (`CourseId`) REFERENCES `course` (`CourseId`),
+  ADD CONSTRAINT `offeredcourse_ibfk_3` FOREIGN KEY (`InstructorId`) REFERENCES `instructor` (`InstructorId`);
 
 --
 -- Constraints for table `semester`
@@ -553,7 +615,6 @@ ALTER TABLE `student`
 -- Constraints for table `studentcourseenrollment`
 --
 ALTER TABLE `studentcourseenrollment`
-  ADD CONSTRAINT `studentcourseenrollment_ibfk_1` FOREIGN KEY (`StudentId`) REFERENCES `student` (`StudentId`),
   ADD CONSTRAINT `studentcourseenrollment_ibfk_2` FOREIGN KEY (`StudentSemesterEnrollmentId`) REFERENCES `studentsemesterenrollment` (`StudentSemesterEnrollmentId`),
   ADD CONSTRAINT `studentcourseenrollment_ibfk_3` FOREIGN KEY (`OfferedCourseId`) REFERENCES `offeredcourse` (`OfferedCourseId`);
 
@@ -584,6 +645,6 @@ ALTER TABLE `studentsemesterenrollment`
   ADD CONSTRAINT `studentsemesterenrollment_ibfk_2` FOREIGN KEY (`SemesterId`) REFERENCES `semester` (`SemesterId`);
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;

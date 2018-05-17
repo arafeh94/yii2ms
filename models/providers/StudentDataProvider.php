@@ -11,19 +11,27 @@ namespace app\models\providers;
 
 use app\components\GridConfig;
 use app\models\Cycle;
+use app\models\search\StudentSearchModel;
+use app\models\Student;
 use kartik\grid\DataColumn;
+use kartik\grid\GridView;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
-class CycleDataProvider extends ActiveDataProvider implements GridConfig
+class StudentDataProvider extends ActiveDataProvider implements GridConfig
 {
     public $searchModel;
 
     public function init()
     {
         parent::init();
-        $this->query = Cycle::find()->active();
+        $this->query = Student::find()->joinWith('cycle')->active();
+        $this->sort->attributes['cycle'] = [
+            'asc' => ['cycle.Name' => SORT_ASC],
+            'desc' => ['cycle.Name' => SORT_DESC],
+        ];
     }
 
     /**
@@ -33,22 +41,44 @@ class CycleDataProvider extends ActiveDataProvider implements GridConfig
     {
         return [
             [
+                'label' => 'Cycle',
                 'class' => DataColumn::className(),
-                'attribute' => 'Name'
+                'attribute' => 'cycle',
+                'value' => function ($model) {
+                    return $model->cycle->Name;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Cycle::find()->orderBy('Name')->active()->all(), 'Name', 'Name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => ''],
+            ],
+            [
+                'class' => DataColumn::className(),
+                'attribute' => 'FirstName'
+            ],
+            [
+                'class' => DataColumn::className(),
+                'attribute' => 'LastName'
+            ],
+            [
+                'class' => DataColumn::className(),
+                'attribute' => 'FatherName'
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{update} {delete}',
                 'buttons' => [
                     'update' => function ($key, $model, $index) {
-                        $url = Url::to(['cycle/view', 'id' => $model->getPrimaryKey()]);
+                        $url = Url::to(['student/view', 'id' => $model->getPrimaryKey()]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-pencil pointer",
                             'onclick' => "modalForm(this,'$url')",
                         ]);
                     },
                     'delete' => function ($key, $model, $index) {
-                        $url = Url::to(['cycle/delete', 'id' => $model->CycleId]);
+                        $url = Url::to(['student/delete', 'id' => $model->StudentId]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-trash pointer",
                             'onclick' => "gridControl.delete(this,'$url')",
@@ -70,11 +100,11 @@ class CycleDataProvider extends ActiveDataProvider implements GridConfig
     public function searchModel($params = null)
     {
         if ($this->searchModel === null) {
-            $this->searchModel = new Cycle();
+            $this->searchModel = new StudentSearchModel();
         }
 
         if ($params) {
-            $this->searchModel->load($params,'');
+            $this->searchModel->load($params, '');
         }
 
         return $this->searchModel;

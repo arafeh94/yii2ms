@@ -14,6 +14,18 @@ class InstructorQuery extends \yii\db\ActiveQuery
         return $this->andWhere('[[IsDeleted]]=0');
     }
 
+
+    public function id($id)
+    {
+        return $this->andWhere(['InstructorId' => $id]);
+    }
+
+    public function filter()
+    {
+        return $this->select(['InstructorId', 'DateAdded', 'UniversityId', 'FirstName', 'LastName','Title','PhoneExtension','Email']);
+    }
+
+
     /**
      * @inheritdoc
      * @return Instructor[]|array

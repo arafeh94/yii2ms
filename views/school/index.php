@@ -3,7 +3,7 @@
 
 use app\components\ModalForm;
 
-echo ModalForm::widget(['formPath' => '@app/views/school/_form']);
+echo ModalForm::widget(['formPath' => '@app/views/school/_form','title' => 'School']);
 
 ?>
 

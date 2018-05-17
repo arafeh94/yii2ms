@@ -11,7 +11,17 @@ class SemesterQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[IsDeleted]]=0');
+        return $this->andWhere('[[semester.IsDeleted]]=0');
+    }
+
+    public function id($id)
+    {
+        return $this->andWhere(['semester.SemesterId' => $id]);
+    }
+
+    public function filter()
+    {
+        return $this->select(['SemesterId', 'SeasonId', 'StartDate', 'Number', 'EndDate', 'DateAdded', 'IsCurrent', 'Year']);
     }
 
     /**

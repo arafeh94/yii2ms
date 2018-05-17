@@ -49,7 +49,7 @@ class Department extends \yii\db\ActiveRecord
     {
         return [
             'DepartmentId' => Yii::t('app', 'Department ID'),
-            'SchoolId' => Yii::t('app', 'School ID'),
+            'SchoolId' => Yii::t('app', 'School'),
             'Name' => Yii::t('app', 'Name'),
             'CreatedByUserId' => Yii::t('app', 'Created By User ID'),
             'DateAdded' => Yii::t('app', 'Date Added'),

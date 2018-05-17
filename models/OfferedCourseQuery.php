@@ -11,7 +11,17 @@ class OfferedCourseQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[IsDeleted]]=0');
+        return $this->andWhere('[[offeredcourse.IsDeleted]]=0');
+    }
+
+    public function id($id)
+    {
+        return $this->andWhere(['OfferedCourseId' => $id]);
+    }
+
+    public function filter()
+    {
+        return $this->select(['OfferedCourseId', 'CampusId', 'DateAdded', 'SemesterId', 'InstructorId', 'CourseId', 'CRN', 'Section']);
     }
 
     /**

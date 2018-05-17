@@ -5,7 +5,7 @@ use app\components\ModalForm;
 use app\models\providers\CycleDataProvider;
 use kartik\grid\GridView;
 
-echo ModalForm::widget(['formPath' => '@app/views/cycle/_form']);
+echo ModalForm::widget(['formPath' => '@app/views/cycle/_form', 'title' => 'Cycle']);
 
 ?>
 

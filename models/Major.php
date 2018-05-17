@@ -53,11 +53,11 @@ class Major extends \yii\db\ActiveRecord
     {
         return [
             'MajorId' => Yii::t('app', 'Major ID'),
-            'DepartmentId' => Yii::t('app', 'Department ID'),
+            'DepartmentId' => Yii::t('app', 'Department'),
             'Name' => Yii::t('app', 'Name'),
             'Abbreviation' => Yii::t('app', 'Abbreviation'),
             'RequiredCredits' => Yii::t('app', 'Required Credits'),
-            'CreatedByUserId' => Yii::t('app', 'Created By User ID'),
+            'CreatedByUserId' => Yii::t('app', 'Created By User'),
             'DateAdded' => Yii::t('app', 'Date Added'),
             'IsDeleted' => Yii::t('app', 'Is Deleted'),
         ];
