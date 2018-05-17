@@ -19,6 +19,9 @@ use Yii;
  * @property bool $IsDeleted
  *
  * @property Semester $semester
+ * @property Semester $course
+ * @property Semester $instructor
+ * @property Semester $campus
  */
 class OfferedCourse extends \yii\db\ActiveRecord
 {
@@ -51,10 +54,10 @@ class OfferedCourse extends \yii\db\ActiveRecord
     {
         return [
             'OfferedCourseId' => Yii::t('app', 'Offered Course ID'),
-            'CampusId' => Yii::t('app', 'Campus ID'),
-            'SemesterId' => Yii::t('app', 'Semester ID'),
-            'InstructorId' => Yii::t('app', 'Instructor ID'),
-            'CourseId' => Yii::t('app', 'Course ID'),
+            'CampusId' => Yii::t('app', 'Campus'),
+            'SemesterId' => Yii::t('app', 'Semester'),
+            'InstructorId' => Yii::t('app', 'Instructor'),
+            'CourseId' => Yii::t('app', 'Course'),
             'CRN' => Yii::t('app', 'Crn'),
             'Section' => Yii::t('app', 'Section'),
             'CreatedByUserId' => Yii::t('app', 'Created By User ID'),
@@ -69,6 +72,27 @@ class OfferedCourse extends \yii\db\ActiveRecord
     public function getSemester()
     {
         return $this->hasOne(Semester::className(), ['SemesterId' => 'SemesterId']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCampus()
+    {
+        return $this->hasOne(Campus::className(), ['CampusId' => 'CampusId']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCourse()
+    {
+        return $this->hasOne(Course::className(), ['CourseId' => 'CourseId']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInstructor()
+    {
+        return $this->hasOne(Instructor::className(), ['InstructorId' => 'InstructorId']);
     }
 
     /**

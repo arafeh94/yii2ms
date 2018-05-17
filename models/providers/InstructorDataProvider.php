@@ -15,6 +15,8 @@ use app\models\Instructor;
 use app\models\search\DepartmentSearchModel;
 use app\models\search\InstructorSearchModel;
 use kartik\grid\DataColumn;
+use kartik\grid\GridView;
+use Yii;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -38,18 +40,24 @@ class InstructorDataProvider extends ActiveDataProvider implements GridConfig
         return [
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'Title',
+                'attribute' => 'UniversityId',
+                'width' => '115px'
             ],
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'UniversityId',
+                'attribute' => 'Title',
+                'width' => '100px',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => Yii::$app->params['titlesSelector'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => ''],
             ],
-
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'FirstName',
             ],
-
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'LastName',
@@ -59,12 +67,16 @@ class InstructorDataProvider extends ActiveDataProvider implements GridConfig
                 'attribute' => 'Email',
             ],
             [
+                'label' => 'Ext.',
+                'width' => '80px',
                 'class' => DataColumn::className(),
                 'attribute' => 'PhoneExtension',
             ],
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'DateAdded',
+                'format' => 'date',
+                'width' => '105px',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

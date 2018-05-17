@@ -15,6 +15,7 @@ use app\models\Major;
 use app\models\search\DepartmentSearchModel;
 use app\models\search\MajorSearchModel;
 use kartik\grid\DataColumn;
+use kartik\grid\GridView;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -42,10 +43,6 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
     {
         return [
             [
-                'class' => DataColumn::className(),
-                'attribute' => 'MajorId'
-            ],
-            [
                 'label' => 'Major Name',
                 'class' => DataColumn::className(),
                 'attribute' => 'Name',
@@ -56,7 +53,15 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
                 'label' => 'Department Name',
                 'value' => function ($model) {
                     return $model->department->school->Name . ' - ' . $model->department->Name;
-                }
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Department::find()->orderBy('Name')->active()->all(), 'Name', function ($model) {
+                    return $model->school->Name . ' - ' . $model->Name;
+                }),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => ''],
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

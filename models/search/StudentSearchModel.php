@@ -9,15 +9,16 @@
 namespace app\models\search;
 
 
-use app\models\Instructor;
+use app\models\Student;
 
-class InstructorSearchModel extends Instructor
+class StudentSearchModel extends Student
 {
+    public $cycle;
 
     public function rules()
     {
         return [
-            [['UniversityId', 'FirstName', 'LastName', 'Email', 'PhoneExtension', 'Title'], 'safe']
+            [['cycle', 'FirstName', 'LastName', 'FatherName'], 'safe']
         ];
     }
 }

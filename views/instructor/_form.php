@@ -31,7 +31,7 @@ if (!isset($model)) $model = new Instructor();
 ]) ?>
 <?= $form->field($model, 'InstructorId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'UniversityId')->textInput() ?>
-<?= $form->field($model, 'Title')->dropDownList(['Mr' => 'Mr', 'Dr' => 'Dr', 'Mrs' => 'Mrs', 'Ms' => 'Ms']) ?>
+<?= $form->field($model, 'Title')->dropDownList(Yii::$app->params['titlesSelector']) ?>
 <?= $form->field($model, 'FirstName')->textInput() ?>
 <?= $form->field($model, 'LastName')->textInput() ?>
 <?= $form->field($model, 'Email')->textInput() ?>

@@ -57,12 +57,6 @@ class SemesterDataProvider extends ActiveDataProvider implements GridConfig
             ],
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'Year',
-                'format' => 'date',
-                'xlFormat' => "yyyy",
-            ],
-            [
-                'class' => DataColumn::className(),
                 'attribute' => 'StartDate',
                 'format' => 'date',
             ],

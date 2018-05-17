@@ -14,6 +14,16 @@ class StudentCourseEnrollmentQuery extends \yii\db\ActiveQuery
         return $this->andWhere('[[IsDeleted]]=0');
     }
 
+    public function id($id)
+    {
+        return $this->andWhere(['StudentCourseEnrollmentId' => $id]);
+    }
+
+    public function filter()
+    {
+        return $this->select(['StudentCourseEnrollmentId', 'StudentId', 'SemesterId', 'DateAdded']);
+    }
+
     /**
      * @inheritdoc
      * @return StudentCourseEnrollment[]|array

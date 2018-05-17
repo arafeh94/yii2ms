@@ -118,13 +118,13 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CycleId', 'UniversityId', 'FirstName', 'LastName', 'OverallImpression', 'EnrollmentConditions', 'SupportProgram', 'HousingTransportAllowance', 'PreparatorySemester', 'CreatedByUserId'], 'required'],
+            [['CycleId', 'UniversityId', 'FirstName', 'FatherName', 'LastName', 'CreatedByUserId'], 'required'],
             [['CycleId', 'DOBMonth', 'DOBYear', 'CurrentMajor', 'Certificate', 'CreatedByUserId'], 'integer'],
             [['TwelveGrade', 'TenGrade', 'ElevenGrade', 'EnglishExamScore'], 'number'],
             [['IsDataEntryComplete', 'IsInitialVettingDone', 'VettingUpdated', 'AntiTerrorismCertification', 'StudentMOUSigned', 'HasLaptop', 'IsGraduated', 'TookAcademicCourseLeadership', 'IsUpdatingIDP', 'IsDeleted'], 'boolean'],
-            [['SIIDate', 'Duration', 'StartOfEmployment', 'DateOfPhoneCall', 'DateAdded'], 'safe'],
+            [['SIIDate', 'Duration', 'StartOfEmployment', 'DateOfPhoneCall', 'DateAdded', 'OverallImpression', 'EnrollmentConditions', 'SupportProgram', 'HousingTransportAllowance', 'PreparatorySemester',], 'safe'],
             [['UniversityId'], 'string', 'max' => 9],
-            [['FirstName', 'LastName', 'FatherName', 'PhoneNumber', 'Email', 'Village', 'Caza', 'Mouhafaza', 'SchoolName', 'LaptopSerialNumber', 'ExpectedGraduation', 'SEESATScores', 'AdmissionSemester', 'AdmissionMajor', 'TD', 'AcademicCoordinator', 'StudentMentor', 'CommunityDevelopmentProject', 'BankAccount', 'Branch', 'IDPCompleted', 'EligibilitySummer', 'SummersTakenCount', 'ReferredToCounselor', 'CSPCompleted', 'SchoolBackground', 'OverallImpression', 'Issues', 'Faculty', 'OldMajor', 'ConditionsChangeMajor', 'EnrolledTeachingDiploma', 'ParticipatedUSPSponsored', 'EnrolledDoubleMajor', 'EnrolledMajorMinor', 'CurrentEnrollmentStatus', 'Probation', 'ProbationRemovalDeadline', 'MeritStatus', 'Internship', 'InternshipHost', 'EngagedWorkshops', 'EngagedSoftSkills', 'EngagedEntrepreneurship', 'LeadershipTraining', 'CivicEngagement', 'CommunityService', 'USPCompetition', 'StudentClub', 'NameOfClub', 'EmploymentStatus', 'EmploymentLocation', 'IsFullTimePosition', 'GraduateStudies', 'GraduateStudiesLocation', 'PhoneCallMadeBy', 'RemarkableAchievements', 'EnrollmentConditions', 'SupportProgram', 'HousingTransportAllowance', 'PreparatorySemester'], 'string', 'max' => 255],
+            [['FirstName', 'LastName', 'PhoneNumber', 'Email', 'Village', 'Caza', 'Mouhafaza', 'SchoolName', 'LaptopSerialNumber', 'ExpectedGraduation', 'SEESATScores', 'AdmissionSemester', 'AdmissionMajor', 'TD', 'AcademicCoordinator', 'StudentMentor', 'CommunityDevelopmentProject', 'BankAccount', 'Branch', 'IDPCompleted', 'EligibilitySummer', 'SummersTakenCount', 'ReferredToCounselor', 'CSPCompleted', 'SchoolBackground', 'OverallImpression', 'Issues', 'Faculty', 'OldMajor', 'ConditionsChangeMajor', 'EnrolledTeachingDiploma', 'ParticipatedUSPSponsored', 'EnrolledDoubleMajor', 'EnrolledMajorMinor', 'CurrentEnrollmentStatus', 'Probation', 'ProbationRemovalDeadline', 'MeritStatus', 'Internship', 'InternshipHost', 'EngagedWorkshops', 'EngagedSoftSkills', 'EngagedEntrepreneurship', 'LeadershipTraining', 'CivicEngagement', 'CommunityService', 'USPCompetition', 'StudentClub', 'NameOfClub', 'EmploymentStatus', 'EmploymentLocation', 'IsFullTimePosition', 'GraduateStudies', 'GraduateStudiesLocation', 'PhoneCallMadeBy', 'RemarkableAchievements', 'EnrollmentConditions', 'SupportProgram', 'HousingTransportAllowance', 'PreparatorySemester'], 'string', 'max' => 255],
             [['Gender'], 'string', 'max' => 1],
             [['CycleId'], 'exist', 'skipOnError' => true, 'targetClass' => Cycle::className(), 'targetAttribute' => ['CycleId' => 'CycleId']],
         ];
@@ -137,7 +137,7 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             'StudentId' => Yii::t('app', 'Student ID'),
-            'CycleId' => Yii::t('app', 'Cycle ID'),
+            'CycleId' => Yii::t('app', 'Cycle'),
             'UniversityId' => Yii::t('app', 'University ID'),
             'FirstName' => Yii::t('app', 'First Name'),
             'LastName' => Yii::t('app', 'Last Name'),

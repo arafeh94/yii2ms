@@ -11,8 +11,10 @@ namespace app\models\providers;
 
 use app\components\GridConfig;
 use app\models\Department;
+use app\models\School;
 use app\models\search\DepartmentSearchModel;
 use kartik\grid\DataColumn;
+use kartik\grid\GridView;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -39,13 +41,10 @@ class DepartmentDataProvider extends ActiveDataProvider implements GridConfig
     {
         return [
             [
-                'class' => DataColumn::className(),
-                'attribute' => 'DepartmentId'
-            ],
-            [
                 'label' => 'Department Name',
                 'class' => DataColumn::className(),
                 'attribute' => 'Name',
+                'width' => '200px'
             ],
             [
                 'class' => DataColumn::className(),
@@ -53,11 +52,18 @@ class DepartmentDataProvider extends ActiveDataProvider implements GridConfig
                 'label' => 'School Name',
                 'value' => function ($model) {
                     return $model->school->Name;
-                }
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(School::find()->orderBy('Name')->active()->all(), 'Name', 'Name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => ''],
             ],
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'DateAdded',
+                'format' => 'date'
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
