@@ -69,17 +69,18 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getStudent()
+    public function getStudentSemesterEnrollment()
     {
-        return $this->hasOne(Student::className(), ['StudentId' => 'StudentId']);
+        return $this->hasOne(StudentSemesterEnrollment::className(), ['StudentSemesterEnrollmentId' => 'StudentSemesterEnrollmentId']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getStudentSemesterEnrollment()
+    public function getStudent()
     {
-        return $this->hasOne(StudentSemesterEnrollment::className(), ['StudentSemesterEnrollmentId' => 'StudentSemesterEnrollmentId']);
+        return $this->hasOne(Student::className(), ['StudentId' => 'StudentSemesterEnrollmentId'])
+            ->via('studentSemesterEnrollment')->inverseOf('studentCourseEnrollments');
     }
 
     /**

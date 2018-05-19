@@ -11,8 +11,9 @@ class InstructorEvaluationEmailQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[IsDeleted]]=0');
+        return $this->andWhere('[[instructorevaluationemail.IsDeleted]]=0');
     }
+
 
     /**
      * @inheritdoc

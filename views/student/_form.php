@@ -14,6 +14,7 @@ use app\models\Cycle;
 use app\models\Student;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
+use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\jui\DatePicker;
 
@@ -126,7 +127,6 @@ if (!isset($model)) $model = new Student();
         <?= $form->field($model, 'RemarkableAchievements')->textInput(); ?>
     </div>
 </div>
-
-<?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-success']) ?>
-<?= \yii\bootstrap\Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger', 'onclick' => 'modalFormClose()']) ?>
+<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
 <?php ActiveForm::end(); ?>

@@ -26,6 +26,7 @@ use Yii;
  *
  * @property InstructorEvaluationEmail $instructorEvaluationEmail
  * @property Student $student
+ * @property StudentCourseEnrollment $studentCourseEnrollment
  */
 class StudentCourseEvaluation extends \yii\db\ActiveRecord
 {
@@ -91,6 +92,14 @@ class StudentCourseEvaluation extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getStudentCourseEnrollment()
+    {
+        return $this->hasOne(StudentCourseEnrollment::className(), ['StudentCourseEnrollmentId' => 'StudentCourseEnrollmentId']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getStudent()
     {
         return $this->hasOne(Student::className(), ['StudentId' => 'StudentId']);
@@ -103,5 +112,10 @@ class StudentCourseEvaluation extends \yii\db\ActiveRecord
     public static function find()
     {
         return new StudentCourseEvaluationQuery(get_called_class());
+    }
+
+    public function __toString()
+    {
+        return spl_object_hash($this);
     }
 }

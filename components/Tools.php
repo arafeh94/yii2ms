@@ -32,4 +32,21 @@ class Tools extends Component
         \Yii::$app->view->registerJs("console.log({$msg})");
     }
 
+    public static function currentDate()
+    {
+        $time = new \DateTime('now', new \DateTimeZone(\Yii::$app->params['timezone']));
+        return $time->format(\Yii::$app->params['dateTimeFormat']);
+    }
+
+    public static function random($length = 8)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
 }

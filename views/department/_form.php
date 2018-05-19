@@ -14,6 +14,7 @@ use app\models\Department;
 use app\models\School;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
+use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 
 if (!isset($model)) $model = new Department();
@@ -33,6 +34,6 @@ if (!isset($model)) $model = new Department();
 <?= $form->field($model, 'DepartmentId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'SchoolId')->dropDownList(ArrayHelper::map($schools,'SchoolId','Name'))?>
 <?= $form->field($model, 'Name')->textInput() ?>
-<?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-success']) ?>
-<?= \yii\bootstrap\Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger', 'onclick' => 'modalFormClose()']) ?>
+<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
 <?php ActiveForm::end(); ?>

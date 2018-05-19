@@ -9,6 +9,7 @@
 /** @var $widget ModalForm */
 
 use app\components\ModalForm;
+use yii\bootstrap\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
 
@@ -20,7 +21,7 @@ use yii\widgets\Pjax;
         <div class="loader"></div>
     </div>
     <div id="modal-container-form" class="modal-container-form" style="display: none">
-        <?php Pjax::begin(['enablePushState' => false]) ?>
+        <?php Pjax::begin(['enablePushState' => false, 'id' => 'modal-form-pjax']) ?>
         <?= $this->render($widget->formPath, $widget->formParams); ?>
         <?php Pjax::end() ?>
     </div>

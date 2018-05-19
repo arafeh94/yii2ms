@@ -15,6 +15,7 @@ use Yii;
  * @property bool $IsDeleted
  *
  * @property Instructor $instructor
+ * @property EvaluationEmail $evaluationEmail
  * @property StudentCourseEvaluation[] $studentCourseEvaluation
  */
 class InstructorEvaluationEmail extends \yii\db\ActiveRecord
@@ -25,6 +26,18 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'instructorevaluationemail';
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if ($insert) {
+            Yii::$app->mailer->compose('evaluation/html', ['instructorEvaluationEmail' => $this, 'instructor' => $this->instructor])
+                ->setFrom('lau@gmail.com')
+                ->setTo($this->instructor->Email)
+                ->setSubject('Evaluation Fill Request')
+                ->send();
+        }
+        parent::afterSave($insert, $changedAttributes);
     }
 
     /**
@@ -72,6 +85,17 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
     {
         return $this->hasMany(StudentCourseEvaluation::className(), ['InstructorEvaluationEmailId' => 'InstructorEvaluationEmailId']);
     }
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEvaluationEmail()
+    {
+        return $this->hasOne(EvaluationEmail::className(), ['EvaluationEmailId' => 'EvaluationEmailId']);
+    }
+
+
 
     /**
      * @inheritdoc

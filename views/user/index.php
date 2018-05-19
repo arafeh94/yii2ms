@@ -14,5 +14,4 @@ use yii\bootstrap\Html;
 echo ModalForm::widget(['formPath' => '@app/views/user/_form', 'title' => 'User']);
 
 ?>
-
 <?= GridViewBuilder::render($provider, 'User'); ?>

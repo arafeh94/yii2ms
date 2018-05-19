@@ -14,6 +14,7 @@ use app\models\Season;
 use app\models\Semester;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
+use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\jui\DatePicker;
 
@@ -37,6 +38,6 @@ if (!isset($model)) $model = new Semester();
 <?= $form->field($model, 'StartDate')->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'options' => ['class' => 'form-control']]) ?>
 <?= $form->field($model, 'EndDate')->widget(DatePicker::className(), ['dateFormat' => Yii::$app->params['dateFormat'], 'options' => ['class' => 'form-control']]) ?>
 <?= $form->field($model, 'IsCurrent')->dropDownList(Yii::$app->params['booleanSelector']) ?>
-<?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-success']) ?>
-<?= \yii\bootstrap\Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger', 'onclick' => 'modalFormClose()']) ?>
+<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
 <?php ActiveForm::end(); ?>

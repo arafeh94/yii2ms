@@ -11,7 +11,7 @@ class CycleQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[IsDeleted]]=0');
+        return $this->andWhere('[[cycle.IsDeleted]]=0');
     }
 
     public function id($id)

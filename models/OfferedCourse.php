@@ -19,9 +19,10 @@ use Yii;
  * @property bool $IsDeleted
  *
  * @property Semester $semester
- * @property Semester $course
- * @property Semester $instructor
- * @property Semester $campus
+ * @property Course $course
+ * @property Instructor $instructor
+ * @property Campus $campus
+ * @property StudentCourseEnrollment[] $studentCourseEnrollments
  */
 class OfferedCourse extends \yii\db\ActiveRecord
 {
@@ -73,6 +74,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Semester::className(), ['SemesterId' => 'SemesterId']);
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -80,6 +82,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Campus::className(), ['CampusId' => 'CampusId']);
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -87,12 +90,21 @@ class OfferedCourse extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Course::className(), ['CourseId' => 'CourseId']);
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getInstructor()
     {
         return $this->hasOne(Instructor::className(), ['InstructorId' => 'InstructorId']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStudentCourseEnrollments()
+    {
+        return $this->hasMany(StudentCourseEnrollment::className(), ['OfferedCourseId' => 'OfferedCourseId']);
     }
 
     /**

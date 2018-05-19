@@ -11,6 +11,7 @@ use app\models\Cycle;
 use app\models\School;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
+use yii\bootstrap\Html;
 
 if (!isset($model)) $model = new School();
 ?>
@@ -28,6 +29,6 @@ if (!isset($model)) $model = new School();
 ]) ?>
 <?= $form->field($model, 'SchoolId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'Name')->textInput() ?>
-<?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-success']) ?>
-<?= \yii\bootstrap\Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger', 'onclick' => 'modalFormClose()']) ?>
+<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
 <?php ActiveForm::end(); ?>

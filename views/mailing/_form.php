@@ -6,17 +6,16 @@
  * Time: 3:38 PM
  */
 
-/** @var $model Course */
+/** @var $model EvaluationEmail */
 
-/** @var $majors \app\models\Major[] */
+/** @var $semester \app\models\Semester */
 
-use app\models\Course;
+use app\models\EvaluationEmail;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
-use yii\helpers\ArrayHelper;
 
-if (!isset($model)) $model = new Course();
+if (!isset($model)) $model = new EvaluationEmail();
 ?>
 
 
@@ -27,14 +26,14 @@ if (!isset($model)) $model = new Course();
 
 <?php $form = ActiveForm::begin([
     'id' => 'model-form',
-    'action' => ['course/update'],
+    'action' => ['mailing/update'],
     'options' => ['data-pjax' => '']
 ]) ?>
-<?= $form->field($model, 'CourseId')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'MajorId')->dropDownList(ArrayHelper::map($majors, 'MajorId', 'Name'))->label('Major') ?>
-<?= $form->field($model, 'Name')->textInput() ?>
-<?= $form->field($model, 'Number')->textInput(['type' => 'number']) ?>
-<?= $form->field($model, 'Credits')->textInput(['type' => 'number']) ?>
+<?= $form->field($model, 'EvaluationEmailId')->hiddenInput()->label(false) ?>
+<?= $form->field($model, 'SemesterId')->dropDownList([$semester->SemesterId => $semester->Year . ' - ' . $semester->season->Name], ['data-add-value' => $semester->SemesterId, 'readonly' => 'readonly', 'disabled' => 'disabled']); ?>
+<?= $form->field($model, 'Description')->textInput() ?>
+<?= $form->field($model, 'Quarter')->dropDownList(Yii::$app->params['quarterSelector']) ?>
+<?= $form->field($model, 'AvailableForInstructors')->dropDownList(Yii::$app->params['booleanSelector']) ?>
 <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
 <?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
 <?php ActiveForm::end(); ?>

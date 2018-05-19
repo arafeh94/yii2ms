@@ -11,7 +11,7 @@ class CampusQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[IsDeleted]]=0');
+        return $this->andWhere('[[campus.IsDeleted]]=0');
     }
 
     /**

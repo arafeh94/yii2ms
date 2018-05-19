@@ -16,6 +16,7 @@
 use app\models\OfferedCourse;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
+use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 
 if (!isset($model)) $model = new OfferedCourse();
@@ -43,6 +44,6 @@ if (!isset($model)) $model = new OfferedCourse();
 })) ?>
 <?= $form->field($model, 'CRN')->textInput(['type' => 'number']) ?>
 <?= $form->field($model, 'Section')->textInput(['type' => 'number']) ?>
-<?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-success']) ?>
-<?= \yii\bootstrap\Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger', 'onclick' => 'modalFormClose()']) ?>
+<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
 <?php ActiveForm::end(); ?>

@@ -241,7 +241,8 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getStudentCourseEnrollments()
     {
-        return $this->hasMany(StudentCourseEnrollment::className(), ['StudentId' => 'StudentId']);
+        return $this->hasMany(StudentCourseEnrollment::className(), ['StudentCourseEnrollmentId' => 'StudentId'])
+            ->via('studentSemesterEnrollments');
     }
 
     /**

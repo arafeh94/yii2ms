@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "evaluationemail".
@@ -16,10 +17,12 @@ use Yii;
  * @property string $Description
  * @property int $CreatedByUserId
  * @property string $DateAdded
+ * @property bool $IsDeleted
  *
  * @property Semester $semester
+ * @property InstructorEvaluationEmail[] $instructorEvaluationEmails
  */
-class EvaluationEmail extends \yii\db\ActiveRecord
+class EvaluationEmail extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -35,10 +38,10 @@ class EvaluationEmail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['EvaluationEmailId', 'SemesterId', 'CreatedByUserId'], 'integer'],
+            [['EvaluationEmailId', 'SemesterId', 'CreatedByUserId', 'AvailableForInstructors'], 'integer'],
             [['SemesterId', 'Date', 'Quarter', 'Description', 'CreatedByUserId'], 'required'],
             [['Date', 'DateAdded'], 'safe'],
-            [['IsEnabled', 'AvailableForInstructors'], 'boolean'],
+            [['IsEnabled', 'IsDeleted'], 'boolean'],
             [['Quarter'], 'string', 'max' => 25],
             [['Description'], 'string', 'max' => 255],
             [['SemesterId'], 'exist', 'skipOnError' => true, 'targetClass' => Semester::className(), 'targetAttribute' => ['SemesterId' => 'SemesterId']],
@@ -69,6 +72,14 @@ class EvaluationEmail extends \yii\db\ActiveRecord
     public function getSemester()
     {
         return $this->hasOne(Semester::className(), ['SemesterId' => 'SemesterId']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInstructorEvaluationEmails()
+    {
+        return $this->hasMany(InstructorEvaluationEmail::className(), ['EvaluationEmailId' => 'EvaluationEmailId']);
     }
 
     /**

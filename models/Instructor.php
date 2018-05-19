@@ -19,6 +19,7 @@ use Yii;
  * @property bool $IsDeleted
  *
  * @property InstructorEvaluationEmail[] $instructorEvaluationEmails
+ * @property OfferedCourse[] $offeredCourses
  */
 class Instructor extends \yii\db\ActiveRecord
 {
@@ -72,6 +73,19 @@ class Instructor extends \yii\db\ActiveRecord
     public function getInstructorEvaluationEmails()
     {
         return $this->hasMany(InstructorEvaluationEmail::className(), ['InstructorId' => 'InstructorId']);
+    }
+
+    /**
+     * @param bool $InCurrentSemester
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOfferedCourses($InCurrentSemester = true)
+    {
+        $query = $this->hasMany(OfferedCourse::className(), ['InstructorId' => 'InstructorId']);
+        if ($InCurrentSemester) {
+            $query->where(['offeredcourse.SemesterId' => Semester::find()->current()->SemesterId]);
+        }
+        return $query;
     }
 
     /**

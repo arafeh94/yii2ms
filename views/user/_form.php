@@ -11,9 +11,11 @@
 use app\models\User;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
+use yii\bootstrap\Html;
 
 if (!isset($model)) $model = new User();
 ?>
+
 
 <?php if (isset($saved) && $saved): ?>
     <?= Alert::widget(['id' => 'form-state-alert', 'body' => 'saved', 'options' => ['class' => 'alert-info']]) ?>
@@ -31,6 +33,6 @@ if (!isset($model)) $model = new User();
 <?= $form->field($model, 'Username')->textInput() ?>
 <?= $form->field($model, 'Email')->textInput() ?>
 <?= $form->field($model, 'Type')->dropDownList([1 => 'admin', 2 => 'user']) ?>
-<?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-success']) ?>
-<?= \yii\bootstrap\Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
+<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
 <?php ActiveForm::end(); ?>

@@ -3,8 +3,19 @@
 namespace app\controllers;
 
 use app\components\AppController;
+use app\components\Tools;
+use app\models\Course;
 use app\models\forms\LoginForm;
+use app\models\Instructor;
+use app\models\InstructorEvaluationEmail;
+use app\models\OfferedCourse;
+use app\models\Semester;
+use app\models\Student;
+use app\models\StudentCourseEnrollment;
+use app\models\StudentCourseEvaluation;
+use app\models\StudentSemesterEnrollment;
 use Yii;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -71,7 +82,6 @@ class SiteController extends AppController
      */
     public function actionLogin()
     {
-
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -97,5 +107,7 @@ class SiteController extends AppController
 
         return $this->goHome();
     }
+
+
 
 }
