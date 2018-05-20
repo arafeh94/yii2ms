@@ -24,8 +24,9 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\helpers\Json;
+use yii\web\Controller;
 
-class EvaluationController extends \yii\web\Controller
+class EvaluationController extends Controller
 {
     public function actionIndex()
     {
