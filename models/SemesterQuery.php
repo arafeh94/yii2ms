@@ -12,6 +12,11 @@ use Yii;
 class SemesterQuery extends \yii\db\ActiveQuery
 {
 
+    public function active()
+    {
+        return $this->andWhere(['semester.IsDeleted' => 0]);
+    }
+
     public function id($id)
     {
         return $this->andWhere(['semester.SemesterId' => $id]);
