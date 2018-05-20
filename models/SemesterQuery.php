@@ -11,10 +11,6 @@ use Yii;
  */
 class SemesterQuery extends \yii\db\ActiveQuery
 {
-    public function active()
-    {
-        return $this->andWhere('[[semester.IsDeleted]]=0');
-    }
 
     public function id($id)
     {
@@ -32,7 +28,7 @@ class SemesterQuery extends \yii\db\ActiveQuery
     public function current()
     {
         return Yii::$app->db->cache(function ($db) {
-            return Semester::find()->where(['IsCurrent' => 1])->one();
+            return Semester::find()->where(['IsCurrent' => true])->one();
         }, 0);
     }
 

@@ -16,7 +16,7 @@ class MailingController extends \yii\web\Controller
     {
         $provider = new MailingDataProvider();
         $provider->search(\Yii::$app->request->get('MajorSearchModel', []));
-        return $this->render('index', ['provider' => $provider, 'semester' => Semester::find()->withSeason()->active()->current()->one()]);
+        return $this->render('index', ['provider' => $provider, 'semester' => Semester::find()->withSeason()->current()   ]);
     }
 
     public function actionView($id)
@@ -30,20 +30,22 @@ class MailingController extends \yii\web\Controller
     public function actionUpdate()
     {
         if (\Yii::$app->request->isAjax) {
+
             $id = \Yii::$app->request->post('EvaluationEmail')['EvaluationEmailId'];
             $model = $id === "" ? new EvaluationEmail() : EvaluationEmail::find()->active()->id($id)->one();
             $isNewRecord = $model->isNewRecord;
             if ($isNewRecord) {
                 $model->Date = Tools::currentDate();
                 $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
-                $model->SemesterId = Semester::find()->current()->active()->one()->SemesterId;
+                $model->SemesterId = Semester::find()->current()->SemesterId;
             }
             $saved = null;
+
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
                 if ($saved && $isNewRecord) $this->sendInstructorEmails($model);
             }
-            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved, 'semester' => Semester::find()->withSeason()->active()->current()->one()]);
+            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved, 'semester' => Semester::find()->withSeason()->current()]);
         }
         return false;
     }
