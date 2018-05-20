@@ -359,7 +359,7 @@ CREATE TABLE studentcourseenrollment
     PRIMARY KEY,
   StudentSemesterEnrollmentId INT                                 NOT NULL,
   OfferedCourseId             INT                                 NOT NULL,
-  FinalGrade                  VARCHAR(255)                        NULL,
+  FinalGrade                  DOUBLE                        NULL,
   IsDropped                   BIT DEFAULT b'0'                    NOT NULL,
   IsDeleted                   BIT DEFAULT b'0'                    NOT NULL,
   CreatedByUserId             INT                                 NOT NULL,

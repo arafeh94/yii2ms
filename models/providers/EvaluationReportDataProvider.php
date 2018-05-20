@@ -64,8 +64,13 @@ class EvaluationReportDataProvider extends ActiveDataProvider implements GridCon
             ->innerJoin(Campus::tableName(), 'campus.CampusId = offeredcourse.CampusId')
             ->innerJoin(Semester::tableName(), 'semester.SemesterId = studentSemesterEnrollment.SemesterId')
             ->innerJoin(Season::tableName(), 'season.SeasonId = semester.SeasonId')
-            ->where(['semester.SemesterId' => Semester::find()->current()->SemesterId]);
-
+            ->where(['semester.SemesterId' => Semester::find()->current()->SemesterId])
+            ->where(['offeredcourse.IsDeleted' => 0])
+            ->where(['studentcourseenrollment.IsDropped' => 0])
+            ->where(['studentcourseenrollment.IsDeleted' => 0])
+            ->where(['studentsemesterenrollment.IsDeleted' => 0])
+            ->where(['course.IsDeleted' => 0]);
+        Tools::forcePrint($this->query->createCommand()->rawSql);
     }
 
     /**

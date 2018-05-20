@@ -46,9 +46,9 @@ class StudentCourseEvaluation extends \yii\db\ActiveRecord
         return [
             [['StudentCourseEnrollmentId', 'InstructorEvaluationEmailId', 'StudentId'], 'required'],
             [['StudentCourseEnrollmentId', 'InstructorEvaluationEmailId', 'StudentId', 'NumberOfAbsences'], 'integer'],
-            [['Grade', 'HomeWork'], 'number'],
+            [['HomeWork'], 'number'],
             [['IsDeleted'], 'boolean'],
-            [['DateAdded'], 'safe'],
+            [['DateAdded', 'Grade'], 'safe'],
             [['Participation', 'Effort', 'Attitude', 'Evaluation'], 'string', 'max' => 20],
             [['InstructorNotes', 'UserNote', 'AdminNote'], 'string', 'max' => 255],
             [['InstructorEvaluationEmailId'], 'exist', 'skipOnError' => true, 'targetClass' => Instructorevaluationemail::className(), 'targetAttribute' => ['InstructorEvaluationEmailId' => 'InstructorEvaluationEmailId']],

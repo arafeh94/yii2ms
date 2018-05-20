@@ -38,6 +38,9 @@ class EvaluationController extends \yii\web\Controller
         $evaluations = Yii::$app->request->post('StudentCourseEvaluation', []);
         $evaluationsModels = [];
         $instructorEvaluationEmail = InstructorEvaluationEmail::find()->where(['EvaluationCode' => $code])->active()->one();
+        if (!$instructorEvaluationEmail) {
+            return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'WRONG EVALUATION CODE']);
+        }
         $enrollments = (new Query())
             ->select('*')
             ->from(StudentCourseEnrollment::tableName())
@@ -51,15 +54,16 @@ class EvaluationController extends \yii\web\Controller
             ->andWhere(['instructor.InstructorId' => $instructorEvaluationEmail->InstructorId])
             ->select('*')
             ->all();
-        if (!$instructorEvaluationEmail) {
-            return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'WRONG EVALUATION CODE']);
-        }
+
         if ($instructorEvaluationEmail->DateFilled) {
             return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'EVALUATION ALREADY FILLED']);
         }
+
         if ($evaluations) {
             $transaction = Yii::$app->db->beginTransaction();
+
             try {
+
                 $hasError = false;
                 foreach ($evaluations as $evaluation) {
                     $studentCourseEvaluation = new StudentCourseEvaluation();
@@ -71,20 +75,23 @@ class EvaluationController extends \yii\web\Controller
                             if (!$studentCourseEvaluation->save()) $hasError = true;
                             if (!$hasError && $instructorEvaluationEmail->evaluationEmail->Quarter == 'Final') {
                                 $studentCourseEnrollment = StudentCourseEnrollment::findOne($evaluation['StudentCourseEnrollmentId']);
-                                $studentCourseEnrollment->FinalGrade = $studentCourseEvaluation->Grade;
-                                $studentCourseEnrollment->save();
+                                $studentCourseEnrollment->FinalGrade = (double)$studentCourseEvaluation->Grade;
+                                $studentCourseEnrollment->save(false);
                             }
+
                         }
                         $evaluationsModels[] = $studentCourseEvaluation;
                     }
                 }
                 if ($hasError) {
+
                     $transaction->rollBack();
                 } else {
                     $instructorEvaluationEmail->DateFilled = Tools::currentDate();
                     $instructorEvaluationEmail->save();
                     $transaction->commit();
                 }
+
             } catch (\Exception $e) {
                 $transaction->rollBack();
             }

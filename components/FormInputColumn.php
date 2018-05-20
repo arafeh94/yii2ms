@@ -9,8 +9,8 @@
 namespace app\components;
 
 
+use kartik\grid\DataColumn;
 use yii\bootstrap\ActiveForm;
-use yii\grid\DataColumn;
 
 class FormInputColumn extends DataColumn
 {

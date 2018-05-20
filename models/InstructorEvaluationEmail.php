@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Swift_Encoding;
 use Yii;
 
 /**
@@ -31,11 +32,13 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         if ($insert) {
-            Yii::$app->mailer->compose('evaluation/html', ['instructorEvaluationEmail' => $this, 'instructor' => $this->instructor])
+            $message = Yii::$app->mailer
+                ->compose('evaluation/html', ['instructorEvaluationEmail' => $this, 'instructor' => $this->instructor])
                 ->setFrom('lau@gmail.com')
                 ->setTo($this->instructor->Email)
-                ->setSubject('Evaluation Fill Request')
-                ->send();
+                ->setSubject('Evaluation Fill Request');
+            $message->getSwiftMessage()->setEncoder(Swift_Encoding::get8BitEncoding());
+            $message->send();
         }
         parent::afterSave($insert, $changedAttributes);
     }
@@ -94,7 +97,6 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
     {
         return $this->hasOne(EvaluationEmail::className(), ['EvaluationEmailId' => 'EvaluationEmailId']);
     }
-
 
 
     /**

@@ -6,6 +6,8 @@
  * Time: 6:20 PM
  */
 
+use app\components\FormInputColumn;
+use kartik\grid\DataColumn;
 use kartik\grid\EditableColumn;
 use yii\bootstrap\Alert;
 use yii\data\ArrayDataProvider;
@@ -48,10 +50,11 @@ use yii\data\ArrayDataProvider;
                 'groupEvenCssClass' => 'kv-grouped-row', // configure even group cell css class
             ],
             [
-                'class' => \kartik\grid\DataColumn::className(),
+                'class' => DataColumn::className(),
                 'attribute' => 'student',
                 'contentOptions' => ['class' => 'text-center'],
                 'headerOptions' => ['class' => 'text-center'],
+                'width' => '120px',
                 'value' => function ($model) use ($enrollments) {
                     foreach ($enrollments as $enrollment) {
                         if ($enrollment['StudentId'] == $model->StudentId) {
@@ -62,77 +65,84 @@ use yii\data\ArrayDataProvider;
                 }
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'StudentCourseEvaluationId',
                 'form' => $form,
-                'visible' => false,
-                'config' => ['type' => 'number', 'disabled' => 'disabled', 'readonly' => 'readonly'],
+                'hidden' => true,
+                'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'StudentCourseEnrollmentId',
                 'form' => $form,
-                'visible' => false,
-                'config' => ['type' => 'number', 'disabled' => 'disabled', 'readonly' => 'readonly'],
+                'hidden' => true,
+                'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'InstructorEvaluationEmailId',
                 'form' => $form,
-                'visible' => false,
-                'config' => ['type' => 'number', 'disabled' => 'disabled', 'readonly' => 'readonly'],
+                'hidden' => true,
+                'config' => ['type' => 'number',],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'StudentId',
                 'form' => $form,
-                'visible' => false,
-                'config' => ['type' => 'number', 'disabled' => 'disabled', 'readonly' => 'readonly'],
+                'hidden' => true,
+                'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'label' => '#Absence',
+                'class' => FormInputColumn::className(),
                 'attribute' => 'NumberOfAbsences',
                 'form' => $form,
+                'width' => '80px',
                 'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => DataColumn::className(),
                 'attribute' => 'Grade',
-                'form' => $form,
-                'config' => ['type' => 'number'],
+                'width' => '90px',
+                'format' => 'raw',
+                'value' => function ($model, $key, $index) use ($form) {
+                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['gpaSelector'], [
+                        'prompt' => ''
+                    ])->label(false);
+                }
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'HomeWork',
                 'form' => $form,
                 'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'Participation',
                 'form' => $form,
                 'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'Effort',
                 'form' => $form,
                 'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'Attitude',
                 'form' => $form,
                 'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'Evaluation',
                 'form' => $form,
                 'config' => ['type' => 'number'],
             ],
             [
-                'class' => \app\components\FormInputColumn::className(),
+                'class' => FormInputColumn::className(),
                 'attribute' => 'InstructorNotes',
                 'form' => $form,
             ],

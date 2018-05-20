@@ -22,9 +22,8 @@ class InstructorQuery extends \yii\db\ActiveQuery
 
     public function filter()
     {
-        return $this->select(['InstructorId', 'DateAdded', 'UniversityId', 'FirstName', 'LastName','Title','PhoneExtension','Email']);
+        return $this->select(['InstructorId', 'DateAdded', 'UniversityId', 'FirstName', 'LastName', 'Title', 'PhoneExtension', 'Email']);
     }
-
 
     /**
      * @inheritdoc

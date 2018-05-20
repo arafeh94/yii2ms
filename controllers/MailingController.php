@@ -15,8 +15,8 @@ class MailingController extends \yii\web\Controller
     public function actionIndex()
     {
         $provider = new MailingDataProvider();
-        $provider->search(\Yii::$app->request->get('MajorSearchModel', []));
-        return $this->render('index', ['provider' => $provider, 'semester' => Semester::find()->withSeason()->current()   ]);
+        $provider->search(\Yii::$app->request->get('MailingSearchModel', []));
+        return $this->render('index', ['provider' => $provider, 'semester' => Semester::find()->withSeason()->current()]);
     }
 
     public function actionView($id)
