@@ -42,7 +42,6 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
             [['IsDropped', 'IsDeleted'], 'boolean'],
             [['DateAdded'], 'safe'],
             [['FinalGrade'], 'double'],
-            [['StudentId'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['StudentId' => 'StudentId']],
             [['StudentSemesterEnrollmentId'], 'exist', 'skipOnError' => true, 'targetClass' => Studentsemesterenrollment::className(), 'targetAttribute' => ['StudentSemesterEnrollmentId' => 'StudentSemesterEnrollmentId']],
             [['OfferedCourseId'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['OfferedCourseId' => 'CourseId']],
         ];
@@ -93,7 +92,7 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return StudentcourseEnrollmentQuery the active query used by this AR class.
+     * @return StudentCourseEnrollmentQuery the active query used by this AR class.
      */
     public static function find()
     {

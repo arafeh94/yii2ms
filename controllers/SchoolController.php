@@ -4,10 +4,27 @@ namespace app\controllers;
 
 use app\models\providers\SchoolDataProvider;
 use app\models\School;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class SchoolController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new SchoolDataProvider();

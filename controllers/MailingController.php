@@ -8,10 +8,27 @@ use app\models\Instructor;
 use app\models\InstructorEvaluationEmail;
 use app\models\providers\MailingDataProvider;
 use app\models\Semester;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class MailingController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new MailingDataProvider();

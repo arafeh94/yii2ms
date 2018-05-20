@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\components\GridConfig;
 use Yii;
+use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -20,7 +21,7 @@ use yii\web\IdentityInterface;
  * @property int $CreatedByUserId
  * @property string $DateAdded
  */
-class User extends \yii\db\ActiveRecord implements IdentityInterface
+class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * @inheritdoc
@@ -45,6 +46,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['Username', 'Password', 'Email', 'FirstName', 'LastName'], 'string', 'max' => 255],
         ];
     }
+
 
     /**
      * @inheritdoc
@@ -135,5 +137,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return new UserQuery(get_called_class());
     }
+
 
 }

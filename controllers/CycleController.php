@@ -4,10 +4,27 @@ namespace app\controllers;
 
 use app\models\Cycle;
 use app\models\providers\CycleDataProvider;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class CycleController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new CycleDataProvider();

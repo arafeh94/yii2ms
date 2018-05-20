@@ -6,10 +6,27 @@ use app\models\Department;
 use app\models\Major;
 use app\models\providers\MajorDataProvider;
 use app\models\search\MajorSearchModel;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class MajorController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new MajorDataProvider();
