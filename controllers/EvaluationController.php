@@ -4,17 +4,24 @@ namespace app\controllers;
 
 use app\components\Tools;
 use app\models\Course;
+use app\models\Cycle;
+use app\models\Department;
+use app\models\EvaluationEmail;
 use app\models\Instructor;
 use app\models\InstructorEvaluationEmail;
 use app\models\Major;
 use app\models\OfferedCourse;
 use app\models\providers\CourseDataProvider;
+use app\models\providers\EvaluationReportDataProvider;
+use app\models\School;
+use app\models\Season;
 use app\models\Semester;
 use app\models\Student;
 use app\models\StudentCourseEnrollment;
 use app\models\StudentCourseEvaluation;
 use app\models\StudentSemesterEnrollment;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\helpers\Json;
 
@@ -22,7 +29,8 @@ class EvaluationController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        return $this->render('index', []);
+        $provider = new EvaluationReportDataProvider();
+        return $this->render('index', ['provider' => $provider]);
     }
 
     public function actionFill($code)

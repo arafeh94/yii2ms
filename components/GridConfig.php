@@ -17,5 +17,5 @@ interface GridConfig
 
     public function search($param);
 
-    public function searchModel();
+    public function searchModel($params = null);
 }

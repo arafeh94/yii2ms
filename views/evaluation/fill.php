@@ -136,16 +136,6 @@ use yii\data\ArrayDataProvider;
                 'attribute' => 'InstructorNotes',
                 'form' => $form,
             ],
-            [
-                'class' => \app\components\FormInputColumn::className(),
-                'attribute' => 'UserNote',
-                'form' => $form,
-            ],
-            [
-                'class' => \app\components\FormInputColumn::className(),
-                'attribute' => 'AdminNote',
-                'form' => $form,
-            ],
         ]
     ]);
     ?>
