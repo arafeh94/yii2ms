@@ -25,3 +25,6 @@ tests/_support/_generated
 
 # composer vendor dir
 /vendor
+
+# rbac assignments
+/rbac/assignments.php

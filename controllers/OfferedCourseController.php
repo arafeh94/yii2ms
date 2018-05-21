@@ -9,10 +9,27 @@ use app\models\OfferedCourse;
 use app\models\providers\OfferedCourseDataProvider;
 use app\models\search\OfferedCourseSearchModel;
 use app\models\Semester;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class OfferedCourseController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new OfferedCourseDataProvider();

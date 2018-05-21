@@ -4,10 +4,27 @@ namespace app\controllers;
 
 use app\models\providers\UserDataProvider;
 use app\models\User;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class UserController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new UserDataProvider();
@@ -47,6 +64,10 @@ class UserController extends \yii\web\Controller
             return $user->save();
         }
         return false;
+    }
+
+    public function a(){
+
     }
 
 }

@@ -6,10 +6,27 @@ use app\models\Cycle;
 use app\models\providers\StudentDataProvider;
 use app\models\search\StudentSearchModel;
 use app\models\Student;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class StudentController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new StudentDataProvider();

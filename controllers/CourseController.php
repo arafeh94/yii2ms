@@ -5,10 +5,27 @@ namespace app\controllers;
 use app\models\Course;
 use app\models\Major;
 use app\models\providers\CourseDataProvider;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class CourseController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new CourseDataProvider();

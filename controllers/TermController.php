@@ -6,10 +6,27 @@ use app\models\providers\SemesterDataProvider;
 use app\models\search\SemesterSearchModel;
 use app\models\Season;
 use app\models\Semester;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class TermController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new SemesterDataProvider();

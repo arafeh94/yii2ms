@@ -21,6 +21,9 @@ $config = [
         ],
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'app\components\RbacManager',
+        ],
         'request' => [
             'cookieValidationKey' => 'lFD4KQIfAuKi5bDQowx5167DpPQDh1M0',
         ],

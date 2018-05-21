@@ -23,10 +23,28 @@ use app\models\StudentSemesterEnrollment;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
+use yii\web\Controller;
 
-class EvaluationController extends \yii\web\Controller
+class EvaluationController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new EvaluationReportDataProvider();
@@ -63,7 +81,6 @@ class EvaluationController extends \yii\web\Controller
             $transaction = Yii::$app->db->beginTransaction();
 
             try {
-
                 $hasError = false;
                 foreach ($evaluations as $evaluation) {
                     $studentCourseEvaluation = new StudentCourseEvaluation();

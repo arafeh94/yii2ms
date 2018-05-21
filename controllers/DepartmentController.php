@@ -6,10 +6,27 @@ use app\models\Department;
 use app\models\providers\DepartmentDataProvider;
 use app\models\School;
 use app\models\search\DepartmentSearchModel;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 
 class DepartmentController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $provider = new DepartmentDataProvider();
