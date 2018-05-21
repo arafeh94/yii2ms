@@ -8,7 +8,6 @@ use Yii;
  * This is the model class for table "studentcourseenrollment".
  *
  * @property int $StudentCourseEnrollmentId
- * @property int $StudentId
  * @property int $StudentSemesterEnrollmentId
  * @property int $OfferedCourseId
  * @property string $FinalGrade
@@ -23,6 +22,8 @@ use Yii;
  */
 class StudentCourseEnrollment extends \yii\db\ActiveRecord
 {
+
+
     /**
      * @inheritdoc
      */
@@ -37,12 +38,11 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['StudentId', 'StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId'], 'required'],
-            [['StudentId', 'StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId'], 'integer'],
+            [['StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId'], 'required'],
+            [['StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId'], 'integer'],
             [['IsDropped', 'IsDeleted'], 'boolean'],
             [['DateAdded'], 'safe'],
             [['FinalGrade'], 'double'],
-            [['StudentId'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['StudentId' => 'StudentId']],
             [['StudentSemesterEnrollmentId'], 'exist', 'skipOnError' => true, 'targetClass' => Studentsemesterenrollment::className(), 'targetAttribute' => ['StudentSemesterEnrollmentId' => 'StudentSemesterEnrollmentId']],
             [['OfferedCourseId'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['OfferedCourseId' => 'CourseId']],
         ];
@@ -55,7 +55,6 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
     {
         return [
             'StudentCourseEnrollmentId' => Yii::t('app', 'Student Course Enrollment ID'),
-            'StudentId' => Yii::t('app', 'Student ID'),
             'StudentSemesterEnrollmentId' => Yii::t('app', 'Student Semester Enrollment ID'),
             'OfferedCourseId' => Yii::t('app', 'Offered Course ID'),
             'FinalGrade' => Yii::t('app', 'Final Grade'),

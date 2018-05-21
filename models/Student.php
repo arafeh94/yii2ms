@@ -262,6 +262,15 @@ class Student extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+
+    public function getStudentSemesterEnrollmentForCurrentSemester()
+    {
+        return $this->hasOne(StudentSemesterEnrollment::className(), ['StudentId' => 'StudentId'])->where(['SemesterId' => Semester::find()->current()->SemesterId]);
+    }
+
+    /**
      * @inheritdoc
      * @return StudentQuery the active query used by this AR class.
      */
