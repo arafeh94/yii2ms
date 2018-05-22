@@ -17,6 +17,10 @@ use yii\data\ArrayDataProvider;
 /** @var $enrollments [] */
 ?>
 
+<h3>Hello
+    <?= $instructorEvaluationEmail->instructor->Title . '. ' . $instructorEvaluationEmail->instructor->FirstName . ' ' . $instructorEvaluationEmail->instructor->LastName ?>
+</h3>
+
 <?php if ($instructorEvaluationEmail->DateFilled): ?>
     <?= Alert::widget([
         'options' => [

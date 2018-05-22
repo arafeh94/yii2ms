@@ -31,27 +31,27 @@ SELECT
      INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
      INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
      INNER JOIN course sc ON sof.CourseId = sc.CourseId
-   WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId) AS `creditTaken`,
+   WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId and sse.IsDeleted = 0 and sce.IsDeleted = 0 and sce.IsDropped = 0) AS `creditTaken`,
   (SELECT sum(Credits)
    FROM studentcourseenrollment sce
      INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
      INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
      INNER JOIN course sc ON sof.CourseId = sc.CourseId
    WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId AND
-         sc.MajorId = student.CurrentMajor)                                          AS `majorCredit`,
+         sc.MajorId = student.CurrentMajor and  sse.IsDeleted = 0 and sce.IsDeleted = 0 and sce.IsDropped = 0)                                          AS `majorCredit`,
   (SELECT sum(FinalGrade * Credits) / sum(Credits)
    FROM studentcourseenrollment sce
      INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
      INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
      INNER JOIN course sc ON sof.CourseId = sc.CourseId
-   WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId) AS `GPA`,
+   WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId and sce.FinalGrade IS NOT NULL and sse.IsDeleted = 0 and sce.IsDeleted = 0 and sce.IsDropped = 0) AS `GPA`,
   (SELECT sum(FinalGrade * Credits) / sum(Credits)
    FROM studentcourseenrollment sce
      INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
      INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
      INNER JOIN course sc ON sof.CourseId = sc.CourseId
    WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId AND
-         sc.MajorId = student.CurrentMajor)                                          AS `mGPA`
+         sc.MajorId = student.CurrentMajor and sce.FinalGrade IS NOT NULL and sse.IsDeleted = 0 and sce.IsDeleted = 0 and sce.IsDropped = 0)                                          AS `mGPA`
 FROM `studentcourseevaluation`
   INNER JOIN `student` ON student.StudentId = studentcourseevaluation.StudentId
   INNER JOIN `studentsemesterenrollment` ON student.StudentId = studentsemesterenrollment.StudentId

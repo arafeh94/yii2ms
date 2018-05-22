@@ -62,9 +62,9 @@ class StudentCourseEvaluation extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'StudentCourseEvaluationId' => Yii::t('app', 'Student Course Evaluation ID'),
-            'StudentCourseEnrollmentId' => Yii::t('app', 'Student Course Enrollment ID'),
-            'InstructorEvaluationEmailId' => Yii::t('app', 'Instructor Evaluation Email ID'),
+            'StudentCourseEvaluationId' => Yii::t('app', 'Student Course Evaluation'),
+            'StudentCourseEnrollmentId' => Yii::t('app', 'Student Course Enrollment'),
+            'InstructorEvaluationEmailId' => Yii::t('app', 'Instructor Evaluation Email'),
             'StudentId' => Yii::t('app', 'Student ID'),
             'NumberOfAbsences' => Yii::t('app', 'Number Of Absences'),
             'Grade' => Yii::t('app', 'Grade'),

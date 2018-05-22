@@ -53,7 +53,7 @@ class Semester extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'SemesterId' => Yii::t('app', 'Semester ID'),
+            'SemesterId' => Yii::t('app', 'Semester'),
             'Year' => Yii::t('app', 'Year'),
             'SeasonId' => Yii::t('app', 'Season'),
             'StartDate' => Yii::t('app', 'Start Date'),

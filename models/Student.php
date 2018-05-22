@@ -118,7 +118,7 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CycleId', 'UniversityId', 'FirstName', 'FatherName', 'LastName', 'CreatedByUserId'], 'required'],
+            [['CycleId', 'UniversityId', 'FirstName', 'FatherName', 'LastName', 'CreatedByUserId', 'CurrentMajor'], 'required'],
             [['CycleId', 'DOBMonth', 'DOBYear', 'CurrentMajor', 'Certificate', 'CreatedByUserId'], 'integer'],
             [['TwelveGrade', 'TenGrade', 'ElevenGrade', 'EnglishExamScore'], 'number'],
             [['IsDataEntryComplete', 'IsInitialVettingDone', 'VettingUpdated', 'AntiTerrorismCertification', 'StudentMOUSigned', 'HasLaptop', 'IsGraduated', 'TookAcademicCourseLeadership', 'IsUpdatingIDP', 'IsDeleted'], 'boolean'],
@@ -204,7 +204,7 @@ class Student extends \yii\db\ActiveRecord
             'LeadershipTraining' => Yii::t('app', 'Leadership Training'),
             'CivicEngagement' => Yii::t('app', 'Civic Engagement'),
             'CommunityService' => Yii::t('app', 'Community Service'),
-            'USPCompetition' => Yii::t('app', 'Uspcompetition'),
+            'USPCompetition' => Yii::t('app', 'Usp Competition'),
             'StudentClub' => Yii::t('app', 'Student Club'),
             'NameOfClub' => Yii::t('app', 'Name Of Club'),
             'TookAcademicCourseLeadership' => Yii::t('app', 'Took Academic Course Leadership'),

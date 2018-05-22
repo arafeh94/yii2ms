@@ -58,6 +58,9 @@ class EvaluationController extends Controller
         if (!$instructorEvaluationEmail) {
             return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'WRONG EVALUATION CODE']);
         }
+        if (!$instructorEvaluationEmail->evaluationEmail->AvailableForInstructors) {
+            return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'EVALUATION FORM NOT AVAILABLE']);
+        }
         $enrollments = (new Query())
             ->select('*')
             ->from(StudentCourseEnrollment::tableName())
@@ -69,6 +72,11 @@ class EvaluationController extends Controller
             ->orderBy('offeredcourse.CourseId')
             ->where(['studentsemesterenrollment.SemesterId' => Semester::find()->current()->SemesterId])
             ->andWhere(['instructor.InstructorId' => $instructorEvaluationEmail->InstructorId])
+            ->andWhere(['instructor.IsDeleted' => 0])
+            ->andWhere(['offeredcourse.IsDeleted' => 0])
+            ->andWhere(['studentsemesterenrollment.IsDeleted' => 0])
+            ->andWhere(['studentcourseenrollment.IsDeleted' => 0])
+            ->andWhere(['studentcourseenrollment.IsDropped' => 0])
             ->select('*')
             ->all();
 
@@ -94,7 +102,6 @@ class EvaluationController extends Controller
                                 $studentCourseEnrollment->FinalGrade = (double)$studentCourseEvaluation->Grade;
                                 $studentCourseEnrollment->save(false);
                             }
-
                         }
                         $evaluationsModels[] = $studentCourseEvaluation;
                     }

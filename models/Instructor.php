@@ -54,7 +54,7 @@ class Instructor extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'InstructorId' => Yii::t('app', 'Instructor ID'),
+            'InstructorId' => Yii::t('app', 'Instructor'),
             'UniversityId' => Yii::t('app', 'University ID'),
             'FirstName' => Yii::t('app', 'First Name'),
             'LastName' => Yii::t('app', 'Last Name'),

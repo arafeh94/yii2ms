@@ -40,7 +40,7 @@ class Season extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'SeasonId' => Yii::t('app', 'Season ID'),
+            'SeasonId' => Yii::t('app', 'Season'),
             'Name' => Yii::t('app', 'Name'),
             'IsDeleted' => Yii::t('app', 'Is Deleted'),
         ];

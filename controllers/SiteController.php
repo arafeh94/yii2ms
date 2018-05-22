@@ -89,7 +89,7 @@ class SiteController extends AppController
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
                 $model->login();
-                return $this->redirect(['site/index'], 200);
+                return $this->goHome();
             }
         }
         return $this->render('login', ['model' => $model]);

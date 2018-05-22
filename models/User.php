@@ -71,7 +71,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return self::findOne(['UserId' => $id]);
+        return self::findOne(['UserId' => $id, 'IsDeleted' => 0]);
     }
 
     /**
@@ -90,7 +90,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return User::findOne(['Username' => $username]);
+        return User::findOne(['Username' => $username, 'IsDeleted' => 0]);
     }
 
     /**

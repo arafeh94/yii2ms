@@ -54,8 +54,8 @@ class EvaluationEmail extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'EvaluationEmailId' => Yii::t('app', 'Evaluation Email ID'),
-            'SemesterId' => Yii::t('app', 'Semester ID'),
+            'EvaluationEmailId' => Yii::t('app', 'Evaluation Email'),
+            'SemesterId' => Yii::t('app', 'Semester'),
             'Date' => Yii::t('app', 'Date'),
             'Quarter' => Yii::t('app', 'Quarter'),
             'IsEnabled' => Yii::t('app', 'Is Enabled'),

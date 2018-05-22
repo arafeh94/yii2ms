@@ -49,8 +49,8 @@ class StudentPlanRow extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'StudentPlanRowId' => Yii::t('app', 'Student Plan Row ID'),
-            'StudentPlanId' => Yii::t('app', 'Student Plan ID'),
+            'StudentPlanRowId' => Yii::t('app', 'Student Plan Row'),
+            'StudentPlanId' => Yii::t('app', 'Student Plan'),
             'CourseLetter' => Yii::t('app', 'Course Letter'),
             'Year' => Yii::t('app', 'Year'),
             'Season' => Yii::t('app', 'Season'),

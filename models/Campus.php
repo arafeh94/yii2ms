@@ -41,7 +41,7 @@ class Campus extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'CampusId' => Yii::t('app', 'Campus ID'),
+            'CampusId' => Yii::t('app', 'Campus'),
             'Name' => Yii::t('app', 'Name'),
             'IsDeleted' => Yii::t('app', 'Is Deleted'),
         ];

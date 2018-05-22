@@ -46,7 +46,7 @@ class School extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'SchoolId' => Yii::t('app', 'School ID'),
+            'SchoolId' => Yii::t('app', 'School'),
             'Name' => Yii::t('app', 'Name'),
             'CreatedByUserId' => Yii::t('app', 'Created By User ID'),
             'DateAdded' => Yii::t('app', 'Date Added'),

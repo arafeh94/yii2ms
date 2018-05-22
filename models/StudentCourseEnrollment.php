@@ -54,9 +54,9 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'StudentCourseEnrollmentId' => Yii::t('app', 'Student Course Enrollment ID'),
-            'StudentSemesterEnrollmentId' => Yii::t('app', 'Student Semester Enrollment ID'),
-            'OfferedCourseId' => Yii::t('app', 'Offered Course ID'),
+            'StudentCourseEnrollmentId' => Yii::t('app', 'Student Course Enrollment'),
+            'StudentSemesterEnrollmentId' => Yii::t('app', 'Student Semester Enrollment'),
+            'OfferedCourseId' => Yii::t('app', 'Offered Course'),
             'FinalGrade' => Yii::t('app', 'Final Grade'),
             'IsDropped' => Yii::t('app', 'Is Dropped'),
             'IsDeleted' => Yii::t('app', 'Is Deleted'),

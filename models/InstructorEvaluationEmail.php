@@ -65,8 +65,8 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
     {
         return [
             'InstructorEvaluationEmailId' => Yii::t('app', 'Instructor Evaluation Email ID'),
-            'EvaluationEmailId' => Yii::t('app', 'Evaluation Email ID'),
-            'InstructorId' => Yii::t('app', 'Instructor ID'),
+            'EvaluationEmailId' => Yii::t('app', 'Evaluation Email'),
+            'InstructorId' => Yii::t('app', 'Instructor'),
             'EvaluationCode' => Yii::t('app', 'Evaluation Code'),
             'DateFilled' => Yii::t('app', 'Date Filled'),
             'IsDeleted' => Yii::t('app', 'Is Deleted'),

@@ -53,7 +53,7 @@ class Major extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'MajorId' => Yii::t('app', 'Major ID'),
+            'MajorId' => Yii::t('app', 'Major'),
             'DepartmentId' => Yii::t('app', 'Department'),
             'Name' => Yii::t('app', 'Name'),
             'Abbreviation' => Yii::t('app', 'Abbreviation'),
