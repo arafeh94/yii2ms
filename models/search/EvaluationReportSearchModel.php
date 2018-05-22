@@ -13,6 +13,17 @@ use yii\base\Model;
 
 class EvaluationReportSearchModel extends Model
 {
+    public $StudentName;
+    public $CampusName;
+    public $MajorName;
+    public $CourseName;
+    public $InstructorName;
+    public $Grade;
+    public $GPA;
+    public $creditTaken;
+    public $mGPA;
+    public $majorCredit;
+    public $Comment;
 
     public function rules()
     {

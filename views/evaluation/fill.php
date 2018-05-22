@@ -105,16 +105,24 @@ use yii\data\ArrayDataProvider;
                 'config' => ['type' => 'number'],
             ],
             [
-                'class' => DataColumn::className(),
+                'label' => 'Grade',
+                'class' => FormInputColumn::className(),
                 'attribute' => 'Grade',
-                'width' => '90px',
-                'format' => 'raw',
-                'value' => function ($model, $key, $index) use ($form) {
-                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['gpaSelector'], [
-                        'prompt' => ''
-                    ])->label(false);
-                }
+                'form' => $form,
+                'width' => '80px',
+                'config' => ['type' => 'number'],
             ],
+//            [
+//                'class' => DataColumn::className(),
+//                'attribute' => 'Grade',
+//                'width' => '90px',
+//                'format' => 'raw',
+//                'value' => function ($model, $key, $index) use ($form) {
+//                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['gpaSelector'], [
+//                        'prompt' => ''
+//                    ])->label(false);
+//                }
+//            ],
             [
                 'class' => FormInputColumn::className(),
                 'attribute' => 'HomeWork',
@@ -125,19 +133,19 @@ use yii\data\ArrayDataProvider;
                 'class' => FormInputColumn::className(),
                 'attribute' => 'Participation',
                 'form' => $form,
-                'config' => ['type' => 'number'],
+                'config' => ['type' => 'text'],
             ],
             [
                 'class' => FormInputColumn::className(),
                 'attribute' => 'Effort',
                 'form' => $form,
-                'config' => ['type' => 'number'],
+                'config' => ['type' => 'text'],
             ],
             [
                 'class' => FormInputColumn::className(),
                 'attribute' => 'Attitude',
                 'form' => $form,
-                'config' => ['type' => 'number'],
+                'config' => ['type' => 'text'],
             ],
             [
                 'class' => FormInputColumn::className(),

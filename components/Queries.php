@@ -78,7 +78,6 @@ WHERE `course`.`IsDeleted` = 0
       AND course.IsDeleted = 0
       AND semester.SemesterId = {$semesterId}
 SQL;
-
     }
 
 }
