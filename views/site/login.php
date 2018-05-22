@@ -15,7 +15,6 @@ $this->title = 'Login';
     'action' => ['site/login'],
     'method' => 'post',
     'id' => 'login',
-    'enableAjaxValidation' => true,
 ]); ?>
 
 <?= $form->field($model, 'username')->textInput() ?>

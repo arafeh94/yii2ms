@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Instructor;
+use app\models\OfferedCourse;
 use app\models\providers\InstructorDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
@@ -16,7 +17,6 @@ class InstructorController extends \yii\web\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -57,6 +57,9 @@ class InstructorController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
+        if (OfferedCourse::find()->where(['InstructorId' => $id])->count()) {
+            return false;
+        }
         if (\Yii::$app->request->isAjax) {
             $model = Instructor::findOne($id);
             $model->IsDeleted = 1;

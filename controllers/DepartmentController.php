@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Department;
+use app\models\Major;
 use app\models\providers\DepartmentDataProvider;
 use app\models\School;
 use app\models\search\DepartmentSearchModel;
@@ -18,7 +19,6 @@ class DepartmentController extends \yii\web\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -59,6 +59,9 @@ class DepartmentController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
+        if (Major::find()->where(['DepartmentId' => $id])->count()) {
+            return false;
+        }
         if (\Yii::$app->request->isAjax) {
             $model = Department::findOne($id);
             $model->IsDeleted = 1;

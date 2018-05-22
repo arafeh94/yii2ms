@@ -2,10 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Course;
 use app\models\Department;
 use app\models\Major;
 use app\models\providers\MajorDataProvider;
 use app\models\search\MajorSearchModel;
+use app\models\Student;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -18,7 +20,6 @@ class MajorController extends \yii\web\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -59,6 +60,12 @@ class MajorController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
+        if (Course::find()->where(['MajorId' => $id])->count()) {
+            return false;
+        }
+        if (Student::find()->where(['CurrentMajor' => $id])->count()) {
+            return false;
+        }
         if (\Yii::$app->request->isAjax) {
             $model = Major::findOne($id);
             $model->IsDeleted = 1;

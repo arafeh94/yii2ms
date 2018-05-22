@@ -92,7 +92,6 @@ class SiteController extends AppController
                 return $this->redirect(['site/index'], 200);
             }
         }
-
         return $this->render('login', ['model' => $model]);
     }
 

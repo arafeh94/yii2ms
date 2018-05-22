@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Department;
 use app\models\providers\SchoolDataProvider;
 use app\models\School;
 use yii\filters\AccessControl;
@@ -16,7 +17,6 @@ class SchoolController extends \yii\web\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -57,6 +57,9 @@ class SchoolController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
+        if (Department::find()->where(['SchoolId' => $id])->count()) {
+            return false;
+        }
         if (\Yii::$app->request->isAjax) {
             $model = School::findOne($id);
             $model->IsDeleted = 1;

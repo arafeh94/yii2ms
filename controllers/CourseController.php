@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use app\models\Course;
 use app\models\Major;
+use app\models\OfferedCourse;
 use app\models\providers\CourseDataProvider;
+use app\models\Student;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -17,7 +19,6 @@ class CourseController extends \yii\web\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -58,6 +59,9 @@ class CourseController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
+        if (OfferedCourse::find()->where(['CourseId' => $id])->count()) {
+            return false;
+        }
         if (\Yii::$app->request->isAjax) {
             $model = Course::findOne($id);
             $model->IsDeleted = 1;

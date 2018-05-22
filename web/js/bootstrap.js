@@ -19,7 +19,7 @@ function reloadTable() {
 function clearForm(form) {
     var elements = form.elements;
     form.reset();
-    for (i = 0; i < elements.length; i++) {
+    for (var i = 0; i < elements.length; i++) {
         var field_type = elements[i].type.toLowerCase();
         switch (field_type) {
             case "text":
@@ -40,4 +40,11 @@ function clearForm(form) {
                 break;
         }
     }
+
+    $('.help-block-error').text('');
+    $('.form-group').removeClass('has-error');
 }
+
+window.addEventListener('load',function (ev) {
+    window.toastr.options.positionClass = "toast-bottom-right";
+});

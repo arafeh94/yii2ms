@@ -6,6 +6,7 @@ use app\models\providers\SemesterDataProvider;
 use app\models\search\SemesterSearchModel;
 use app\models\Season;
 use app\models\Semester;
+use app\models\StudentSemesterEnrollment;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -18,7 +19,6 @@ class TermController extends \yii\web\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -59,6 +59,9 @@ class TermController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
+        if (StudentSemesterEnrollment::find()->where(['SemesterId' => $id])->count()) {
+            return false;
+        }
         if (\Yii::$app->request->isAjax) {
             $model = Semester::findOne($id);
             $model->IsDeleted = 1;

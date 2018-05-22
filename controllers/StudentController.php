@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Cycle;
+use app\models\Major;
 use app\models\providers\StudentDataProvider;
 use app\models\search\StudentSearchModel;
 use app\models\Student;
@@ -18,7 +19,6 @@ class StudentController extends \yii\web\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -52,7 +52,11 @@ class StudentController extends \yii\web\Controller
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
             }
-            return $this->renderPartial('_form', ['model' => $model, 'cycles' => Cycle::find()->active()->all(), 'saved' => $saved]);
+            return $this->renderPartial('_form', ['model' => $model,
+                'cycles' => Cycle::find()->active()->all(),
+                'majors' => Major::find()->active()->all(),
+                'saved' => $saved
+            ]);
         }
         return false;
     }

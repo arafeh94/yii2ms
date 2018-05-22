@@ -9,8 +9,10 @@
 /** @var $model Student */
 
 /** @var $cycles Cycle[] */
+/** @var $majors Major[] */
 
 use app\models\Cycle;
+use app\models\Major;
 use app\models\Student;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
@@ -46,6 +48,7 @@ if (!isset($model)) $model = new Student();
     <div id="personal-info" class="tab-pane fade in active">
         <?= $form->field($model, 'CycleId')->dropDownList(ArrayHelper::map($cycles, 'CycleId', 'Name'), ['prompt' => '']); ?>
         <?= $form->field($model, 'UniversityId')->textInput(); ?>
+        <?= $form->field($model, 'CurrentMajor')->dropDownList(ArrayHelper::map($majors, 'MajorId', 'Name')); ?>
         <?= $form->field($model, 'FirstName')->textInput(); ?>
         <?= $form->field($model, 'FatherName')->textInput(); ?>
         <?= $form->field($model, 'LastName')->textInput(); ?>
@@ -69,7 +72,6 @@ if (!isset($model)) $model = new Student();
         <?= $form->field($model, 'LaptopSerialNumber')->textInput(); ?>
         <?= $form->field($model, 'ExpectedGraduation')->textInput(); ?>
         <?= $form->field($model, 'AdmissionMajor')->textInput(); ?>
-        <?= $form->field($model, 'CurrentMajor')->textInput(); ?>
         <?= $form->field($model, 'AdmissionSemester')->textInput(); ?>
         <?= $form->field($model, 'AcademicCoordinator')->textInput(); ?>
         <?= $form->field($model, 'StudentMentor')->textInput(); ?>

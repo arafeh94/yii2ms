@@ -41,6 +41,7 @@ class Major extends \yii\db\ActiveRecord
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],
             [['Name'], 'string', 'max' => 255],
+            [['Name'], 'unique', 'targetAttribute' => ['Name'], 'filter' => ['IsDeleted' => 0]],
             [['Abbreviation'], 'string', 'max' => 3],
             [['DepartmentId'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['DepartmentId' => 'DepartmentId']],
         ];

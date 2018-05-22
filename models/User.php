@@ -42,11 +42,10 @@ class User extends ActiveRecord implements IdentityInterface
             [['Type', 'CreatedByUserId'], 'integer'],
             [['IsDeleted'], 'boolean'],
             [['DateAdded'], 'safe'],
-            [['Username'], 'unique', 'targetAttribute' => ['Username']],
+            [['Username'], 'unique', 'targetAttribute' => ['Username'], 'filter' => ['IsDeleted' => 0]],
             [['Username', 'Password', 'Email', 'FirstName', 'LastName'], 'string', 'max' => 255],
         ];
     }
-
 
     /**
      * @inheritdoc

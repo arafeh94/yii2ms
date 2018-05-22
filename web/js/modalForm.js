@@ -66,7 +66,13 @@
             url: url,
             dataType: 'json',
             success: function (data) {
-                gridControl.reload(true);
+                if (data) {
+                    gridControl.reload(true);
+                } else {
+                    toastr.error("This item can't be deleted");
+                }
+            }, error: function (data) {
+                toastr.error("This item can't be deleted");
             }
         });
     }

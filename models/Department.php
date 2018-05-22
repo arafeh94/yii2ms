@@ -38,6 +38,7 @@ class Department extends \yii\db\ActiveRecord
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],
             [['Name'], 'string', 'max' => 255],
+            [['Name'], 'unique', 'targetAttribute' => ['Name'], 'filter' => ['IsDeleted' => 0]],
             [['SchoolId'], 'exist', 'skipOnError' => true, 'targetClass' => School::className(), 'targetAttribute' => ['SchoolId' => 'SchoolId']],
         ];
     }

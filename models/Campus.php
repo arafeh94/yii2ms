@@ -31,6 +31,7 @@ class Campus extends ActiveRecord
             [['Name'], 'required'],
             [['IsDeleted'], 'boolean'],
             [['Name'], 'string', 'max' => 255],
+            [['Name'], 'unique', 'targetAttribute' => ['Name'], 'filter' => ['IsDeleted' => 0]],
         ];
     }
 

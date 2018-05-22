@@ -1,8 +1,10 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
+use app\assets\ToastrAsset;
 use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -12,6 +14,7 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+ToastrAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -72,8 +75,9 @@ $navigation = [
                 <?php if (!Yii::$app->user->isGuest): ?>
                     <?php foreach ($navigation as $n) : ?>
                         <?php if ($n['type'] >= Yii::$app->user->identity->Type): ?>
-                            <?php $o = $this->context->route == $n['url'][0] ? 'activeLink': ''; $li1="<li class='$o'>";?>
-                                <?= Html::a($li1.$n['label'].'</li>', Url::to($n['url'])) ?>
+                            <?php $o = $this->context->route == $n['url'][0] ? 'activeLink' : '';
+                            $li1 = "<li class='$o'>"; ?>
+                            <?= Html::a($li1 . $n['label'] . '</li>', Url::to($n['url'])) ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -81,8 +85,6 @@ $navigation = [
                 <?php if (Yii::$app->user->isGuest): ?>
                     <li><?php echo Html::a(Html::img('@web/images/header/login.svg', ['class' => 'img', 'alt' => 'Login']) . ' Login', Url::to(['/site/login'])) ?></li>
                 <?php endif; ?>
-
-
 
 
             </ul>
