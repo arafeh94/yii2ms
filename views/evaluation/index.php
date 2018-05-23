@@ -8,12 +8,6 @@ use yii\helpers\Html;
 
 ?>
 
-<?= \app\components\ModalForm::widget([
-    'formPath' => '@app/views/evaluation/validate',
-    'title' => 'Validate',
-    'size' => Modal::SIZE_LARGE
-]) ?>
-
 <?= GridView::widget([
     'id' => 'gridview',
     'dataProvider' => $provider,
@@ -27,7 +21,6 @@ use yii\helpers\Html;
     ],
     'toolbar' => [
         ['content' =>
-            Html::button('<i class="glyphicon glyphicon-eye-open"></i>', ['type' => 'button', 'title' => Yii::t('app', "Validate"), 'class' => 'btn btn-success', 'onclick' => 'modalForm(this)']) . ' ' .
             Html::button('<i class="glyphicon glyphicon-repeat"></i>', ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('app', 'Reset Grid'), 'onclick' => 'gridControl.reload(true)'])
         ],
         '{export}',

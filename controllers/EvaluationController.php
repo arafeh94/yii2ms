@@ -13,6 +13,8 @@ use app\models\Major;
 use app\models\OfferedCourse;
 use app\models\providers\CourseDataProvider;
 use app\models\providers\EvaluationReportDataProvider;
+use app\models\providers\EvaluationValidateDataProvider;
+use app\models\providers\MailingDataProvider;
 use app\models\School;
 use app\models\Season;
 use app\models\Semester;
@@ -49,6 +51,80 @@ class EvaluationController extends Controller
         $provider = new EvaluationReportDataProvider();
         $provider->search(\Yii::$app->request->get('EvaluationReportSearchModel', []));
         return $this->render('index', ['provider' => $provider]);
+    }
+
+    public function actionMailing()
+    {
+        $provider = new MailingDataProvider();
+        $provider->search(\Yii::$app->request->get('MailingSearchModel', []));
+        return $this->render('mailing', ['provider' => $provider, 'semester' => Semester::find()->withSeason()->current()]);
+    }
+
+    public function actionView($id)
+    {
+        if (\Yii::$app->request->isAjax) {
+            return Json::encode(EvaluationEmail::find()->active()->filter()->id($id)->one());
+        }
+        return false;
+    }
+
+    public function actionUpdate()
+    {
+        if (\Yii::$app->request->isAjax) {
+
+            $id = \Yii::$app->request->post('EvaluationEmail')['EvaluationEmailId'];
+            $model = $id === "" ? new EvaluationEmail() : EvaluationEmail::find()->active()->id($id)->one();
+            $isNewRecord = $model->isNewRecord;
+            if ($isNewRecord) {
+                $model->Date = Tools::currentDate();
+                $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
+                $model->SemesterId = Semester::find()->current()->SemesterId;
+            }
+            $saved = null;
+
+            if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+                $saved = $model->save();
+                if ($saved && $isNewRecord) $this->sendInstructorEmails($model);
+            }
+            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved, 'semester' => Semester::find()->withSeason()->current()]);
+        }
+        return false;
+    }
+
+    public function actionDelete($id)
+    {
+        if (\Yii::$app->request->isAjax) {
+            $model = EvaluationEmail::findOne($id);
+            $model->IsDeleted = 1;
+            return $model->save();
+        }
+        return false;
+    }
+
+    public function actionSend($id)
+    {
+        $eval = InstructorEvaluationEmail::find()->active()->where(['InstructorEvaluationEmailId' => $id])->with('instructor')->one();
+        $message = Yii::$app->mailer
+            ->compose('evaluation/html', ['instructorEvaluationEmail' => $eval, 'instructor' => $eval->instructor])
+            ->setFrom('lau@gmail.com')
+            ->setTo($eval->instructor->Email)
+            ->setSubject('Evaluation Fill Request');
+        return $message->send();
+    }
+
+    /**
+     * @param EvaluationEmail $evaluationEmail
+     */
+    public function sendInstructorEmails($evaluationEmail)
+    {
+        $instructors = Instructor::find()->active()->all();
+        foreach ($instructors as $instructor) {
+            $instEvalEmail = new InstructorEvaluationEmail();
+            $instEvalEmail->EvaluationEmailId = $evaluationEmail->EvaluationEmailId;
+            $instEvalEmail->InstructorId = $instructor->InstructorId;
+            $instEvalEmail->EvaluationCode = Tools::random();
+            $instEvalEmail->save();
+        }
     }
 
     public function actionFill($code)
@@ -134,6 +210,11 @@ class EvaluationController extends Controller
             'enrollments' => $enrollments,
             'evaluations' => $evaluationsModels
         ]);
+    }
+
+    public function actionValidate($evaluationId)
+    {
+        return $this->renderPartial('validate', ['provider' => new EvaluationValidateDataProvider(['evaluationEmailId' => $evaluationId])]);
     }
 
 }

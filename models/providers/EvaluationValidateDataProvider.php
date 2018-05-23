@@ -26,11 +26,12 @@ use yii\helpers\Url;
 class EvaluationValidateDataProvider extends ActiveDataProvider implements GridConfig
 {
     public $searchModel;
+    public $evaluationEmailId;
 
     public function init()
     {
         parent::init();
-        $this->query = InstructorEvaluationEmail::find()->active()->innerJoinWith('instructor');
+        $this->query = InstructorEvaluationEmail::find()->active()->innerJoinWith('instructor')->where(['EvaluationEmailId' => $this->evaluationEmailId]);
     }
 
     /**
@@ -62,7 +63,7 @@ class EvaluationValidateDataProvider extends ActiveDataProvider implements GridC
                         ]);
                     },
                     'send' => function ($key, $model, $index) {
-                        $url = Url::to(['mailing/send', 'id' => $model->InstructorEvaluationEmailId]);
+                        $url = Url::to(['evaluation/send', 'id' => $model->InstructorEvaluationEmailId]);
                         $ajax = "(function(){ $.ajax({type: 'POST', url: '$url', dataType: 'json', success: function (data) {data ? toastr.info('sent') : toastr.error('error');}});})()";
                         return Html::button('send', [
                             'encode' => false,

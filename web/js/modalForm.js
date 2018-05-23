@@ -3,10 +3,6 @@
         $('#form-state-alert').remove();
         $('#dialog-form').modal('show');
         var form = document.getElementById('model-form');
-        if (!form) {
-            end();
-            return;
-        }
         clearForm(form);
         if (!url) {
             onAdd();
@@ -82,6 +78,11 @@
         });
     }
 };
+
+(window).modalContainer = function () {
+
+};
+
 (window).modalControl = {
     close: function () {
 

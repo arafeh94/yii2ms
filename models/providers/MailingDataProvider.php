@@ -71,20 +71,27 @@ class MailingDataProvider extends ActiveDataProvider implements GridConfig
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
+                'template' => '{validate} {update} {delete}',
                 'buttons' => [
                     'update' => function ($key, $model, $index) {
-                        $url = Url::to(['mailing/view', 'id' => $model->getPrimaryKey()]);
+                        $url = Url::to(['evaluation/view', 'id' => $model->getPrimaryKey()]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-pencil pointer",
                             'onclick' => "modalForm(this,'$url')",
                         ]);
                     },
                     'delete' => function ($key, $model, $index) {
-                        $url = Url::to(['mailing/delete', 'id' => $model->EvaluationEmailId]);
+                        $url = Url::to(['evaluation/delete', 'id' => $model->EvaluationEmailId]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-trash pointer",
                             'onclick' => "gridControl.delete(this,'$url')",
+                        ]);
+                    },
+                    'validate' => function ($key, $model, $index) {
+                        $url = Url::to(['evaluation/validate', 'evaluationId' => $model->EvaluationEmailId]);
+                        return Html::tag('span', '', [
+                            'class' => "glyphicon glyphicon-eye-open pointer",
+                            'onclick' => "modalController.show('$url')",
                         ]);
                     },
                 ]

@@ -6,13 +6,13 @@
  * Time: 11:32 PM
  */
 
+/** @var $provider EvaluationValidateDataProvider */
+
 use app\models\providers\EvaluationValidateDataProvider;
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
 
-$provider = new EvaluationValidateDataProvider();
 ?>
-
 <?= GridView::widget([
     'id' => 'validate',
     'dataProvider' => $provider,
