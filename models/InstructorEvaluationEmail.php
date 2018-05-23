@@ -4,6 +4,7 @@ namespace app\models;
 
 use Swift_Encoding;
 use Yii;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "instructorevaluationemail".
@@ -37,7 +38,6 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
                 ->setFrom('lau@gmail.com')
                 ->setTo($this->instructor->Email)
                 ->setSubject('Evaluation Fill Request');
-            $message->getSwiftMessage()->setEncoder(Swift_Encoding::get8BitEncoding());
             $message->send();
         }
         parent::afterSave($insert, $changedAttributes);
@@ -89,6 +89,10 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
         return $this->hasMany(StudentCourseEvaluation::className(), ['InstructorEvaluationEmailId' => 'InstructorEvaluationEmailId']);
     }
 
+    public function getUrl()
+    {
+        return Url::to(['evaluation/fill', 'code' => $this->EvaluationCode], true);
+    }
 
     /**
      * @return \yii\db\ActiveQuery

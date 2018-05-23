@@ -8,6 +8,7 @@ use app\models\Instructor;
 use app\models\InstructorEvaluationEmail;
 use app\models\providers\MailingDataProvider;
 use app\models\Semester;
+use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -74,6 +75,17 @@ class MailingController extends \yii\web\Controller
             return $model->save();
         }
         return false;
+    }
+
+    public function actionSend($id)
+    {
+        $eval = InstructorEvaluationEmail::find()->active()->where(['InstructorEvaluationEmailId' => $id])->with('instructor')->one();
+        $message = Yii::$app->mailer
+            ->compose('evaluation/html', ['instructorEvaluationEmail' => $eval, 'instructor' => $eval->instructor])
+            ->setFrom('lau@gmail.com')
+            ->setTo($eval->instructor->Email)
+            ->setSubject('Evaluation Fill Request');
+        return $message->send();
     }
 
     /**

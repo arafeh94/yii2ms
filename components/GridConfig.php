@@ -8,6 +8,8 @@
 
 namespace app\components;
 
+use yii\base\Model;
+
 interface GridConfig
 {
     /**
@@ -15,7 +17,14 @@ interface GridConfig
      */
     public function gridColumns();
 
+    /**
+     * @param $param
+     */
     public function search($param);
 
+    /**
+     * @param null $params
+     * @return Model
+     */
     public function searchModel($params = null);
 }
