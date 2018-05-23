@@ -7,9 +7,11 @@
  */
 
 /** @var $model StudentCourseEnrollment */
+/** @var $student Student */
 
 /** @var $offeredCourses \app\models\OfferedCourse[] */
 
+use app\models\Student;
 use app\models\StudentCourseEnrollment;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
