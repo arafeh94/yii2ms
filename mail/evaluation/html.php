@@ -10,4 +10,4 @@ use yii\helpers\Url;
 ?>
 
 please click on the link bellow
-<?= Url::to(['evaluation/fill', 'code' => $instructorEvaluationEmail->EvaluationCode], true) ?>
+<?= $instructorEvaluationEmail->url ?>

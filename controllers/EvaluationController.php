@@ -47,6 +47,7 @@ class EvaluationController extends Controller
     public function actionIndex()
     {
         $provider = new EvaluationReportDataProvider();
+        $provider->search(\Yii::$app->request->get('EvaluationReportSearchModel', []));
         return $this->render('index', ['provider' => $provider]);
     }
 

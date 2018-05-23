@@ -9,10 +9,12 @@
 namespace app\models\search;
 
 
+use app\models\EvaluationEmail;
 use yii\base\Model;
 
-class EvaluationReportSearchModel extends Model
+class EvaluationReportSearchModel extends EvaluationEmail
 {
+    public $Quarter;
     public $StudentName;
     public $CampusName;
     public $MajorName;
@@ -28,7 +30,7 @@ class EvaluationReportSearchModel extends Model
     public function rules()
     {
         return [
-
+            [['Quarter', 'StudentName', 'CampusName', 'MajorName', 'CourseName', 'InstructorName', 'Grade', 'GPA', 'creditTaken', 'mGPA', 'majorCredit', 'Comment'], 'safe']
         ];
     }
 }

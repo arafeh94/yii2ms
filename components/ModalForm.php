@@ -12,10 +12,12 @@ use yii\base\Widget;
 
 class ModalForm extends Widget
 {
+    public $id;
     public $formPath;
     public $title;
     public $formParams = [];
     public $includeFormButtons = true;
+    public $size = null;
 
     public function init()
     {

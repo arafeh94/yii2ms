@@ -20,6 +20,7 @@ class Queries
         return <<<SQL
 SELECT
   concat(student.FirstName, ' ', student.LastName)                                   AS `StudentName`,
+  `Quarter`                                                                          AS `Quarter`,
   `campus`.Name                                                                      AS `CampusName`,
   `major`.Name                                                                       AS `MajorName`,
   `course`.Name                                                                      AS `CourseName`,
@@ -77,7 +78,7 @@ WHERE `course`.`IsDeleted` = 0
       AND studentsemesterenrollment.IsDeleted = 0
       AND course.IsDeleted = 0
       AND semester.SemesterId = {$semesterId}
+      ORDER BY Quarter,student.FirstName,student.LastName
 SQL;
     }
-
 }

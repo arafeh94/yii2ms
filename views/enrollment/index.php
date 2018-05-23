@@ -12,7 +12,7 @@ echo ModalForm::widget([
     'formPath' => '@app/views/enrollment/_form',
     'title' => 'Enrollments',
     'formParams' => [
-       'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(),
+        'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(),
         'student' => $student
     ]
 ]);

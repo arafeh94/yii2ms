@@ -15,6 +15,7 @@ use app\components\Tools;
 use app\models\Campus;
 use app\models\search\EvaluationReportSearchModel;
 use kartik\grid\DataColumn;
+use kartik\grid\GridView;
 use yii\data\ActiveDataProvider;
 use app\models\Course;
 use app\models\Cycle;
@@ -33,6 +34,7 @@ use app\models\StudentCourseEvaluation;
 use app\models\StudentSemesterEnrollment;
 use yii\data\SqlDataProvider;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 class EvaluationReportDataProvider extends SqlDataProvider implements GridConfig
 {
@@ -50,6 +52,17 @@ class EvaluationReportDataProvider extends SqlDataProvider implements GridConfig
     public function gridColumns()
     {
         return [
+            [
+                'label' => 'Quarter',
+                'class' => DataColumn::className(),
+                'attribute' => 'Quarter',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => \Yii::$app->params['quarterSelector'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => ''],
+            ],
             [
                 'label' => 'Student',
                 'class' => DataColumn::className(),
@@ -112,15 +125,30 @@ class EvaluationReportDataProvider extends SqlDataProvider implements GridConfig
 
     public function search($param)
     {
-        return null;
+        $this->searchModel($param);
+        if ($param) {
+            $this->sql = "SELECT * FROM ($this->sql) as upper where 1=1 ";
+            if (isset($param['Quarter']) && $param['Quarter']) $this->sql .= " And lower(`Quarter`) = lower('{$param["Quarter"]}')";
+            if (isset($param['StudentName']) && $param['StudentName']) $this->sql .= " And lower(`StudentName`) like  lower('%{$param["StudentName"]}%')";
+            if (isset($param['CampusName']) && $param['CampusName']) $this->sql .= " And lower(`CampusName`) like  lower('%{$param["CampusName"]}%')";
+            if (isset($param['MajorName']) && $param['MajorName']) $this->sql .= " And lower(`MajorName`) like  lower('%{$param["MajorName"]}%')";
+            if (isset($param['CourseName']) && $param['CourseName']) $this->sql .= " And lower(`CourseName`) like  lower('%{$param["CourseName"]}%')";
+            if (isset($param['InstructorName']) && $param['InstructorName']) $this->sql .= " And lower(`InstructorName`) like  lower('%{$param["InstructorName"]}%')";
+            if (isset($param['Grade']) && $param['Grade']) $this->sql .= " And Grade <=  '{$param["Grade"]}'";
+            if (isset($param['GPA']) && $param['GPA']) $this->sql .= " And GPA <=  '{$param["GPA"]}'";
+            if (isset($param['creditTaken']) && $param['creditTaken']) $this->sql .= " And creditTaken <=  '{$param["creditTaken"]}'";
+            if (isset($param['mGPA']) && $param['mGPA']) $this->sql .= " And mGPA <=  '{$param["mGPA"]}'";
+            if (isset($param['majorCredit']) && $param['majorCredit']) $this->sql .= " And majorCredit <=  '{$param["majorCredit"]}'";
+            if (isset($param['Comment']) && $param['Comment']) $this->sql .= " And lower(Comment) like  lower('%{$param["Comment"]}%')";
+        }
     }
+
 
     public function searchModel($params = null)
     {
         if ($this->searchModel === null) {
             $this->searchModel = new EvaluationReportSearchModel();
         }
-
         if ($params) {
             $this->searchModel->load($params, '');
         }

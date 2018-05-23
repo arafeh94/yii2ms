@@ -1,8 +1,13 @@
 (window).modalForm = function (element, url) {
     function update() {
-        $('#dialog-form').modal('show');
-        clearForm(document.getElementById('model-form'));
         $('#form-state-alert').remove();
+        $('#dialog-form').modal('show');
+        var form = document.getElementById('model-form');
+        if (!form) {
+            end();
+            return;
+        }
+        clearForm(form);
         if (!url) {
             onAdd();
             end();

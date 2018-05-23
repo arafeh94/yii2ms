@@ -67,6 +67,11 @@ class Instructor extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getFullName()
+    {
+        return $this->Title . '. ' . $this->FirstName . ' ' . $this->LastName;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
