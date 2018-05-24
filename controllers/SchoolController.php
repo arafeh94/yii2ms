@@ -28,7 +28,7 @@ class SchoolController extends \yii\web\Controller
     public function actionIndex()
     {
         $provider = new SchoolDataProvider();
-        $provider->search(\Yii::$app->request->get('User', []));
+        $provider->search(\Yii::$app->request->get('School', []));
         return $this->render('index', ['provider' => $provider]);
     }
 

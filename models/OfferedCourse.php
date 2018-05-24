@@ -72,7 +72,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
      */
     public function getSemester()
     {
-        return $this->hasOne(Semester::className(), ['SemesterId' => 'SemesterId']);
+        return $this->hasOne(Semester::className(), ['SemesterId' => 'SemesterId'])->where(['semester.IsDeleted' => 0]);
     }
 
     /**
@@ -80,7 +80,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
      */
     public function getCampus()
     {
-        return $this->hasOne(Campus::className(), ['CampusId' => 'CampusId']);
+        return $this->hasOne(Campus::className(), ['CampusId' => 'CampusId'])->where(['campus.IsDeleted' => 0]);
     }
 
     /**
@@ -88,7 +88,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
      */
     public function getCourse()
     {
-        return $this->hasOne(Course::className(), ['CourseId' => 'CourseId']);
+        return $this->hasOne(Course::className(), ['CourseId' => 'CourseId'])->where(['course.IsDeleted' => 0]);
     }
 
     /**
@@ -96,7 +96,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
      */
     public function getInstructor()
     {
-        return $this->hasOne(Instructor::className(), ['InstructorId' => 'InstructorId']);
+        return $this->hasOne(Instructor::className(), ['InstructorId' => 'InstructorId'])->where(['instructor.IsDeleted' => 0]);
     }
 
     /**
@@ -104,7 +104,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
      */
     public function getStudentCourseEnrollments()
     {
-        return $this->hasMany(StudentCourseEnrollment::className(), ['OfferedCourseId' => 'OfferedCourseId']);
+        return $this->hasMany(StudentCourseEnrollment::className(), ['OfferedCourseId' => 'OfferedCourseId'])->where(['studentcourseenrollment.IsDeleted' => 0]);
     }
 
     /**

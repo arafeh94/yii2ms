@@ -17,6 +17,7 @@ use app\models\Season;
 use app\models\Semester;
 use kartik\grid\BooleanColumn;
 use kartik\grid\DataColumn;
+use kartik\grid\GridView;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\grid\CheckboxColumn;
@@ -30,7 +31,7 @@ class SemesterDataProvider extends ActiveDataProvider implements GridConfig
     public function init()
     {
         parent::init();
-        $this->query = Semester::find()->innerJoinWith('season')->active();
+        $this->query = Semester::find()->innerJoinWith('season', true)->active();
         $this->sort->attributes['season'] = [
             'asc' => ['season.Name' => SORT_ASC],
             'desc' => ['season.Name' => SORT_DESC],
@@ -46,6 +47,7 @@ class SemesterDataProvider extends ActiveDataProvider implements GridConfig
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'Year',
+                'width'=>'80px',
             ],
             [
                 'class' => DataColumn::className(),
@@ -53,25 +55,44 @@ class SemesterDataProvider extends ActiveDataProvider implements GridConfig
                 'label' => 'Season',
                 'value' => function ($model) {
                     return $model->season->Name;
-                }
+                },
+                'width'=>'120px',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['Spring' => 'Spring', 'Fall' => 'Fall', 'Summer' => 'Summer'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => ''],
             ],
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'StartDate',
                 'format' => 'date',
+                'filterType' => GridView::FILTER_DATE,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => [
+                        'format' => \Yii::$app->params['dateFormat'],
+                        'autoclose' => true,
+                        'todayHighlight' => true,
+                    ]
+                ],
             ],
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'EndDate',
                 'format' => 'date',
+                'filterType' => GridView::FILTER_DATE,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => [
+                        'format' => \Yii::$app->params['dateFormat'],
+                        'autoclose' => true,
+                        'todayHighlight' => true,
+                    ]
+                ],
             ],
             [
                 'class' => BooleanColumn::className(),
                 'attribute' => 'IsCurrent',
-            ],
-            [
-                'class' => DataColumn::className(),
-                'attribute' => 'DateAdded',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -99,8 +120,10 @@ class SemesterDataProvider extends ActiveDataProvider implements GridConfig
     public function search($params)
     {
         $this->searchModel($params);
-        $this->query->andFilterWhere(['like', 'department.Name', ArrayHelper::getValue($params, 'Name', '')]);
-        $this->query->andFilterWhere(['like', 'school.Name', ArrayHelper::getValue($params, 'school', '')]);
+        $this->query->andFilterWhere(['like', 'season.Name', ArrayHelper::getValue($params, 'season', '')]);
+        $this->query->andFilterWhere(['like', 'semester.Year', ArrayHelper::getValue($params, 'Year', '')]);
+        $this->query->andFilterWhere(['like', 'semester.StartDate', ArrayHelper::getValue($params, 'StartDate', '')]);
+        $this->query->andFilterWhere(['like', 'semester.EndDate', ArrayHelper::getValue($params, 'EndDate', '')]);
     }
 
     public function searchModel($params = null)

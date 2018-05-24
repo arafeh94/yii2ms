@@ -105,7 +105,7 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
             unset($params['cycle']);
         }
         foreach ($params as $key => $value) {
-            $this->query->andFilterWhere(['like', $key, $value]);
+            $this->query->andFilterWhere(['like', "lower({$key})", strtolower($value)]);
         }
     }
 

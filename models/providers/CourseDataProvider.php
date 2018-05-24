@@ -45,10 +45,6 @@ class CourseDataProvider extends ActiveDataProvider implements GridConfig
         return [
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'CourseId'
-            ],
-            [
-                'class' => DataColumn::className(),
                 'attribute' => 'major',
                 'label' => 'Major Name',
                 'value' => function ($model) {
@@ -96,8 +92,10 @@ class CourseDataProvider extends ActiveDataProvider implements GridConfig
     public function search($params)
     {
         $this->searchModel($params);
-        $this->query->andFilterWhere(['like', 'course.Name', ArrayHelper::getValue($params, 'Name', '')]);
-        $this->query->andFilterWhere(['like', 'major.Name', ArrayHelper::getValue($params, 'major', '')]);
+        $this->query->andFilterWhere(['like', 'lower(course.Name)', strtolower(ArrayHelper::getValue($params, 'Name', ''))]);
+        $this->query->andFilterWhere(['like', 'lower(major.Name)', strtolower(ArrayHelper::getValue($params, 'major', ''))]);
+        $this->query->andFilterWhere(['like', 'Number', ArrayHelper::getValue($params, 'Number', '')]);
+        $this->query->andFilterWhere(['like', 'Credits', ArrayHelper::getValue($params, 'Credits', '')]);
     }
 
     public function searchModel($params = null)

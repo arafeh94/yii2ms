@@ -19,6 +19,11 @@ class UserController extends \yii\web\Controller
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'actions' => ['settings'],
+                    ],
                 ],
             ],
         ];

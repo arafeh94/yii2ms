@@ -34,15 +34,7 @@ class SchoolDataProvider extends ActiveDataProvider implements GridConfig
         return [
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'SchoolId'
-            ],
-            [
-                'class' => DataColumn::className(),
                 'attribute' => 'Name'
-            ],
-            [
-                'class' => DataColumn::className(),
-                'attribute' => 'DateAdded'
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -71,7 +63,7 @@ class SchoolDataProvider extends ActiveDataProvider implements GridConfig
     {
         $this->searchModel($params);
         foreach ($params as $key => $value) {
-            $this->query->andFilterWhere(['like', $key, $value]);
+            $this->query->andFilterWhere(['like', "lower({$key})", strtolower($value)]);
         }
     }
 

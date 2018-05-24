@@ -29,7 +29,9 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
     {
         parent::init();
         $this->query = Major::find()
-            ->innerJoinWith('department')->active();
+            ->innerJoinWith('department', true)
+            ->innerJoinWith('department.school', true)
+            ->active();
         $this->sort->attributes['department'] = [
             'asc' => ['department.Name' => SORT_ASC],
             'desc' => ['department.Name' => SORT_DESC],
@@ -89,9 +91,8 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
     public function search($params)
     {
         $this->searchModel($params);
-        $this->query->andFilterWhere(['like', 'major.Name', ArrayHelper::getValue($params, 'Name', '')]);
-        $this->query->andFilterWhere(['like', 'school.Name', ArrayHelper::getValue($params, 'school', '')]);
-        $this->query->andFilterWhere(['like', 'department.Name', ArrayHelper::getValue($params, 'department', '')]);
+        $this->query->andFilterWhere(['like', 'lower(major.Name)', strtolower(ArrayHelper::getValue($params, 'Name', ''))]);
+        $this->query->andFilterWhere(['like', "concat(school.Name,' - ',department.Name)", ArrayHelper::getValue($params, 'department', '')]);
     }
 
     public function searchModel($params = null)

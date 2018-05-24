@@ -63,7 +63,7 @@ class CycleDataProvider extends ActiveDataProvider implements GridConfig
     {
         $this->searchModel($params);
         foreach ($params as $key => $value) {
-            $this->query->andFilterWhere(['like', $key, $value]);
+            $this->query->andFilterWhere(['like', "lower({$key})", strtolower($value)]);
         }
     }
 
@@ -74,7 +74,7 @@ class CycleDataProvider extends ActiveDataProvider implements GridConfig
         }
 
         if ($params) {
-            $this->searchModel->load($params,'');
+            $this->searchModel->load($params, '');
         }
 
         return $this->searchModel;

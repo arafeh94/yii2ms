@@ -61,11 +61,6 @@ class DepartmentDataProvider extends ActiveDataProvider implements GridConfig
                 'filterInputOptions' => ['placeholder' => ''],
             ],
             [
-                'class' => DataColumn::className(),
-                'attribute' => 'DateAdded',
-                'format' => 'date'
-            ],
-            [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{update} {delete}',
                 'buttons' => [
@@ -91,7 +86,7 @@ class DepartmentDataProvider extends ActiveDataProvider implements GridConfig
     public function search($params)
     {
         $this->searchModel($params);
-        $this->query->andFilterWhere(['like', 'department.Name', ArrayHelper::getValue($params, 'Name', '')]);
+        $this->query->andFilterWhere(['like', 'lower(department.Name)', strtolower(ArrayHelper::getValue($params, 'Name', ''))]);
         $this->query->andFilterWhere(['like', 'school.Name', ArrayHelper::getValue($params, 'school', '')]);
     }
 

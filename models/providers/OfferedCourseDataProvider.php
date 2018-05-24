@@ -116,7 +116,7 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'CRN',
-                'width' => '100px'
+                'width' => '100px',
             ],
             [
                 'class' => DataColumn::className(),

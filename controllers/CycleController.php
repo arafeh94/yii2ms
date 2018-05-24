@@ -28,7 +28,7 @@ class CycleController extends \yii\web\Controller
     public function actionIndex()
     {
         $provider = new CycleDataProvider();
-        $provider->search(\Yii::$app->request->get('User', []));
+        $provider->search(\Yii::$app->request->get('Cycle', []));
         return $this->render('index', ['provider' => $provider]);
     }
 

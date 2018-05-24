@@ -73,12 +73,6 @@ class InstructorDataProvider extends ActiveDataProvider implements GridConfig
                 'attribute' => 'PhoneExtension',
             ],
             [
-                'class' => DataColumn::className(),
-                'attribute' => 'DateAdded',
-                'format' => 'date',
-                'width' => '105px',
-            ],
-            [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{update} {delete}',
                 'buttons' => [

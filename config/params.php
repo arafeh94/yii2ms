@@ -3,7 +3,7 @@
 return [
     'adminEmail' => 'admin@example.com',
     'timezone' => 'Asia/Beirut',
-    'dateFormat' => 'yyyy-MM-dd',
+    'dateFormat' => 'yyyy-mm-dd',
     'timeFormat' => 'h:i:s',
     'dateTimeFormat' => 'y-m-d h:i:s',
     'titlesSelector' => ['Mr' => 'Mr', 'Dr' => 'Dr', 'Mrs' => 'Mrs', 'Ms' => 'Ms'],
