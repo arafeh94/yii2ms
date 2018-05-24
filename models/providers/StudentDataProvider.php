@@ -100,6 +100,10 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
     public function search($params)
     {
         $this->searchModel($params);
+        if (isset($params['cycle'])) {
+            $this->query->andFilterWhere(['like', 'cycle.Name', $params['cycle']]);
+            unset($params['cycle']);
+        }
         foreach ($params as $key => $value) {
             $this->query->andFilterWhere(['like', $key, $value]);
         }

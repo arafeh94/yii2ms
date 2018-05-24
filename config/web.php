@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'name' => 'University Scholarship Program',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'jsUrlManager'],
     'aliases' => [

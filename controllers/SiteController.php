@@ -72,7 +72,7 @@ class SiteController extends AppController
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->redirect(['student/index']);
     }
 
     /**
@@ -106,7 +106,6 @@ class SiteController extends AppController
 
         return $this->goHome();
     }
-
 
 
 }
