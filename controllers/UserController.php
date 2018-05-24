@@ -65,8 +65,9 @@ class UserController extends \yii\web\Controller
         return false;
     }
 
-    public function a(){
-
+    public function actionSettings()
+    {
+        return $this->render('settings', ['user' => \Yii::$app->user->identity]);
     }
 
 }

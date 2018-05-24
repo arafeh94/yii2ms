@@ -54,7 +54,7 @@ $navigation = [
 
             <div id="nav">
                 <?php if (!Yii::$app->user->isGuest): ?>
-                    <li class="rightItems"><?php echo Html::a(Html::img('@web/images/header/settings.svg', ['class' => 'img', 'alt' => ' Settings']) . ' Settings', Url::to(['/site/settings'])) ?>
+                    <li class="rightItems"><?php echo Html::a(Html::img('@web/images/header/settings.svg', ['class' => 'img', 'alt' => ' Settings']) . ' Settings', Url::to(['/user/settings'])) ?>
                     </li>
                     <li class="rightItems">
                         <?php echo Html::beginForm(['/site/logout'], 'post')

@@ -23,6 +23,7 @@ if (!isset($model)) $model = new Course();
 <?php if (isset($saved) && $saved): ?>
     <?= Alert::widget(['id' => 'form-state-alert', 'body' => 'saved', 'options' => ['class' => 'alert-info']]) ?>
     <script>if (window.gridControl) window.gridControl.shouldRefresh = true</script>
+    <script>if (window.modalControl) window.modalControl.close()</script>
 <?php endif; ?>
 
 <?php $form = ActiveForm::begin([
@@ -35,6 +36,8 @@ if (!isset($model)) $model = new Course();
 <?= $form->field($model, 'Name')->textInput() ?>
 <?= $form->field($model, 'Number')->textInput(['type' => 'number']) ?>
 <?= $form->field($model, 'Credits')->textInput(['type' => 'number']) ?>
-<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
-<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
+<div class="button-container">
+    <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+    <?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
+</div>
 <?php ActiveForm::end(); ?>

@@ -22,11 +22,12 @@ if (!isset($model)) $model = new EvaluationEmail();
 <?php if (isset($saved) && $saved): ?>
     <?= Alert::widget(['id' => 'form-state-alert', 'body' => 'saved', 'options' => ['class' => 'alert-info']]) ?>
     <script>if (window.gridControl) window.gridControl.shouldRefresh = true</script>
+    <script>if (window.modalControl) window.modalControl.close()</script>
 <?php endif; ?>
 
 <?php $form = ActiveForm::begin([
     'id' => 'model-form',
-    'action' => ['mailing/update'],
+    'action' => ['evaluation/update'],
     'options' => ['data-pjax' => '']
 ]) ?>
 <?= $form->field($model, 'EvaluationEmailId')->hiddenInput()->label(false) ?>
@@ -34,6 +35,8 @@ if (!isset($model)) $model = new EvaluationEmail();
 <?= $form->field($model, 'Description')->textInput() ?>
 <?= $form->field($model, 'Quarter')->dropDownList(Yii::$app->params['quarterSelector']) ?>
 <?= $form->field($model, 'AvailableForInstructors')->dropDownList(Yii::$app->params['booleanSelector']) ?>
-<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
-<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
+<div class="button-container">
+    <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+    <?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
+</div>
 <?php ActiveForm::end(); ?>

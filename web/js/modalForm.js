@@ -79,13 +79,12 @@
     }
 };
 
-(window).modalContainer = function () {
-
-};
-
 (window).modalControl = {
     close: function () {
-
+        $('#dialog-form').modal('hide');
+    },
+    open : function () {
+        $('#dialog-form').modal('show');
     }
 };
 (window).modalEvent = {

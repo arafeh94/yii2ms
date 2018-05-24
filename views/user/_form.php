@@ -20,8 +20,10 @@ if (!isset($model)) $model = new User();
 <?php if (isset($saved) && $saved): ?>
     <?= Alert::widget(['id' => 'form-state-alert', 'body' => 'saved', 'options' => ['class' => 'alert-info']]) ?>
     <script>if (window.gridControl) window.gridControl.shouldRefresh = true</script>
+    <script>if (window.modalControl) window.modalControl.close()</script>
 <?php endif; ?>
 
+<?= Alert::widget(['body' => 'Please note that password when new user created is <b>default</b>', 'options' => ['class' => 'alert-success']]) ?>
 <?php $form = ActiveForm::begin([
     'id' => 'model-form',
     'action' => ['user/update'],
@@ -33,6 +35,8 @@ if (!isset($model)) $model = new User();
 <?= $form->field($model, 'Username')->textInput() ?>
 <?= $form->field($model, 'Email')->textInput() ?>
 <?= $form->field($model, 'Type')->dropDownList([1 => 'admin', 2 => 'user']) ?>
-<?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
-<?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
+<div class="button-container">
+    <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
+    <?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
+</div>
 <?php ActiveForm::end(); ?>
