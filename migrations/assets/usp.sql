@@ -2,6 +2,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE user;
 DROP TABLE IF EXISTS studentsemesterenrollment;
 DROP TABLE IF EXISTS studentplanrow;
+DROP TABLE IF EXISTS studyplan;
 DROP TABLE IF EXISTS studentplan;
 DROP TABLE IF EXISTS studentcourseevaluation;
 DROP TABLE IF EXISTS studentcourseenrollment;
@@ -37,7 +38,7 @@ CREATE TABLE course
     PRIMARY KEY,
   MajorId         INT                                 NOT NULL,
   Name            VARCHAR(255)                        NOT NULL,
-  Number          VARCHAR(6)                          NOT NULL,
+  Number          VARCHAR(8)                          NOT NULL,
   Credits         INT                                 NOT NULL,
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL,
@@ -359,7 +360,7 @@ CREATE TABLE studentcourseenrollment
     PRIMARY KEY,
   StudentSemesterEnrollmentId INT                                 NOT NULL,
   OfferedCourseId             INT                                 NOT NULL,
-  FinalGrade                  DOUBLE                        NULL,
+  FinalGrade                  DOUBLE                              NULL,
   IsDropped                   BIT DEFAULT b'0'                    NOT NULL,
   IsDeleted                   BIT DEFAULT b'0'                    NOT NULL,
   CreatedByUserId             INT                                 NOT NULL,
@@ -411,42 +412,22 @@ CREATE INDEX InstructorEvaluationEmailId
 CREATE INDEX StudentId
   ON studentcourseevaluation (StudentId);
 
-CREATE TABLE studentplan
+CREATE TABLE studyplan
 (
-  StudentPlanId   INT AUTO_INCREMENT
-    PRIMARY KEY,
+  StudyPlanId     INT AUTO_INCREMENT PRIMARY KEY,
   MajorId         INT                                 NOT NULL,
+  CourseLetter    VARCHAR(50)                         NOT NULL,
+  Year            TINYINT(1)                          NOT NULL,
+  Season          VARCHAR(8)                          NOT NULL,
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   IsDeleted       BIT DEFAULT b'0'                    NOT NULL,
-  CONSTRAINT studentplan_ibfk_1
+  CONSTRAINT studentplanrow_ibfk_1
   FOREIGN KEY (MajorId) REFERENCES major (MajorId)
 )
   ENGINE = InnoDB
   COLLATE = utf8_bin;
 
-CREATE INDEX MajorId
-  ON studentplan (MajorId);
-
-CREATE TABLE studentplanrow
-(
-  StudentPlanRowId INT AUTO_INCREMENT
-    PRIMARY KEY,
-  StudentPlanId    INT                                 NOT NULL,
-  CourseLetter     VARCHAR(8)                          NOT NULL,
-  Year             TINYINT(1)                          NOT NULL,
-  Season           VARCHAR(8)                          NOT NULL,
-  CreatedByUserId  INT                                 NOT NULL,
-  DateAdded        TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  IsDeleted        BIT DEFAULT b'0'                    NOT NULL,
-  CONSTRAINT studentplanrow_ibfk_1
-  FOREIGN KEY (StudentPlanId) REFERENCES studentplan (StudentPlanId)
-)
-  ENGINE = InnoDB
-  COLLATE = utf8_bin;
-
-CREATE INDEX StudentPlanId
-  ON studentplanrow (StudentPlanId);
 
 CREATE TABLE studentsemesterenrollment
 (
@@ -515,5 +496,5 @@ INSERT INTO `season` (`SeasonId`, `Name`, `IsDeleted`) VALUES
 
 INSERT INTO `user` (`UserId`, `Username`, `Password`, `Email`, `FirstName`, `LastName`, `Type`, `IsDeleted`, `CreatedByUserId`, `DateAdded`)
 VALUES
-  (1, 'admin', 'admin', 'admin@admin.com', 'Admin', 'Admin', 1, b'0', 0, '2018-05-15 17:04:57'),
-  (2, 'user', 'user', 'user@user.com', 'User', 'User', 2, b'0', 0, '2018-05-15 17:06:17');
+  (1, 'admin', 'admin', 'admin@admin.com', 'Admin', 'Admin', 1, 0, 0, '2018-05-15 17:04:57'),
+  (2, 'user', 'user', 'user@user.com', 'User', 'User', 2, 0, 0, '2018-05-15 17:06:17');

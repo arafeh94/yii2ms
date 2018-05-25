@@ -7,7 +7,6 @@
  */
 
 /** @var $model Course */
-
 /** @var $majors \app\models\Major[] */
 
 use app\models\Course;
@@ -34,7 +33,7 @@ if (!isset($model)) $model = new Course();
 <?= $form->field($model, 'CourseId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'MajorId')->dropDownList(ArrayHelper::map($majors, 'MajorId', 'Name'))->label('Major') ?>
 <?= $form->field($model, 'Name')->textInput() ?>
-<?= $form->field($model, 'Number')->textInput(['type' => 'number']) ?>
+<?= $form->field($model, 'Number')->textInput() ?>
 <?= $form->field($model, 'Credits')->textInput(['type' => 'number']) ?>
 <div class="button-container">
     <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
