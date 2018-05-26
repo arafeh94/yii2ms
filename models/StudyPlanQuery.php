@@ -5,9 +5,9 @@ namespace app\models;
 /**
  * This is the ActiveQuery class for [[StudentPlanRow]].
  *
- * @see StudentPlanRow
+ * @see StudyPlan
  */
-class StudentPlanRowQuery extends \yii\db\ActiveQuery
+class StudyPlanQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
@@ -16,7 +16,7 @@ class StudentPlanRowQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return StudentPlanRow[]|array
+     * @return StudyPlan[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class StudentPlanRowQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return StudentPlanRow|array|null
+     * @return StudyPlan|array|null
      */
     public function one($db = null)
     {
