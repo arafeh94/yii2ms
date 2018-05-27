@@ -39,6 +39,7 @@ class StudyPlan extends \yii\db\ActiveRecord
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],
             [['CourseLetter', 'Season'], 'string', 'max' => 8],
+            [['Year'], 'integer', 'min' => 1, 'max' => 5],
             [['MajorId'], 'exist', 'skipOnError' => true, 'targetClass' => Major::className(), 'targetAttribute' => ['MajorId' => 'MajorId']],
         ];
     }

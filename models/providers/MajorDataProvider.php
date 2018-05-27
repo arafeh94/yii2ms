@@ -67,8 +67,15 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
+                'template' => '{study-plan} {update} {delete}',
                 'buttons' => [
+                    'study-plan' => function ($key, $model, $index) {
+                        $url = Url::to(['study-plan/index', 'major' => $model->getPrimaryKey()]);
+                        return Html::tag('span', '', [
+                            'class' => "glyphicon glyphicon-book pointer",
+                            'onclick' => "location.href='$url'",
+                        ]);
+                    },
                     'update' => function ($key, $model, $index) {
                         $url = Url::to(['major/view', 'id' => $model->getPrimaryKey()]);
                         return Html::tag('span', '', [

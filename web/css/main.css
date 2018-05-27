@@ -268,11 +268,11 @@ thead a {
     color: #388674 !important;
 }
 
-tbody tr:hover {
-    background: #0986538c !important;
-    font-weight: bold;
-    color: white;
-}
+/*tbody tr:hover {*/
+    /*background: #0986538c !important;*/
+    /*font-weight: bold;*/
+    /*color: white;*/
+/*}*/
 
 thead th {
     text-align: center;

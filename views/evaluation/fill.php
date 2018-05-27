@@ -17,6 +17,7 @@ use yii\data\ArrayDataProvider;
 /** @var $enrollments [] */
 ?>
 
+
 <h3>Hello
     <?= $instructorEvaluationEmail->instructor->Title . '. ' . $instructorEvaluationEmail->instructor->FirstName . ' ' . $instructorEvaluationEmail->instructor->LastName ?>
 </h3>
@@ -37,21 +38,44 @@ use yii\data\ArrayDataProvider;
     <?= \kartik\grid\GridView::widget([
         'dataProvider' => new ArrayDataProvider(['allModels' => $evaluations]),
         'pjax' => false,
+        'resizableColumns' => false,
         'columns' => [
             [
                 'attribute' => 'course',
                 'value' => function ($model) use ($enrollments) {
                     foreach ($enrollments as $enrollment) {
                         if ($enrollment['StudentCourseEnrollmentId'] == $model->StudentCourseEnrollmentId) {
-                            return $enrollment['Name'];
+                            return $enrollment['CourseName'];
                         }
                     }
                     return '???';
                 },
                 'group' => true,
-                'groupedRow' => true,                    // move grouped column to a single grouped row
-                'groupOddCssClass' => 'kv-grouped-row',  // configure odd group cell css class
-                'groupEvenCssClass' => 'kv-grouped-row', // configure even group cell css class
+                'groupedRow' => true,
+                'groupOddCssClass' => 'kv-grouped-row',
+                'groupEvenCssClass' => 'kv-grouped-row',
+            ],
+            [
+                'attribute' => 'cycle',
+                'value' => function ($model) use ($enrollments) {
+                    foreach ($enrollments as $enrollment) {
+                        if ($enrollment['StudentCourseEnrollmentId'] == $model->StudentCourseEnrollmentId) {
+                            return $enrollment['CycleName'];
+                        }
+                    }
+                    return '???';
+                },
+            ],
+            [
+                'attribute' => 'sec',
+                'value' => function ($model) use ($enrollments) {
+                    foreach ($enrollments as $enrollment) {
+                        if ($enrollment['StudentCourseEnrollmentId'] == $model->StudentCourseEnrollmentId) {
+                            return $enrollment['Section'];
+                        }
+                    }
+                    return '???';
+                },
             ],
             [
                 'class' => DataColumn::className(),
@@ -101,62 +125,120 @@ use yii\data\ArrayDataProvider;
                 'class' => FormInputColumn::className(),
                 'attribute' => 'NumberOfAbsences',
                 'form' => $form,
-                'width' => '80px',
                 'config' => ['type' => 'number'],
+                'contentOptions' => ['style' => 'min-width:80px'],
             ],
             [
-                'label' => 'Grade',
-                'class' => FormInputColumn::className(),
+                'label' => 'LetterGrade',
+                'class' => DataColumn::className(),
                 'attribute' => 'Grade',
-                'form' => $form,
-                'width' => '80px',
-                'config' => ['type' => 'number'],
+                'format' => 'raw',
+                'value' => function ($model, $key, $index) use ($form) {
+                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['gpaSelector'], [
+                        'prompt' => ''
+                    ])->label(false);
+                }
             ],
-//            [
-//                'class' => DataColumn::className(),
-//                'attribute' => 'Grade',
-//                'width' => '90px',
-//                'format' => 'raw',
-//                'value' => function ($model, $key, $index) use ($form) {
-//                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['gpaSelector'], [
-//                        'prompt' => ''
-//                    ])->label(false);
-//                }
-//            ],
+            [
+                'class' => FormInputColumn::className(),
+                'attribute' => 'Exam1',
+                'form' => $form,
+                'config' => ['type' => 'number'],
+                'contentOptions' => ['style' => 'min-width:80px'],
+            ],
+            [
+                'class' => FormInputColumn::className(),
+                'attribute' => 'Exam2',
+                'form' => $form,
+                'config' => ['type' => 'number'],
+                'contentOptions' => ['style' => 'min-width:80px'],
+            ],
+            [
+                'class' => FormInputColumn::className(),
+                'attribute' => 'Final',
+                'form' => $form,
+                'config' => ['type' => 'number'],
+                'contentOptions' => ['style' => 'min-width:80px'],
+            ],
             [
                 'class' => FormInputColumn::className(),
                 'attribute' => 'HomeWork',
+                'label' => 'HW',
                 'form' => $form,
                 'config' => ['type' => 'number'],
+                'contentOptions' => ['style' => 'min-width:80px'],
             ],
             [
                 'class' => FormInputColumn::className(),
+                'attribute' => 'Other',
+                'form' => $form,
+                'contentOptions' => ['style' => 'min-width:120px'],
+            ],
+            [
+                'class' => FormInputColumn::className(),
+                'attribute' => 'Other2',
+                'form' => $form,
+                'contentOptions' => ['style' => 'min-width:120px'],
+            ],
+            [
+                'class' => FormInputColumn::className(),
+                'attribute' => 'Other3',
+                'form' => $form,
+                'contentOptions' => ['style' => 'min-width:120px'],
+            ],
+            [
+                'label' => 'Participation',
+                'class' => DataColumn::className(),
                 'attribute' => 'Participation',
-                'form' => $form,
-                'config' => ['type' => 'text'],
+                'contentOptions' => ['style' => 'min-width:150px'],
+                'format' => 'raw',
+                'value' => function ($model, $key, $index) use ($form) {
+                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['behaviorSelector'], [
+                        'prompt' => ''
+                    ])->label(false);
+                }
             ],
             [
-                'class' => FormInputColumn::className(),
+                'label' => 'Effort',
+                'class' => DataColumn::className(),
                 'attribute' => 'Effort',
-                'form' => $form,
-                'config' => ['type' => 'text'],
+                'contentOptions' => ['style' => 'min-width:150px'],
+                'format' => 'raw',
+                'value' => function ($model, $key, $index) use ($form) {
+                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['behaviorSelector'], [
+                        'prompt' => ''
+                    ])->label(false);
+                }
             ],
             [
-                'class' => FormInputColumn::className(),
+                'label' => 'Attitude',
+                'class' => DataColumn::className(),
                 'attribute' => 'Attitude',
-                'form' => $form,
-                'config' => ['type' => 'text'],
+                'contentOptions' => ['style' => 'min-width:150px'],
+                'format' => 'raw',
+                'value' => function ($model, $key, $index) use ($form) {
+                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['behaviorSelector'], [
+                        'prompt' => ''
+                    ])->label(false);
+                }
             ],
             [
-                'class' => FormInputColumn::className(),
+                'label' => 'Evaluation',
+                'class' => DataColumn::className(),
                 'attribute' => 'Evaluation',
-                'form' => $form,
-                'config' => ['type' => 'number'],
+                'contentOptions' => ['style' => 'min-width:180px'],
+                'format' => 'raw',
+                'value' => function ($model, $key, $index) use ($form) {
+                    return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['evaluationSelector'], [
+                        'prompt' => ''
+                    ])->label(false);
+                }
             ],
             [
                 'class' => FormInputColumn::className(),
                 'attribute' => 'InstructorNotes',
                 'form' => $form,
+                'contentOptions' => ['style' => 'min-width:200px'],
             ],
         ]
     ]);

@@ -2,7 +2,8 @@
 /* @var $this yii\web\View */
 /** @var $isEnrolledInSemester bool */
 /** @var $student Student */
-/** @var $studentSemesterEnrollment StudentSemesterEnrollment  */
+
+/** @var $studentSemesterEnrollment StudentSemesterEnrollment */
 
 use app\components\ModalForm;
 use app\models\Cycle;
@@ -18,14 +19,14 @@ if (!isset($studentSemesterEnrollment)) $studentSemesterEnrollment = new Student
 
 $newEnrollment = $studentSemesterEnrollment == null;
 if ($isEnrolledInSemester) :
-echo ModalForm::widget([
-    'formPath' => '@app/views/enrollment/_form',
-    'title' => 'Enrollments',
-    'formParams' => [
-        'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(),
-        'student' => $student
-    ]
-]);
+    echo ModalForm::widget([
+        'formPath' => '@app/views/enrollment/_form',
+        'title' => 'Enrollments',
+        'formParams' => [
+            'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(),
+            'student' => $student
+        ]
+    ]);
 endif;
 
 ?>
@@ -33,15 +34,10 @@ endif;
 
 
 <?php $form2 = ActiveForm::begin([
-    'method' => 'post',
+    'method' => 'get',
+    'action' => ["enrollment/enroll?studentId=$student->StudentId"],
     'id' => 'StudentSemesterEnrollment',
 ]); ?>
-<?= $form2->field($studentSemesterEnrollment, 'StudentSemesterEnrollmentId')->hiddenInput()->label(false) ?>
-<?php if (!$newEnrollment) : ?>
-    <?= $form2->field($studentSemesterEnrollment, 'StudentId')->hiddenInput()->label(false) ?>
-    <?= $form2->field($studentSemesterEnrollment, 'SemesterId')->hiddenInput()->label(false) ?>
-<?php endif; ?>
-
 <?php if (!$isEnrolledInSemester) : ?>
     <?= Html::submitButton('Enroll in Current Semester', ['class' => 'btn btn-success']) ?>
 <?php else : ?>
@@ -50,6 +46,6 @@ endif;
 <?php ActiveForm::end() ?>
 
 <br>
-<?php if ($isEnrolledInSemester) :?>
-<?= \app\components\GridViewBuilder::render($provider, 'Enrollments') ?>
-<?php endif;?>
+<?php if ($isEnrolledInSemester) : ?>
+    <?= \app\components\GridViewBuilder::render($provider, 'Enrollments') ?>
+<?php endif; ?>

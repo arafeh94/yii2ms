@@ -41,7 +41,7 @@ $navigation = [
     ['label' => 'Course', 'url' => ['course/index'], 'type' => 1],
     ['label' => 'Instructor', 'url' => ['instructor/index'], 'type' => 1],
     ['label' => 'Terms', 'url' => ['term/index'], 'type' => 1],
-    ['label' => 'Evaluation', 'url' => ['evaluation/index'], 'type' => 1],
+    ['label' => 'Evaluation', 'url' => ['evaluation/index'], 'type' => 2],
     ['label' => 'Students', 'url' => ['student/index'], 'type' => 2],
     ['label' => 'Offered Courses', 'url' => ['offered-course/index'], 'type' => 2],
 ];
@@ -100,7 +100,7 @@ $navigation = [
     <div class="container">
         <p class="pull-left">&copy; LAU <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right"></p>
     </div>
 </footer>
 

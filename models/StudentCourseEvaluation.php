@@ -22,7 +22,12 @@ use Yii;
  * @property string $UserNote
  * @property string $AdminNote
  * @property bool $IsDeleted
- * @property string $DateAdded
+ * @property int $Exam1
+ * @property int $Exam2
+ * @property int $Final
+ * @property string $Other
+ * @property string $Other2
+ * @property string $Other3
  *
  * @property InstructorEvaluationEmail $instructorEvaluationEmail
  * @property Student $student
@@ -48,7 +53,7 @@ class StudentCourseEvaluation extends \yii\db\ActiveRecord
             [['StudentCourseEnrollmentId', 'InstructorEvaluationEmailId', 'StudentId', 'NumberOfAbsences'], 'integer'],
             [['HomeWork'], 'number'],
             [['IsDeleted'], 'boolean'],
-            [['DateAdded', 'Grade'], 'safe'],
+            [['DateAdded', 'Grade', 'Exam1', 'Exam2', 'Final', 'Other', 'Other2', 'Other3',], 'safe'],
             [['Participation', 'Effort', 'Attitude', 'Evaluation'], 'string', 'max' => 20],
             [['InstructorNotes', 'UserNote', 'AdminNote'], 'string', 'max' => 255],
             [['InstructorEvaluationEmailId'], 'exist', 'skipOnError' => true, 'targetClass' => Instructorevaluationemail::className(), 'targetAttribute' => ['InstructorEvaluationEmailId' => 'InstructorEvaluationEmailId']],

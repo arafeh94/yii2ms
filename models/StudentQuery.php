@@ -19,6 +19,11 @@ class StudentQuery extends \yii\db\ActiveQuery
         return $this->andWhere(['student.StudentId' => $id]);
     }
 
+    public function universityId($id)
+    {
+        return $this->andWhere(['student.UniversityId' => $id]);
+    }
+
     public function filter()
     {
         return $this->select([

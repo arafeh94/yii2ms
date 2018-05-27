@@ -141,8 +141,8 @@ class EvaluationController extends Controller
     {
         $evaluations = Yii::$app->request->post('StudentCourseEvaluation', []);
         $evaluationsModels = [];
-
         $instructorEvaluationEmail = InstructorEvaluationEmail::find()->where(['EvaluationCode' => $code])->active()->one();
+
         if (!$instructorEvaluationEmail) {
             return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'WRONG EVALUATION CODE']);
         }
@@ -153,6 +153,25 @@ class EvaluationController extends Controller
         if ($instructorEvaluationEmail->DateFilled) {
             return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'EVALUATION ALREADY FILLED']);
         }
+
+        $enrollments = (new Query())
+            ->select(['*', 'course.Name as CourseName', 'cycle.Name as CycleName'])
+            ->from(StudentCourseEnrollment::tableName())
+            ->innerJoin(OfferedCourse::tableName(), 'studentcourseenrollment.OfferedCourseId = offeredcourse.OfferedCourseId')
+            ->innerJoin(Instructor::tableName(), 'offeredcourse.InstructorId = instructor.InstructorId')
+            ->innerJoin(Course::tableName(), 'offeredcourse.CourseId = course.CourseId')
+            ->innerJoin(StudentSemesterEnrollment::tableName(), 'studentcourseenrollment.StudentSemesterEnrollmentId = studentsemesterenrollment.StudentSemesterEnrollmentId')
+            ->innerJoin(Student::tableName(), 'student.StudentId = studentsemesterenrollment.StudentId')
+            ->innerJoin(Cycle::tableName(), 'student.CycleId = cycle.CycleId')
+            ->orderBy('offeredcourse.CourseId')
+            ->where(['studentsemesterenrollment.SemesterId' => Semester::find()->current()->SemesterId])
+            ->andWhere(['instructor.InstructorId' => $instructorEvaluationEmail->InstructorId])
+            ->andWhere(['instructor.IsDeleted' => 0])
+            ->andWhere(['offeredcourse.IsDeleted' => 0])
+            ->andWhere(['studentsemesterenrollment.IsDeleted' => 0])
+            ->andWhere(['studentcourseenrollment.IsDeleted' => 0])
+            ->andWhere(['studentcourseenrollment.IsDropped' => 0])
+            ->all();
 
         if ($evaluations) {
             $transaction = Yii::$app->db->beginTransaction();
@@ -190,24 +209,6 @@ class EvaluationController extends Controller
             }
 
         } else {
-            $enrollments = (new Query())
-                ->select('*')
-                ->from(StudentCourseEnrollment::tableName())
-                ->innerJoin(OfferedCourse::tableName(), 'studentcourseenrollment.OfferedCourseId = offeredcourse.OfferedCourseId')
-                ->innerJoin(Instructor::tableName(), 'offeredcourse.InstructorId = instructor.InstructorId')
-                ->innerJoin(Course::tableName(), 'offeredcourse.CourseId = course.CourseId')
-                ->innerJoin(StudentSemesterEnrollment::tableName(), 'studentcourseenrollment.StudentSemesterEnrollmentId = studentsemesterenrollment.StudentSemesterEnrollmentId')
-                ->innerJoin(Student::tableName(), 'student.StudentId = studentsemesterenrollment.StudentId')
-                ->orderBy('offeredcourse.CourseId')
-                ->where(['studentsemesterenrollment.SemesterId' => Semester::find()->current()->SemesterId])
-                ->andWhere(['instructor.InstructorId' => $instructorEvaluationEmail->InstructorId])
-                ->andWhere(['instructor.IsDeleted' => 0])
-                ->andWhere(['offeredcourse.IsDeleted' => 0])
-                ->andWhere(['studentsemesterenrollment.IsDeleted' => 0])
-                ->andWhere(['studentcourseenrollment.IsDeleted' => 0])
-                ->andWhere(['studentcourseenrollment.IsDropped' => 0])
-                ->select('*')
-                ->all();
             foreach ($enrollments as $enrollment) {
                 $studentCourseEvaluation = new StudentCourseEvaluation();
                 $studentCourseEvaluation->InstructorEvaluationEmailId = $instructorEvaluationEmail->InstructorEvaluationEmailId;

@@ -3,7 +3,7 @@
 namespace app\models;
 
 /**
- * This is the ActiveQuery class for [[StudentPlanRow]].
+ * This is the ActiveQuery class for [[StudyPlan]].
  *
  * @see StudyPlan
  */
@@ -11,7 +11,22 @@ class StudyPlanQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[IsDeleted]]=0');
+        return $this->andWhere('[[studyplan.IsDeleted]]=0');
+    }
+
+    public function filter()
+    {
+        return $this->select(['StudyPlanId', 'MajorId', 'CourseLetter', 'Year', 'Season']);
+    }
+
+    public function major($id)
+    {
+        return $this->andWhere(['major.MajorId' => $id]);
+    }
+
+    public function id($id)
+    {
+        return $this->andWhere(['studyplan.StudyPlanId' => $id]);
     }
 
     /**
