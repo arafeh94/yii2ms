@@ -96,6 +96,6 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
      */
     public static function find()
     {
-        return new StudentcourseEnrollmentQuery(get_called_class());
+        return new StudentCourseEnrollmentQuery(get_called_class());
     }
 }
