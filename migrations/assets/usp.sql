@@ -396,6 +396,12 @@ CREATE TABLE studentcourseevaluation
   AdminNote                   VARCHAR(255)                        NULL,
   IsDeleted                   BIT DEFAULT b'0'                    NOT NULL,
   DateAdded                   TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  Exam1                       INT                                 NULL,
+  Exam2                       INT                                 NULL,
+  Final                       INT                                 NULL,
+  Other                       VARCHAR(255)                        NULL,
+  Other2                      VARCHAR(255)                        NULL,
+  Other3                      VARCHAR(255)                        NULL,
   CONSTRAINT studentcourseevaluation_ibfk_1
   FOREIGN KEY (InstructorEvaluationEmailId) REFERENCES instructorevaluationemail (InstructorEvaluationEmailId),
   CONSTRAINT studentcourseevaluation_ibfk_2
