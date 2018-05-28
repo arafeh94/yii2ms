@@ -43,7 +43,7 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
             [['IsDropped', 'IsDeleted'], 'boolean'],
             [['DateAdded'], 'safe'],
             [['FinalGrade'], 'double'],
-            [['StudentSemesterEnrollmentId'], 'exist', 'skipOnError' => true, 'targetClass' => Studentsemesterenrollment::className(), 'targetAttribute' => ['StudentSemesterEnrollmentId' => 'StudentSemesterEnrollmentId']],
+            [['StudentSemesterEnrollmentId'], 'exist', 'skipOnError' => true, 'targetClass' => StudentSemesterEnrollment::className(), 'targetAttribute' => ['StudentSemesterEnrollmentId' => 'StudentSemesterEnrollmentId']],
             [['OfferedCourseId'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['OfferedCourseId' => 'CourseId']],
         ];
     }
