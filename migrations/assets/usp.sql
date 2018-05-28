@@ -1,5 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE user;
+DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS studentsemesterenrollment;
 DROP TABLE IF EXISTS studentplanrow;
 DROP TABLE IF EXISTS studyplan;
