@@ -107,7 +107,7 @@ class EvaluationController extends Controller
         $eval = InstructorEvaluationEmail::find()->active()->where(['InstructorEvaluationEmailId' => $id])->with('instructor')->one();
         $message = Yii::$app->mailer
             ->compose('evaluation/html', ['instructorEvaluationEmail' => $eval, 'instructor' => $eval->instructor])
-            ->setFrom('lau@gmail.com')
+            ->setFrom(Yii::$app->params['adminEmail'])
             ->setTo($eval->instructor->Email)
             ->setSubject('Evaluation Fill Request');
         return $message->send();

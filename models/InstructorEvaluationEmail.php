@@ -35,7 +35,7 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
         if ($insert) {
             $message = Yii::$app->mailer
                 ->compose('evaluation/html', ['instructorEvaluationEmail' => $this, 'instructor' => $this->instructor])
-                ->setFrom('lau@gmail.com')
+                ->setFrom(Yii::$app->params['adminEmail'])
                 ->setTo($this->instructor->Email)
                 ->setSubject('Evaluation Fill Request');
             $message->send();

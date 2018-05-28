@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adminEmail' => 'admin@example.com',
+    'adminEmail' => 'lauusp@azzammourad.org',
     'timezone' => 'Asia/Beirut',
     'dateFormat' => 'yyyy-mm-dd',
     'timeFormat' => 'h:i:s',
