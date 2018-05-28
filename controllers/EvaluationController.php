@@ -146,11 +146,11 @@ class EvaluationController extends Controller
         if (!$instructorEvaluationEmail) {
             return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'WRONG EVALUATION CODE']);
         }
-        if (!$instructorEvaluationEmail->evaluationEmail->AvailableForInstructors) {
+        if (!$instructorEvaluationEmail->evaluationEmail->AvailableForInstructors && Yii::$app->user->isGuest) {
             return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'EVALUATION FORM NOT AVAILABLE']);
         }
 
-        if ($instructorEvaluationEmail->DateFilled) {
+        if ($instructorEvaluationEmail->DateFilled && Yii::$app->user->isGuest) {
             return $this->render('error', ['name' => 'Evaluation Form Error', 'message' => 'EVALUATION ALREADY FILLED']);
         }
 
@@ -172,6 +172,7 @@ class EvaluationController extends Controller
             ->andWhere(['studentcourseenrollment.IsDeleted' => 0])
             ->andWhere(['studentcourseenrollment.IsDropped' => 0])
             ->all();
+
 
         if ($evaluations) {
             $transaction = Yii::$app->db->beginTransaction();
@@ -209,12 +210,16 @@ class EvaluationController extends Controller
             }
 
         } else {
-            foreach ($enrollments as $enrollment) {
-                $studentCourseEvaluation = new StudentCourseEvaluation();
-                $studentCourseEvaluation->InstructorEvaluationEmailId = $instructorEvaluationEmail->InstructorEvaluationEmailId;
-                $studentCourseEvaluation->StudentCourseEnrollmentId = $enrollment['StudentCourseEnrollmentId'];
-                $studentCourseEvaluation->StudentId = $enrollment['StudentId'];
-                $evaluationsModels[] = $studentCourseEvaluation;
+            if ($instructorEvaluationEmail->DateFilled && !Yii::$app->user->isGuest && !$evaluations) {
+                $evaluationsModels = StudentCourseEvaluation::find()->where(['InstructorEvaluationEmailId' => $instructorEvaluationEmail->InstructorEvaluationEmailId])->all();
+            } else {
+                foreach ($enrollments as $enrollment) {
+                    $studentCourseEvaluation = new StudentCourseEvaluation();
+                    $studentCourseEvaluation->InstructorEvaluationEmailId = $instructorEvaluationEmail->InstructorEvaluationEmailId;
+                    $studentCourseEvaluation->StudentCourseEnrollmentId = $enrollment['StudentCourseEnrollmentId'];
+                    $studentCourseEvaluation->StudentId = $enrollment['StudentId'];
+                    $evaluationsModels[] = $studentCourseEvaluation;
+                }
             }
         }
         return $this->render('fill', [

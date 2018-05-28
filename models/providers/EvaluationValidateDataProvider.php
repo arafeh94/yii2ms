@@ -54,8 +54,14 @@ class EvaluationValidateDataProvider extends ActiveDataProvider implements GridC
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{copy} {send}',
+                'template' => '{view} {copy} {send}',
                 'buttons' => [
+                    'view' => function ($key, $model, $index) {
+                        return Html::button('open', [
+                            'class' => "btn btn-success",
+                            'onclick' => "location.href='$model->url'",
+                        ]);
+                    },
                     'copy' => function ($key, $model, $index) {
                         return Html::button('copy', [
                             'class' => "btn btn-danger",

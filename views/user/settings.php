@@ -6,9 +6,19 @@
  * Time: 12:02 AM
  */
 
-/** @var $user \app\models\User */
+use app\widgets\Alert;
+use kartik\widgets\ActiveForm;
 
+
+/** @var $user \app\models\User */
 ?>
 
 
-<h1>Hello <?= $user->FirstName . ' ' . $user->LastName ?></h1>
+
+<div class="login-container card">
+    <h4>Hello <?= $user->FirstName . ' ' . $user->LastName ?></h4>
+    <?php $form = ActiveForm::begin() ?>
+    <?= $form->field($user, 'Password')->passwordInput()->label('New Password') ?>
+    <?= \yii\bootstrap\Html::submitButton('Submit', ['class' => 'btn btn-success']) ?>
+    <?php ActiveForm::end() ?>
+</div>

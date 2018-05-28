@@ -22,7 +22,7 @@ class UserController extends \yii\web\Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'actions' => ['settings'],
+                        'actions' => ['settings', 'change-pass'],
                     ],
                 ],
             ],
@@ -72,7 +72,16 @@ class UserController extends \yii\web\Controller
 
     public function actionSettings()
     {
-        return $this->render('settings', ['user' => \Yii::$app->user->identity]);
+        /** @var User $model */
+        $model = \Yii::$app->user->identity;
+        if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+            $model->save();
+            \Yii::$app->user->logout();
+            $this->goHome();
+            \Yii::$app->end();
+        }
+        return $this->render('settings', ['user' => $model]);
     }
+
 
 }
