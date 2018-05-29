@@ -32,12 +32,28 @@ SELECT
      INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
      INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
      INNER JOIN course sc ON sof.CourseId = sc.CourseId
+     INNER JOIN (SELECT
+                 max(sce2.StudentCourseEnrollmentId) AS max,
+                 sce2.StudentSemesterEnrollmentId,
+                 sce2.OfferedCourseId
+               FROM studentcourseenrollment sce2
+               WHERE sce2.IsDeleted = 0 AND sce2.IsDropped = 0
+               GROUP BY sce2.StudentSemesterEnrollmentId, sce2.OfferedCourseId
+              ) AS e1 ON e1.max = sce.StudentCourseEnrollmentId
    WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId and sse.IsDeleted = 0 and sce.IsDeleted = 0 and sce.IsDropped = 0) AS `creditTaken`,
   (SELECT sum(Credits)
    FROM studentcourseenrollment sce
      INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
      INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
      INNER JOIN course sc ON sof.CourseId = sc.CourseId
+     INNER JOIN (SELECT
+                 max(sce2.StudentCourseEnrollmentId) AS max,
+                 sce2.StudentSemesterEnrollmentId,
+                 sce2.OfferedCourseId
+               FROM studentcourseenrollment sce2
+               WHERE sce2.IsDeleted = 0 AND sce2.IsDropped = 0
+               GROUP BY sce2.StudentSemesterEnrollmentId, sce2.OfferedCourseId
+              ) AS e1 ON e1.max = sce.StudentCourseEnrollmentId
    WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId AND
          sc.MajorId = student.CurrentMajor and  sse.IsDeleted = 0 and sce.IsDeleted = 0 and sce.IsDropped = 0)                                          AS `majorCredit`,
   (SELECT sum(FinalGrade * Credits) / sum(Credits)
@@ -45,12 +61,28 @@ SELECT
      INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
      INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
      INNER JOIN course sc ON sof.CourseId = sc.CourseId
+     INNER JOIN (SELECT
+                 max(sce2.StudentCourseEnrollmentId) AS max,
+                 sce2.StudentSemesterEnrollmentId,
+                 sce2.OfferedCourseId
+               FROM studentcourseenrollment sce2
+               WHERE sce2.IsDeleted = 0 AND sce2.IsDropped = 0
+               GROUP BY sce2.StudentSemesterEnrollmentId, sce2.OfferedCourseId
+              ) AS e1 ON e1.max = sce.StudentCourseEnrollmentId
    WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId and sce.FinalGrade IS NOT NULL and sse.IsDeleted = 0 and sce.IsDeleted = 0 and sce.IsDropped = 0) AS `GPA`,
   (SELECT sum(FinalGrade * Credits) / sum(Credits)
    FROM studentcourseenrollment sce
      INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
      INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
      INNER JOIN course sc ON sof.CourseId = sc.CourseId
+     INNER JOIN (SELECT
+                 max(sce2.StudentCourseEnrollmentId) AS max,
+                 sce2.StudentSemesterEnrollmentId,
+                 sce2.OfferedCourseId
+               FROM studentcourseenrollment sce2
+               WHERE sce2.IsDeleted = 0 AND sce2.IsDropped = 0
+               GROUP BY sce2.StudentSemesterEnrollmentId, sce2.OfferedCourseId
+              ) AS e1 ON e1.max = sce.StudentCourseEnrollmentId
    WHERE sse.StudentId = student.StudentId AND sse.SemesterId = semester.SemesterId AND
          sc.MajorId = student.CurrentMajor and sce.FinalGrade IS NOT NULL and sse.IsDeleted = 0 and sce.IsDeleted = 0 and sce.IsDropped = 0)                                          AS `mGPA`
 FROM `studentcourseevaluation`
