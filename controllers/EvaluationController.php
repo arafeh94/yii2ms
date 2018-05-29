@@ -192,7 +192,7 @@ class EvaluationController extends Controller
                         }
                         if (!$hasError && $instructorEvaluationEmail->evaluationEmail->Quarter == 'Final') {
                             $studentCourseEnrollment = StudentCourseEnrollment::findOne($evaluation['StudentCourseEnrollmentId']);
-                            $studentCourseEnrollment->FinalGrade = (double)($studentCourseEvaluation->Grade / 25);
+                            $studentCourseEnrollment->FinalGrade = (double)($studentCourseEvaluation->Grade);
                             if (!$studentCourseEnrollment->save(false)) $hasError = true;
                         }
 
