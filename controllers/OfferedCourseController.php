@@ -79,4 +79,5 @@ class OfferedCourseController extends \yii\web\Controller
         }
         return false;
     }
+
 }

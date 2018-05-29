@@ -26,6 +26,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\Controller;
 
@@ -176,28 +177,37 @@ class EvaluationController extends Controller
 
         if ($evaluations) {
             $transaction = Yii::$app->db->beginTransaction();
-
             try {
                 $hasError = false;
                 foreach ($evaluations as $evaluation) {
                     $studentCourseEvaluation = new StudentCourseEvaluation();
                     if ($studentCourseEvaluation->load($evaluation, '')) {
                         if ($evaluation['StudentCourseEvaluationId']) {
+                            //if it's an old record
                             $studentCourseEvaluation->StudentCourseEvaluationId = $evaluation['StudentCourseEvaluationId'];
-                            if (!$studentCourseEvaluation->update()) $hasError = true;
+                            if ($studentCourseEvaluation->update() === false) $hasError = true;
                         } else {
+                            //if it's a new record
                             if (!$studentCourseEvaluation->save()) $hasError = true;
-                            if (!$hasError && $instructorEvaluationEmail->evaluationEmail->Quarter == 'Final') {
-                                $studentCourseEnrollment = StudentCourseEnrollment::findOne($evaluation['StudentCourseEnrollmentId']);
-                                $studentCourseEnrollment->FinalGrade = (double)($studentCourseEvaluation->Grade / 25);
-                                $studentCourseEnrollment->save(false);
-                            }
                         }
-                        $evaluationsModels[] = $studentCourseEvaluation;
+                        if (!$hasError && $instructorEvaluationEmail->evaluationEmail->Quarter == 'Final') {
+                            $studentCourseEnrollment = StudentCourseEnrollment::findOne($evaluation['StudentCourseEnrollmentId']);
+                            $studentCourseEnrollment->FinalGrade = (double)($studentCourseEvaluation->Grade / 25);
+                            if (!$studentCourseEnrollment->save(false)) $hasError = true;
+                        }
+
+                        if (!$hasError) {
+                            $studentCourseEvaluation->studentCourseEnrollment->IsDropped = boolval($studentCourseEvaluation->Withdraw);
+                            $studentCourseEvaluation->studentCourseEnrollment->save();
+                        }
+
+                        if (!$hasError && !$studentCourseEvaluation->studentCourseEnrollment->IsDropped && !$studentCourseEvaluation->studentCourseEnrollment->IsDeleted) {
+                            $evaluationsModels[] = $studentCourseEvaluation;
+                        }
                     }
+
                 }
                 if ($hasError) {
-
                     $transaction->rollBack();
                 } else {
                     $instructorEvaluationEmail->DateFilled = Tools::currentDate();
@@ -208,10 +218,15 @@ class EvaluationController extends Controller
             } catch (\Exception $e) {
                 $transaction->rollBack();
             }
-
         } else {
             if ($instructorEvaluationEmail->DateFilled && !Yii::$app->user->isGuest && !$evaluations) {
-                $evaluationsModels = StudentCourseEvaluation::find()->where(['InstructorEvaluationEmailId' => $instructorEvaluationEmail->InstructorEvaluationEmailId])->all();
+                $evaluationsModels = StudentCourseEvaluation::find()
+                    ->innerJoinWith('studentCourseEnrollment')
+                    ->innerJoinWith('studentCourseEnrollment.studentSemesterEnrollment')
+                    ->where(['InstructorEvaluationEmailId' => $instructorEvaluationEmail->InstructorEvaluationEmailId])
+                    ->where(['studentcourseenrollment.IsDeleted' => 0])
+                    ->where(['studentcourseenrollment.IsDropped' => 0])
+                    ->all();
             } else {
                 foreach ($enrollments as $enrollment) {
                     $studentCourseEvaluation = new StudentCourseEvaluation();
@@ -220,8 +235,10 @@ class EvaluationController extends Controller
                     $studentCourseEvaluation->StudentId = $enrollment['StudentId'];
                     $evaluationsModels[] = $studentCourseEvaluation;
                 }
+
             }
         }
+
         return $this->render('fill', [
             'instructorEvaluationEmail' => $instructorEvaluationEmail,
             'enrollments' => $enrollments,

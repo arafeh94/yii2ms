@@ -105,4 +105,15 @@ class EnrollmentController extends \yii\web\Controller
         return $this->redirect(['enrollment/index', 'student' => $student->UniversityId]);
     }
 
+
+    public function actionDrop($id)
+    {
+        if (\Yii::$app->request->isAjax) {
+            $model = StudentCourseEnrollment::findOne($id);
+            $model->IsDropped = !$model->IsDropped;
+            return $model->save();
+        }
+        return false;
+    }
+
 }

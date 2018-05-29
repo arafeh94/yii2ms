@@ -189,7 +189,7 @@ use yii\data\ArrayDataProvider;
             'contentOptions' => ['style' => 'min-width:150px'],
             'format' => 'raw',
             'value' => function ($model, $key, $index) use ($form) {
-                return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['behaviorSelector'], [
+                return $form->field($model, "[{$index}]Participation")->dropDownList(Yii::$app->params['behaviorSelector'], [
                     'prompt' => ''
                 ])->label(false);
             }
@@ -201,7 +201,7 @@ use yii\data\ArrayDataProvider;
             'contentOptions' => ['style' => 'min-width:150px'],
             'format' => 'raw',
             'value' => function ($model, $key, $index) use ($form) {
-                return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['behaviorSelector'], [
+                return $form->field($model, "[{$index}]Effort")->dropDownList(Yii::$app->params['behaviorSelector'], [
                     'prompt' => ''
                 ])->label(false);
             }
@@ -213,7 +213,7 @@ use yii\data\ArrayDataProvider;
             'contentOptions' => ['style' => 'min-width:150px'],
             'format' => 'raw',
             'value' => function ($model, $key, $index) use ($form) {
-                return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['behaviorSelector'], [
+                return $form->field($model, "[{$index}]Attitude")->dropDownList(Yii::$app->params['behaviorSelector'], [
                     'prompt' => ''
                 ])->label(false);
             }
@@ -225,7 +225,7 @@ use yii\data\ArrayDataProvider;
             'contentOptions' => ['style' => 'min-width:180px'],
             'format' => 'raw',
             'value' => function ($model, $key, $index) use ($form) {
-                return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['evaluationSelector'], [
+                return $form->field($model, "[{$index}]Evaluation")->dropDownList(Yii::$app->params['evaluationSelector'], [
                     'prompt' => ''
                 ])->label(false);
             }
@@ -235,6 +235,18 @@ use yii\data\ArrayDataProvider;
             'attribute' => 'InstructorNotes',
             'form' => $form,
             'contentOptions' => ['style' => 'min-width:200px'],
+        ],
+        [
+            'label' => 'Withdraw',
+            'class' => DataColumn::className(),
+            'attribute' => 'Withdraw',
+            'contentOptions' => ['style' => 'min-width:180px'],
+            'format' => 'raw',
+            'value' => function ($model, $key, $index) use ($form) {
+                return $form->field($model, "[{$index}]Withdraw")->dropDownList(Yii::$app->params['withdrawSelector'], [
+                    'prompt' => ''
+                ])->label(false);
+            }
         ],
     ]
     ?>

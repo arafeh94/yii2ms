@@ -105,10 +105,14 @@ class EnrollmentDataProvider extends ActiveDataProvider implements GridConfig
                 'template' => '{drop} {delete}',
                 'buttons' => [
                     'drop' => function ($key, $model, $index) {
-                        $url = Url::to(['offered-course/drop', 'id' => $model->OfferedCourseId]);
+                        $url = Url::to(['enrollment/drop', 'id' => $model->OfferedCourseId]);
+                        $arrow = $model->IsDropped ? 'up' : 'down';
+                        $title = $model->IsDropped ? 'enroll' : 'drop';
                         return Html::tag('span', '', [
-                            'class' => "glyphicon glyphicon-arrow-down pointer",
+                            'class' => "glyphicon glyphicon-arrow-$arrow pointer",
                             'onclick' => "gridControl.drop(this,'$url')",
+                            'data-toggle' => "tooltip",
+                            'title' => "$title"
                         ]);
                     },
                     'delete' => function ($key, $model, $index) {

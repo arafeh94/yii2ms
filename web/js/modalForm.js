@@ -76,6 +76,22 @@
                 toastr.error("This item can't be deleted");
             }
         });
+    },
+    drop: function (element, url) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            success: function (data) {
+                if (data) {
+                    gridControl.reload(true);
+                } else {
+                    toastr.error("This item can't be dropped");
+                }
+            }, error: function (data) {
+                toastr.error("This item can't be dropped");
+            }
+        });
     }
 };
 
@@ -83,7 +99,7 @@
     close: function () {
         $('#dialog-form').modal('hide');
     },
-    open : function () {
+    open: function () {
         $('#dialog-form').modal('show');
     }
 };
