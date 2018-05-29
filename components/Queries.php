@@ -69,7 +69,7 @@ FROM `studentcourseevaluation`
     ON instructorevaluationemail.InstructorEvaluationEmailId = studentcourseevaluation.InstructorEvaluationEmailId
   INNER JOIN `evaluationemail` ON instructorevaluationemail.EvaluationEmailId = evaluationemail.EvaluationEmailId
   INNER JOIN `campus` ON campus.CampusId = offeredcourse.CampusId
-  INNER JOIN `semester` ON semester.SemesterId = studentSemesterEnrollment.SemesterId
+  INNER JOIN `semester` ON semester.SemesterId = studentsemesterenrollment.SemesterId
   INNER JOIN `season` ON season.SeasonId = semester.SeasonId
 WHERE `course`.`IsDeleted` = 0
       AND offeredcourse.IsDeleted = 0
