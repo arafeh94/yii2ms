@@ -34,9 +34,11 @@ if (!isset($model)) $model = new StudentCourseEnrollment();
 ]) ?>
 <?= $form->field($model, 'StudentCourseEnrollmentId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'StudentSemesterEnrollmentId')->hiddenInput([
-    'data-add-value'=>$student->studentSemesterEnrollmentForCurrentSemester->StudentSemesterEnrollmentId
+    'data-add-value' => $student->studentSemesterEnrollmentForCurrentSemester->StudentSemesterEnrollmentId
 ])->label(false) ?>
-<?= $form->field($model, 'OfferedCourseId')->dropDownList(ArrayHelper::map($offeredCourses, 'OfferedCourseId', function($model){return $model->course->major->Abbreviation . $model->course->Number;}))->label('Name') ?>
+<?= $form->field($model, 'OfferedCourseId')->dropDownList(ArrayHelper::map($offeredCourses, 'OfferedCourseId', function ($model) {
+    return $model->course->major->Abbreviation . $model->course->Number;
+}))->label('Name') ?>
 <div class="button-container">
     <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
     <?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>

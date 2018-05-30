@@ -66,12 +66,8 @@ class EnrollmentController extends \yii\web\Controller
             $model = $id === "" ? new StudentCourseEnrollment() : StudentCourseEnrollment::find()->active()->id($id)->one();
             if ($model->isNewRecord) $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
             $saved = null;
-
-
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
-            } else {
-                die(var_dump($model->errors));
             }
             return $this->renderPartial('_form', ['model' => $model, 'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(), 'saved' => $saved, 'student' => Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $student])->one()]);
         }

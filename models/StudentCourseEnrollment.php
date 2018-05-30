@@ -40,6 +40,7 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
         return [
             [['StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId'], 'required'],
             [['StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId'], 'integer'],
+            [['OfferedCourseId'], 'unique', 'targetAttribute' => ['OfferedCourseId', 'StudentSemesterEnrollmentId'], 'filter' => ['IsDeleted' => 0, 'IsDropped' => 0], 'message' => 'Already enrolled in this semester'],
             [['IsDropped', 'IsDeleted'], 'boolean'],
             [['DateAdded'], 'safe'],
             [['FinalGrade'], 'double'],
