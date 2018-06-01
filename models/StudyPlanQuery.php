@@ -21,7 +21,7 @@ class StudyPlanQuery extends \yii\db\ActiveQuery
 
     public function major($id)
     {
-        return $this->andWhere(['major.MajorId' => $id]);
+        return $this->andWhere(['studyplan.MajorId' => $id]);
     }
 
     public function id($id)

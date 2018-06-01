@@ -14,7 +14,7 @@ use Yii;
  * @property int $CreatedByUserId
  * @property string $DateAdded
  *
- * @property StudentCourseEnrollment[] $studentCourseEnrollment
+ * @property StudentCourseEnrollment[] $studentCourseEnrollments
  * @property Student $student
  * @property Semester $semester
  */

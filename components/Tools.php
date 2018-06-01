@@ -20,6 +20,11 @@ class Tools extends Component
         throw new \RuntimeException($message);
     }
 
+    static function var_dump($message)
+    {
+        die(var_dump($message));
+    }
+
     static function prettyPrint($message)
     {
         $message = Json::encode($message);

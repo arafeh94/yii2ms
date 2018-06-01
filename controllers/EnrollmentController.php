@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\Tools;
 use app\models\Instructor;
 use app\models\OfferedCourse;
 use app\models\providers\EnrollmentDataProvider;
@@ -18,37 +19,14 @@ class EnrollmentController extends \yii\web\Controller
 {
     public function actionIndex($student)
     {
-        $model2 = new StudentSemesterEnrollment();
-        if (Yii::$app->request->isPost) {
-            $id2 = \Yii::$app->request->post('StudentSemesterEnrollment')['StudentSemesterEnrollmentId'];
-            $model2 = $id2 == "" ? new StudentSemesterEnrollment() : StudentSemesterEnrollment::find()->id($id2)->one();
-
-            if ($id2 == "") {
-                if ($model2->isNewRecord) {
-                    $model2->CreatedByUserId = \Yii::$app->user->identity->UserId;
-                    $model2->StudentId = Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $student])->one()->StudentId;
-                    $model2->SemesterId = Semester::find()->current()->SemesterId;
-                }
-                $saved2 = null;
-                if ($model2->load(\Yii::$app->request->post()) && $model2->validate()) {
-                    $saved2 = $model2->save();
-                } else {
-                    die(var_dump($model2->StudentId));
-                }
-            } else {
-                $model2->IsDeleted = $model2->IsDeleted ? 0 : 1;
-                if ($model2->validate()) {
-                    $saved2 = $model2->save();
-                } else {
-                    die(var_dump($model2->error));
-                }
-            }
-        }
-
         $provider = new EnrollmentDataProvider(['student' => $student]);
         $isEnrolledInSemester = StudentSemesterEnrollment::find()->innerJoinWith('student')->where(['UniversityId' => $student, 'studentsemesterenrollment.IsDeleted' => 0])->count() > 0;
         $studentSemesterEnrollment = StudentSemesterEnrollment::find()->innerJoinWith('student')->where(['UniversityId' => $student])->one();
-        return $this->render('index', ['model2' => $model2, 'provider' => $provider, 'student' => Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $student])->one(), 'isEnrolledInSemester' => $isEnrolledInSemester, 'studentSemesterEnrollment' => $studentSemesterEnrollment]);
+        return $this->render('index', [
+            'provider' => $provider,
+            'student' => Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $student])->one(), 'isEnrolledInSemester' => $isEnrolledInSemester, 'studentSemesterEnrollment' => $studentSemesterEnrollment,
+            'currentSemester' => Semester::find()->current(),
+        ]);
     }
 
     public function actionView($id)
@@ -69,7 +47,12 @@ class EnrollmentController extends \yii\web\Controller
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
             }
-            return $this->renderPartial('_form', ['model' => $model, 'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(), 'saved' => $saved, 'student' => Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $student])->one()]);
+            return $this->renderPartial('_form', [
+                'model' => $model,
+                'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(),
+                'saved' => $saved,
+                'student' => Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $student])->one()
+            ]);
         }
         return false;
     }

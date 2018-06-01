@@ -23,6 +23,7 @@ function clearForm(form) {
         var field_type = elements[i].type.toLowerCase();
         switch (field_type) {
             case "text":
+            case "number":
             case "password":
             case "textarea":
             case "hidden":
@@ -70,4 +71,27 @@ function copy(text) {
     document.body.removeChild(textarea);
 }
 
+/**
+ * @param $data []
+ */
+function sum($data) {
+    return $data.reduce(function (stack, item) {
+        return isNaN(item) ? stack : stack + item;
+    }, 0);
+}
 
+/**
+ * @param $data []
+ */
+function count($data) {
+    return $data.reduce(function (stack, item) {
+        return isNaN(item) ? stack : stack + 1;
+    }, 0);
+}
+
+/**
+ * @param $data []
+ */
+function avg($data) {
+    return sum($data) / count($data) || 0;
+}

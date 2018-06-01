@@ -24,6 +24,12 @@ use Yii;
  */
 class Semester extends \yii\db\ActiveRecord
 {
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        Semester::find()->current(true);
+    }
+
     /**
      * @inheritdoc
      */

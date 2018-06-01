@@ -13,7 +13,7 @@ use yii\base\Model;
 interface GridConfig
 {
     /**
-     * @return []
+     * @return array
      */
     public function gridColumns();
 

@@ -37,7 +37,7 @@ if (!isset($model)) $model = new StudentCourseEnrollment();
     'data-add-value' => $student->studentSemesterEnrollmentForCurrentSemester->StudentSemesterEnrollmentId
 ])->label(false) ?>
 <?= $form->field($model, 'OfferedCourseId')->dropDownList(ArrayHelper::map($offeredCourses, 'OfferedCourseId', function ($model) {
-    return $model->course->major->Abbreviation . $model->course->Number;
+    return $model->CRN . ' - ' . $model->course->major->Abbreviation . $model->course->Number;
 }))->label('Name') ?>
 <div class="button-container">
     <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>

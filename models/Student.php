@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\Tools;
 use Yii;
 
 /**
@@ -98,9 +99,9 @@ use Yii;
  * @property string $DateAdded
  *
  * @property Cycle $cycle
- * @property StudentCourseEnrollment[] $studentCourseEnrollments
  * @property StudentCourseEvaluation[] $studentCourseEvaluation
  * @property StudentSemesterEnrollment[] $studentSemesterEnrollments
+ * @property Course[] $courses
  */
 class Student extends \yii\db\ActiveRecord
 {
@@ -240,15 +241,6 @@ class Student extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getStudentCourseEnrollments()
-    {
-        return $this->hasMany(StudentCourseEnrollment::className(), ['StudentCourseEnrollmentId' => 'StudentId'])
-            ->via('studentSemesterEnrollments');
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getStudentCourseEvaluations()
     {
         return $this->hasMany(StudentCourseEvaluation::className(), ['StudentId' => 'StudentId']);
@@ -270,6 +262,7 @@ class Student extends \yii\db\ActiveRecord
     {
         return $this->hasOne(StudentSemesterEnrollment::className(), ['StudentId' => 'StudentId'])->where(['SemesterId' => Semester::find()->current()->SemesterId]);
     }
+
 
     /**
      * @inheritdoc

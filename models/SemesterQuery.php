@@ -28,12 +28,14 @@ class SemesterQuery extends \yii\db\ActiveQuery
     }
 
     /**
+     * @param bool $flush
      * @return Semester
      */
-    public function current()
+    public function current($flush = false)
     {
-        return Yii::$app->db->cache(function ($db) {
-            return Semester::find()->where(['IsCurrent' => true])->one();
+        if ($flush) Yii::$app->cache->delete('semester');
+        return Yii::$app->cache->getOrSet('semester', function () {
+            return Semester::find()->active()->where(['IsCurrent' => true])->one();
         }, 0);
     }
 

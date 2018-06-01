@@ -68,13 +68,19 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{enroll} {update} {delete}',
+                'template' => '{enroll} {study-plan} {update} {delete}',
                 'buttons' => [
-
                     'enroll' => function ($key, $model, $index) {
                         $url = Url::to(['enrollment/index', 'student' => $model->UniversityId]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-user pointer",
+                            'onclick' => "location.href='$url'",
+                        ]);
+                    },
+                    'study-plan' => function ($key, $model, $index) {
+                        $url = Url::to(['study-plan/report', 'student' => $model->getPrimaryKey()]);
+                        return Html::tag('span', '', [
+                            'class' => "glyphicon glyphicon-book pointer",
                             'onclick' => "location.href='$url'",
                         ]);
                     },

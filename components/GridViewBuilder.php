@@ -31,6 +31,7 @@ class GridViewBuilder
             'filterModel' => $provider->searchModel(),
             'columns' => $provider->gridColumns(),
             'autoXlFormat' => true,
+            'hover'=>true,
             'export' => [
                 'fontAwesome' => true,
                 'showConfirmAlert' => false,

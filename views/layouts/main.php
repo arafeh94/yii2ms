@@ -41,10 +41,10 @@ $navigation = [
     ['label' => 'Course', 'url' => ['course/index'], 'type' => 1],
     ['label' => 'Instructor', 'url' => ['instructor/index'], 'type' => 1],
     ['label' => 'Terms', 'url' => ['term/index'], 'type' => 1],
-    ['label' => 'Evaluation', 'url' => ['evaluation/index'], 'type' => 2],
     ['label' => 'Students', 'url' => ['student/index'], 'type' => 2],
     ['label' => 'Offered Courses', 'url' => ['offered-course/index'], 'type' => 2],
-    ['label' => 'Evaluation Mails', 'url' => ['evaluation/mailing'], 'type' => 1],
+    ['label' => 'Evaluations', 'url' => ['evaluation/index'], 'type' => 2],
+    ['label' => 'Mails', 'url' => ['evaluation/mailing'], 'type' => 1],
 ];
 ?>
 

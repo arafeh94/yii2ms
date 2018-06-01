@@ -2,10 +2,15 @@
 
 namespace app\controllers;
 
+use app\components\Queries;
+use app\components\Tools;
 use app\models\Major;
 use app\models\providers\StudyPlanDataProvider;
+use app\models\providers\StudyPlanReportDataProvider;
+use app\models\Student;
 use app\models\StudyPlan;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 class StudyPlanController extends \yii\web\Controller
@@ -45,13 +50,33 @@ class StudyPlanController extends \yii\web\Controller
     public function actionUpdate($major)
     {
         if (\Yii::$app->request->isAjax) {
-            $id = \Yii::$app->request->post('StudyPlan')['StudyPlanId'];
-            $model = $id === "" ? new StudyPlan() : StudyPlan::find()->active()->id($id)->one();
-            if ($model->isNewRecord) $model->MajorId = $major;
-            if ($model->isNewRecord) $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
             $saved = null;
-            if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
-                $saved = $model->save();
+            $id = \Yii::$app->request->post('StudyPlan')['StudyPlanId'];
+            if ($id) {
+                $model = StudyPlan::find()->active()->id($id)->one();
+                if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+                    $saved = $model->save();
+                }
+            } else {
+                $post = \Yii::$app->request->post();
+                $letters = ArrayHelper::getValue($post, 'StudyPlan.CourseLetter', '');
+                $model = null;
+                $transaction = \Yii::$app->db->beginTransaction();
+                foreach (explode(',', $letters) as $letter) {
+                    $model = new StudyPlan();
+                    $model->MajorId = $major;
+                    $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
+                    $model->CourseLetter = trim($letter);
+                    $model->Year = ArrayHelper::getValue($post, 'StudyPlan.Year', null);
+                    $model->Season = ArrayHelper::getValue($post, 'StudyPlan.Season', null);
+                    if ($model->validate() && $model->save()) {
+                        $saved = true;
+                    } else {
+                        $saved = false;
+                        break;
+                    }
+                }
+                $saved ? $transaction->commit() : $transaction->rollBack();
             }
             return $this->renderPartial('_form', ['model' => $model, 'majors' => Major::find()->active()->all(), 'saved' => $saved]);
         }
@@ -66,6 +91,16 @@ class StudyPlanController extends \yii\web\Controller
             return $model->save();
         }
         return false;
+    }
+
+    public function actionReport($student)
+    {
+        $student = Student::findOne($student);
+        $provider = new StudyPlanReportDataProvider(['student' => $student]);
+        return $this->render('report', [
+            'student' => $student,
+            'provider' => $provider
+        ]);
     }
 
 
