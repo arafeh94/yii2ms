@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\exceptions\SemesterNotSetException;
 use Yii;
 
 /**
@@ -24,7 +25,7 @@ class SemesterQuery extends \yii\db\ActiveQuery
 
     public function filter()
     {
-        return $this->select(['SemesterId', 'SeasonId', 'StartDate', 'Number', 'EndDate', 'DateAdded', 'IsCurrent', 'Year']);
+        return $this->select(['SemesterId', 'SeasonId', 'StartDate', 'EndDate', 'DateAdded', 'IsCurrent', 'Year']);
     }
 
     /**
@@ -35,7 +36,9 @@ class SemesterQuery extends \yii\db\ActiveQuery
     {
         if ($flush) Yii::$app->cache->delete('semester');
         return Yii::$app->cache->getOrSet('semester', function () {
-            return Semester::find()->active()->where(['IsCurrent' => true])->one();
+            $semester = Semester::find()->active()->where(['IsCurrent' => true])->one();
+            if ($semester == null) throw new SemesterNotSetException();
+            return $semester;
         }, 0);
     }
 

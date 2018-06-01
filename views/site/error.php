@@ -14,10 +14,7 @@ $this->title = $name;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
+        <?= nl2br($message) ?>
     </div>
 
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
 </div>
