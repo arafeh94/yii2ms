@@ -30,6 +30,8 @@ class Math extends Component
 
     public static function avg($items)
     {
-        return self::sum($items) / self::count($items);
+        $count = self::count($items);
+        if ($count == 0) return 0;
+        return self::sum($items) / $count;
     }
 }
