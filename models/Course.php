@@ -42,7 +42,7 @@ class Course extends \yii\db\ActiveRecord
             [['Name'], 'string', 'max' => 255],
             [['Name'], 'unique', 'targetAttribute' => ['Name'], 'filter' => ['IsDeleted' => 0]],
             [['Number'], 'string', 'max' => 8],
-            [['Number'], 'unique', 'targetAttribute' => ['Number'], 'filter' => ['IsDeleted' => 0]],
+            [['Number'], 'unique', 'targetAttribute' => ['Name', 'Number'], 'filter' => ['IsDeleted' => 0]],
             [['MajorId'], 'exist', 'skipOnError' => true, 'targetClass' => Major::className(), 'targetAttribute' => ['MajorId' => 'MajorId']],
         ];
     }
