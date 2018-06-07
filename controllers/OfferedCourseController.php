@@ -50,7 +50,6 @@ class OfferedCourseController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax) {
             $id = \Yii::$app->request->post('OfferedCourse')['OfferedCourseId'];
             $model = $id === "" ? new OfferedCourse() : OfferedCourse::find()->active()->id($id)->one();
-            if ($model->isNewRecord) $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();

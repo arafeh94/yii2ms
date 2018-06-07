@@ -71,7 +71,7 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
                 'template' => '{enroll} {study-plan} {update} {delete}',
                 'buttons' => [
                     'enroll' => function ($key, $model, $index) {
-                        $url = Url::to(['enrollment/index', 'student' => $model->UniversityId]);
+                        $url = Url::to(['enrollment/index', 'uid' => $model->UniversityId]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-user pointer",
                             'onclick' => "location.href='$url'",

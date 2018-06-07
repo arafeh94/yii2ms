@@ -14,12 +14,11 @@ use yii\base\Model;
  */
 class SemesterSearchModel extends Semester
 {
-    public $season;
 
     public function rules()
     {
         return [
-            [['season', 'Year', 'StartDate', 'EndDate'], 'safe']
+            [['Season', 'Year', 'StartDate', 'EndDate'], 'safe']
         ];
     }
 

@@ -31,11 +31,7 @@ class SemesterDataProvider extends ActiveDataProvider implements GridConfig
     public function init()
     {
         parent::init();
-        $this->query = Semester::find()->innerJoinWith('season', true)->active();
-        $this->sort->attributes['season'] = [
-            'asc' => ['season.Name' => SORT_ASC],
-            'desc' => ['season.Name' => SORT_DESC],
-        ];
+        $this->query = Semester::find()->active();
     }
 
     /**
@@ -47,16 +43,13 @@ class SemesterDataProvider extends ActiveDataProvider implements GridConfig
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'Year',
-                'width'=>'80px',
+                'width' => '80px',
             ],
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'season',
+                'attribute' => 'Season',
                 'label' => 'Season',
-                'value' => function ($model) {
-                    return $model->season->Name;
-                },
-                'width'=>'120px',
+                'width' => '120px',
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ['Spring' => 'Spring', 'Fall' => 'Fall', 'Summer' => 'Summer'],
                 'filterWidgetOptions' => [
@@ -120,7 +113,7 @@ class SemesterDataProvider extends ActiveDataProvider implements GridConfig
     public function search($params)
     {
         $this->searchModel($params);
-        $this->query->andFilterWhere(['like', 'season.Name', ArrayHelper::getValue($params, 'season', '')]);
+        $this->query->andFilterWhere(['like', 'semester.Season', ArrayHelper::getValue($params, 'Season', '')]);
         $this->query->andFilterWhere(['like', 'semester.Year', ArrayHelper::getValue($params, 'Year', '')]);
         $this->query->andFilterWhere(['like', 'semester.StartDate', ArrayHelper::getValue($params, 'StartDate', '')]);
         $this->query->andFilterWhere(['like', 'semester.EndDate', ArrayHelper::getValue($params, 'EndDate', '')]);

@@ -19,6 +19,14 @@ use Yii;
  */
 class Department extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
     /**
      * @inheritdoc
      */
@@ -33,7 +41,7 @@ class Department extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['SchoolId', 'Name', 'CreatedByUserId'], 'required'],
+            [['SchoolId', 'Name'], 'required'],
             [['SchoolId', 'CreatedByUserId'], 'integer'],
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],

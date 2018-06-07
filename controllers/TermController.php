@@ -31,7 +31,7 @@ class TermController extends \yii\web\Controller
     {
         $provider = new SemesterDataProvider();
         $provider->search(\Yii::$app->request->get('SemesterSearchModel', []));
-        return $this->render('index', ['provider' => $provider, 'seasons' => Season::find()->active()->all()]);
+        return $this->render('index', ['provider' => $provider]);
     }
 
     public function actionView($id)
@@ -47,7 +47,6 @@ class TermController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax) {
             $id = \Yii::$app->request->post('Semester')['SemesterId'];
             $model = $id === "" ? new Semester() : Semester::find()->active()->id($id)->one();
-            if ($model->isNewRecord) $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
@@ -55,7 +54,7 @@ class TermController extends \yii\web\Controller
                     \Yii::$app->db->createCommand("update semester set IsCurrent = 0 WHERE SemesterId != $model->SemesterId")->execute();
                 }
             }
-            return $this->renderPartial('_form', ['model' => $model, 'seasons' => Season::find()->active()->all(), 'saved' => $saved]);
+            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved]);
         }
         return false;
     }

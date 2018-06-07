@@ -16,7 +16,6 @@ use app\models\providers\EvaluationReportDataProvider;
 use app\models\providers\EvaluationValidateDataProvider;
 use app\models\providers\MailingDataProvider;
 use app\models\School;
-use app\models\Season;
 use app\models\Semester;
 use app\models\Student;
 use app\models\StudentCourseEnrollment;
@@ -59,7 +58,7 @@ class EvaluationController extends Controller
     {
         $provider = new MailingDataProvider();
         $provider->search(\Yii::$app->request->get('MailingSearchModel', []));
-        return $this->render('mailing', ['provider' => $provider, 'semester' => Semester::find()->withSeason()->current()]);
+        return $this->render('mailing', ['provider' => $provider, 'semester' => Semester::find()->current()]);
     }
 
     public function actionView($id)
@@ -79,7 +78,6 @@ class EvaluationController extends Controller
             $isNewRecord = $model->isNewRecord;
             if ($isNewRecord) {
                 $model->Date = Tools::currentDate();
-                $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
                 $model->SemesterId = Semester::find()->current()->SemesterId;
             }
             $saved = null;
@@ -88,7 +86,7 @@ class EvaluationController extends Controller
                 $saved = $model->save();
                 if ($saved && $isNewRecord) $this->sendInstructorEmails($model);
             }
-            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved, 'semester' => Semester::find()->withSeason()->current()]);
+            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved, 'semester' => Semester::find()->current()]);
         }
         return false;
     }

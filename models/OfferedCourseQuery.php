@@ -24,6 +24,13 @@ class OfferedCourseQuery extends \yii\db\ActiveQuery
         return $this->select(['OfferedCourseId', 'CampusId', 'DateAdded', 'SemesterId', 'InstructorId', 'CourseId', 'CRN', 'Section']);
     }
 
+    public function semester($current = true)
+    {
+        $semesterId = $current === true ? Semester::find()->current()->SemesterId : $current;
+        return $this->where(['offeredcourse.SemesterId' => $semesterId]);
+    }
+
+
     /**
      * @inheritdoc
      * @return OfferedCourse[]|array

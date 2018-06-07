@@ -3,13 +3,14 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "semester".
  *
  * @property int $SemesterId
  * @property int $Year
- * @property int $SeasonId
+ * @property string $Season
  * @property string $StartDate
  * @property string $EndDate
  * @property bool $IsCurrent
@@ -19,11 +20,19 @@ use Yii;
  *
  * @property EvaluationEmail[] $evaluationEmails
  * @property OfferedCourse[] $offeredCourse
- * @property Season $season
  * @property StudentSemesterEnrollment[] $studentSemesterEnrollment
  */
-class Semester extends \yii\db\ActiveRecord
+class Semester extends ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -44,11 +53,11 @@ class Semester extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Year', 'SeasonId', 'StartDate', 'EndDate', 'CreatedByUserId'], 'required'],
-            [['Year', 'SeasonId', 'CreatedByUserId'], 'integer'],
+            [['Year', 'Season', 'StartDate', 'EndDate'], 'required'],
+            [['Season'], 'string', 'min' => 0, 'max' => 8],
+            [['Year', 'CreatedByUserId'], 'integer'],
             [['StartDate', 'EndDate', 'DateAdded'], 'safe'],
             [['IsCurrent', 'IsDeleted'], 'boolean'],
-            [['SeasonId'], 'exist', 'skipOnError' => true, 'targetClass' => Season::className(), 'targetAttribute' => ['SeasonId' => 'SeasonId']],
             ['EndDate', 'compare', 'compareAttribute' => 'StartDate', 'operator' => '>='],
         ];
     }
@@ -61,7 +70,7 @@ class Semester extends \yii\db\ActiveRecord
         return [
             'SemesterId' => Yii::t('app', 'Semester'),
             'Year' => Yii::t('app', 'Year'),
-            'SeasonId' => Yii::t('app', 'Season'),
+            'Season' => Yii::t('app', 'Season'),
             'StartDate' => Yii::t('app', 'Start Date'),
             'EndDate' => Yii::t('app', 'End Date'),
             'IsCurrent' => Yii::t('app', 'Is Current'),
@@ -87,13 +96,6 @@ class Semester extends \yii\db\ActiveRecord
         return $this->hasMany(Offeredcourse::className(), ['SemesterId' => 'SemesterId']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSeason()
-    {
-        return $this->hasOne(Season::className(), ['SeasonId' => 'SeasonId']);
-    }
 
     /**
      * @return \yii\db\ActiveQuery

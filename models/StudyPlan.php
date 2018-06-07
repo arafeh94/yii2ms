@@ -20,6 +20,15 @@ use Yii;
  */
 class StudyPlan extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
     /**
      * @inheritdoc
      */
@@ -34,7 +43,7 @@ class StudyPlan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['MajorId', 'CourseLetter', 'Year', 'Season', 'CreatedByUserId'], 'required'],
+            [['MajorId', 'CourseLetter', 'Year', 'Season'], 'required'],
             [['MajorId', 'Year', 'CreatedByUserId'], 'integer'],
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],

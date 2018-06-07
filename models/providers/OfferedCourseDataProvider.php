@@ -39,6 +39,7 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
             ->innerJoinWith('instructor')
             ->innerJoinWith('campus')
             ->active();
+
         $this->sort->attributes['course'] = [
             'asc' => ['course.Name' => SORT_ASC],
             'desc' => ['course.Name' => SORT_DESC],
@@ -64,7 +65,7 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
                 'attribute' => 'semester',
                 'label' => 'Semester',
                 'value' => function ($model) {
-                    return $model->semester->season->Name . ' - ' . $model->semester->Year;
+                    return $model->semester->Season . ' - ' . $model->semester->Year;
                 }
             ],
             [

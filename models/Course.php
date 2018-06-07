@@ -10,7 +10,7 @@ use Yii;
  * @property int $CourseId
  * @property int $MajorId
  * @property string $Name
- * @property string $Number
+ * @property string $Letter
  * @property int $Credits
  * @property int $CreatedByUserId
  * @property string $DateAdded
@@ -21,6 +21,14 @@ use Yii;
  */
 class Course extends \yii\db\ActiveRecord
 {
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
     /**
      * @inheritdoc
      */
@@ -35,14 +43,14 @@ class Course extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['MajorId', 'Name', 'Number', 'Credits', 'CreatedByUserId'], 'required'],
+            [['MajorId', 'Name', 'Letter', 'Credits'], 'required'],
             [['MajorId', 'Credits', 'CreatedByUserId'], 'integer'],
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],
             [['Name'], 'string', 'max' => 255],
             [['Name'], 'unique', 'targetAttribute' => ['Name'], 'filter' => ['IsDeleted' => 0]],
-            [['Number'], 'string', 'max' => 8],
-            [['Number'], 'unique', 'targetAttribute' => ['Name','Number'], 'filter' => ['IsDeleted' => 0]],
+            [['Letter'], 'string', 'max' => 8],
+            [['Letter'], 'unique', 'targetAttribute' => ['Name', 'Letter'], 'filter' => ['IsDeleted' => 0]],
             [['MajorId'], 'exist', 'skipOnError' => true, 'targetClass' => Major::className(), 'targetAttribute' => ['MajorId' => 'MajorId']],
         ];
     }
@@ -56,7 +64,7 @@ class Course extends \yii\db\ActiveRecord
             'CourseId' => Yii::t('app', 'Course'),
             'MajorId' => Yii::t('app', 'Major'),
             'Name' => Yii::t('app', 'Name'),
-            'Number' => Yii::t('app', 'Number'),
+            'Letter' => Yii::t('app', 'Letter'),
             'Credits' => Yii::t('app', 'Credits'),
             'CreatedByUserId' => Yii::t('app', 'Created By User ID'),
             'DateAdded' => Yii::t('app', 'Date Added'),

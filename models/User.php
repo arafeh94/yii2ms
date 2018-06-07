@@ -26,6 +26,15 @@ class User extends ActiveRecord implements IdentityInterface
     public static $ADMIN = 1;
     public static $USER = 2;
 
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
     /**
      * @inheritdoc
      */
@@ -41,7 +50,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['Username', 'Password', 'Email', 'FirstName', 'LastName', 'Type', 'CreatedByUserId'], 'required'],
+            [['Username', 'Password', 'Email', 'FirstName', 'LastName', 'Type'], 'required'],
             [['Type', 'CreatedByUserId'], 'integer'],
             [['IsDeleted'], 'boolean'],
             [['DateAdded'], 'safe'],

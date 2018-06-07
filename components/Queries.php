@@ -9,6 +9,7 @@
 namespace app\components;
 
 
+use app\models\Semester;
 use app\models\Student;
 use Yii;
 use yii\web\Controller;
@@ -103,7 +104,6 @@ FROM `studentcourseevaluation`
   INNER JOIN `evaluationemail` ON instructorevaluationemail.EvaluationEmailId = evaluationemail.EvaluationEmailId
   INNER JOIN `campus` ON campus.CampusId = offeredcourse.CampusId
   INNER JOIN `semester` ON semester.SemesterId = studentsemesterenrollment.SemesterId
-  INNER JOIN `season` ON season.SeasonId = semester.SeasonId
 WHERE `course`.`IsDeleted` = 0
       AND offeredcourse.IsDeleted = 0
       AND studentcourseenrollment.IsDropped = 0
@@ -124,68 +124,201 @@ SQL;
     {
         if ($major === null) $major = Student::findOne($student)->CurrentMajor;
         return <<<SQL
-SELECT
-  s.Year as StudyPlanYear,
-  s.Season as StudyPlanSeason,
-  s.CourseLetter as CourseLetter,
-  c.Name as CourseName,
-  s4.FinalGrade as FinalGrade,
-  c.Credits as CourseCredit,
-  m.RequiredCredits as MajorCredit
-FROM studyplan s
-  INNER JOIN major m ON s.MajorId = m.MajorId
-  LEFT JOIN course c
-    ON c.CourseId = (
-    SELECT c2.CourseId
-    FROM course c2
-      INNER JOIN major m2 ON c2.MajorId = m2.MajorId
-      INNER JOIN offeredcourse o ON c2.CourseId = o.CourseId
-      INNER JOIN studentcourseenrollment s2 ON o.OfferedCourseId = s2.OfferedCourseId
-      INNER JOIN studentsemesterenrollment s3 ON s2.StudentSemesterEnrollmentId = s3.StudentSemesterEnrollmentId
-      INNER JOIN (SELECT
-                    max(sce2.StudentCourseEnrollmentId) AS max,
-                    sce2.StudentSemesterEnrollmentId,
-                    sce2.OfferedCourseId
-                  FROM studentcourseenrollment sce2
-                  WHERE sce2.IsDeleted = 0 AND sce2.IsDropped = 0
-                  GROUP BY sce2.StudentSemesterEnrollmentId, sce2.OfferedCourseId
-                 ) AS e1 ON e1.max = s2.StudentCourseEnrollmentId
-    WHERE (
-            left(explode(s.CourseLetter, '/', 1), number_pos(explode(s.CourseLetter, '/', 1)) - 1) = m2.Abbreviation OR
-            left(explode(s.CourseLetter, '/', 2), number_pos(explode(s.CourseLetter, '/', 1)) - 2) = m2.Abbreviation OR
-            left(explode(s.CourseLetter, '/', 3), number_pos(explode(s.CourseLetter, '/', 1)) - 3) = m2.Abbreviation
-          )
-          AND (
-            c2.Number REGEXP
-            replace(
-                right(
-                    explode(s.CourseLetter, '/', 1),
-                    length(explode(s.CourseLetter, '/', 1)) - number_pos(explode(s.CourseLetter, '/', 1)) + 1
-                ), '-', '.'
-            ) OR
-            c2.Number REGEXP
-            replace(
-                right(
-                    explode(s.CourseLetter, '/', 2),
-                    length(explode(s.CourseLetter, '/', 2)) - number_pos(explode(s.CourseLetter, '/', 2)) + 1),
-                '-', '.'
-            ) OR
-            c2.Number REGEXP
-            replace(
-                right(
-                    explode(s.CourseLetter, '/', 3),
-                    length(explode(s.CourseLetter, '/', 3)) - number_pos(explode(s.CourseLetter, '/', 3)) + 1),
-                '-', '.'
-            )
-          )
-          AND s3.StudentId = {$student} AND s3.IsDeleted = 0 AND s2.IsDeleted = 0 AND s2.IsDropped = 0 
-    LIMIT 1
-  )
-  LEFT JOIN offeredcourse o2 ON c.CourseId = o2.CourseId
-  LEFT JOIN studentcourseenrollment s4 ON o2.OfferedCourseId = s4.OfferedCourseId
-  LEFT JOIN studentsemesterenrollment s5 ON s4.StudentSemesterEnrollmentId = s5.StudentSemesterEnrollmentId
-WHERE m.MajorId = {$major} AND s.IsDeleted = 0
-ORDER BY s.Year, s.Season
+SELECT *
+FROM (SELECT
+        s.Year            AS StudyPlanYear,
+        s.Season          AS StudyPlanSeason,
+        s.CourseLetter    AS CourseLetter,
+        c.Name            AS CourseName,
+        s4.FinalGrade     AS FinalGrade,
+        c.Credits         AS CourseCredit,
+        m.RequiredCredits AS MajorCredit
+      FROM studyplan s
+        INNER JOIN major m ON s.MajorId = m.MajorId
+        LEFT JOIN studentsemesterenrollment s5 ON s5.StudentId = 1 AND s5.IsDeleted = 0
+        LEFT JOIN studentcourseenrollment s4
+          ON s5.StudentSemesterEnrollmentId = s4.StudentSemesterEnrollmentId AND s4.StudyPlanId = s.StudyPlanId AND
+             s4.IsDeleted = 0 AND s4.IsDropped = 0
+        LEFT JOIN offeredcourse o2 ON s4.OfferedCourseId = o2.OfferedCourseId
+        LEFT JOIN course c ON c.CourseId = o2.CourseId
+      WHERE m.MajorId = 1
+            AND s.IsDeleted = 0
+
+      UNION
+
+      SELECT
+        s7.Year            AS StudyPlanYear,
+        s7.Season          AS StudyPlanSeason,
+        NULL               AS CourseLetter,
+        c2.Name            AS CourseName,
+        s2.FinalGrade      AS FinalGrade,
+        c2.Credits         AS CourseCredit,
+        m2.RequiredCredits AS MajorCredit
+      FROM offeredcourse
+        INNER JOIN studentcourseenrollment s2
+          ON offeredcourse.OfferedCourseId = s2.OfferedCourseId AND s2.IsDropped = 0 AND s2.IsDeleted = 0 AND
+             s2.StudyPlanId IS NULL
+        INNER JOIN studentsemesterenrollment s3 ON s2.StudentSemesterEnrollmentId = s3.StudentSemesterEnrollmentId
+        INNER JOIN semester s7 ON s3.SemesterId = s7.SemesterId
+        INNER JOIN course c2 ON offeredcourse.CourseId = c2.CourseId
+        INNER JOIN student s6 ON s6.StudentId = 1
+        INNER JOIN major m2 ON m2.MajorId = 1
+     ) AS qr
+ORDER BY qr.StudyPlanYear, qr.StudyPlanSeason
 SQL;
+    }
+
+    public static function enrollment($student, $major)
+    {
+        if ($major === null) $major = Student::findOne($student)->CurrentMajor;
+        return <<<SQL
+SELECT *
+FROM (SELECT
+        s.StudyPlanId     AS StudyPlanId,
+        s.Year            AS StudyPlanYear,
+        s.Season          AS StudyPlanSeason,
+        s.CourseLetter    AS CourseLetter,
+        c.Name            AS CourseName,
+        c.Credits         AS CourseCredit,
+        m.RequiredCredits AS MajorCredit,
+        s5.StudentId      AS StudentId,
+        s4.StudentCourseEnrollmentId
+      FROM studyplan s
+        INNER JOIN major m ON s.MajorId = m.MajorId
+        LEFT JOIN studentsemesterenrollment s5 ON s5.StudentId = {$student} AND s5.IsDeleted = 0
+        LEFT JOIN studentcourseenrollment s4 ON s5.StudentSemesterEnrollmentId = s4.StudentSemesterEnrollmentId AND
+                                                s4.StudyPlanId = s.StudyPlanId AND s4.IsDeleted = 0 AND s4.IsDropped = 0
+        LEFT JOIN offeredcourse o2 ON s4.OfferedCourseId = o2.OfferedCourseId
+        LEFT JOIN course c ON c.CourseId = o2.CourseId
+      WHERE m.MajorId = {$major}
+            AND s.IsDeleted = 0
+
+      UNION
+
+      SELECT
+        NULL               AS StudyPlanId,
+        s7.Year            AS StudyPlanYear,
+        s7.Season          AS StudyPlanSeason,
+        NULL               AS CourseLetter,
+        c2.Name            AS CourseName,
+        c2.Credits         AS CourseCredit,
+        m2.RequiredCredits AS MajorCredit,
+        s6.StudentId       AS StudentId,
+        s2.StudentCourseEnrollmentId
+      FROM offeredcourse
+        INNER JOIN studentcourseenrollment s2
+          ON offeredcourse.OfferedCourseId = s2.OfferedCourseId AND s2.IsDropped = 0 AND s2.IsDeleted = 0 AND
+             s2.StudyPlanId IS NULL
+        INNER JOIN studentsemesterenrollment s3 ON s2.StudentSemesterEnrollmentId = s3.StudentSemesterEnrollmentId
+        INNER JOIN semester s7 ON s3.SemesterId = s7.SemesterId
+        INNER JOIN course c2 ON offeredcourse.CourseId = c2.CourseId
+        INNER JOIN student s6 ON s6.StudentId = {$student}
+        INNER JOIN major m2 ON m2.MajorId = {$major}
+     ) AS qr
+ORDER BY qr.StudyPlanYear, qr.StudyPlanSeason
+SQL;
+    }
+
+    public static function offeredCourses($semester = null)
+    {
+        if (!$semester) $semester = Semester::find()->current()->SemesterId;
+        return <<<SQL
+SELECT 
+  OfferedCourseId,
+  Section,
+  c.Letter as Letter,
+  c.Name as Title,
+  m.Abbreviation as Major
+ FROM offeredcourse
+INNER JOIN course c ON offeredcourse.CourseId = c.CourseId
+INNER JOIN major m ON c.MajorId = m.MajorId
+WHERE offeredcourse.SemesterId = {$semester}
+SQL;
+    }
+
+    /**
+     * @param $student Student
+     * @param null $year
+     * @param null $season
+     * @return string
+     */
+    public static function gpa($student, $year = null, $season = null)
+    {
+        $query = <<<SQL
+SELECT sum(FinalGrade * Credits) / sum(Credits) as GPA
+   FROM studentcourseenrollment sce
+     INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
+     INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
+     LEFT JOIN studyplan s3 ON sce.StudyPlanId = s3.StudyPlanId
+     INNER JOIN semester s ON sse.SemesterId = s.SemesterId
+     INNER JOIN course sc ON sof.CourseId = sc.CourseId
+     INNER JOIN (SELECT
+                 max(sce2.StudentCourseEnrollmentId) AS max,
+                 sce2.StudentSemesterEnrollmentId,
+                 sce2.OfferedCourseId
+               FROM studentcourseenrollment sce2
+               WHERE sce2.IsDeleted = 0 AND sce2.IsDropped = 0
+               GROUP BY sce2.StudentSemesterEnrollmentId, sce2.OfferedCourseId
+              ) AS e1 ON e1.max = sce.StudentCourseEnrollmentId
+   WHERE sse.StudentId = {$student->StudentId} 
+   AND sce.FinalGrade IS NOT NULL 
+   AND sse.IsDeleted = 0 
+   AND sce.IsDeleted = 0 
+   AND sce.IsDropped = 0
+SQL;
+
+        if ($season) {
+            $query .= " and if(s3.Season is null,lower(s.Season) = lower('{$season}'), lower(s3.Season) = lower('{$season}'))";
+        }
+
+        if ($year) {
+            $query .= " and if(s3.Year is null, s.Year = '{$year}', s3.Year = '{$year}')";
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param $student Student
+     * @param null $year
+     * @param null $season
+     * @return string
+     */
+    public static function mgpa($student, $year = null, $season = null)
+    {
+        $query = <<<SQL
+SELECT sum(FinalGrade * Credits) / sum(Credits) as MGPA
+   FROM studentcourseenrollment sce
+     INNER JOIN studentsemesterenrollment sse ON sce.StudentSemesterEnrollmentId = sse.StudentSemesterEnrollmentId
+     INNER JOIN offeredcourse sof ON sce.OfferedCourseId = sof.OfferedCourseId
+     LEFT JOIN studyplan s3 ON sce.StudyPlanId = s3.StudyPlanId
+     INNER JOIN semester s ON sse.SemesterId = s.SemesterId
+     INNER JOIN course sc ON sof.CourseId = sc.CourseId
+     INNER JOIN (SELECT
+                 max(sce2.StudentCourseEnrollmentId) AS max,
+                 sce2.StudentSemesterEnrollmentId,
+                 sce2.OfferedCourseId
+               FROM studentcourseenrollment sce2
+               WHERE sce2.IsDeleted = 0 AND sce2.IsDropped = 0
+               GROUP BY sce2.StudentSemesterEnrollmentId, sce2.OfferedCourseId
+              ) AS e1 ON e1.max = sce.StudentCourseEnrollmentId
+   WHERE sse.StudentId = {$student->StudentId} 
+   AND sc.MajorId = {$student->CurrentMajor} 
+   and sce.FinalGrade IS NOT NULL 
+   and sse.IsDeleted = 0 
+   and sce.IsDeleted = 0 
+   and sce.IsDropped = 0
+SQL;
+
+
+        if ($season) {
+            $query .= " and if(s3.Season is null,lower(s.Season) = lower('{$season}'), lower(s3.Season) = lower('{$season}'))";
+        }
+
+        if ($year) {
+            $query .= " and if(s3.Year is null, s.Year = '{$year}', s3.Year = '{$year}')";
+        }
+
+        return $query;
     }
 }

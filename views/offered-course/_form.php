@@ -37,7 +37,7 @@ if (!isset($model)) $model = new OfferedCourse();
 <?= $form->field($model, 'OfferedCourseId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'CampusId')->dropDownList(ArrayHelper::map($campuses, 'CampusId', 'Name')) ?>
 <?= $form->field($model, 'SemesterId')->dropDownList(ArrayHelper::map($semesters, 'SemesterId', function ($model) {
-    return $model->season->Name . ' - ' . $model->Year;
+    return $model->Season . ' - ' . $model->Year;
 })) ?>
 <?= $form->field($model, 'CourseId')->dropDownList(ArrayHelper::map($courses, 'CourseId', 'Name')) ?>
 <?= $form->field($model, 'InstructorId')->dropDownList(ArrayHelper::map($instructors, 'InstructorId', function ($model) {

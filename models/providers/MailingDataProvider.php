@@ -50,7 +50,7 @@ class MailingDataProvider extends ActiveDataProvider implements GridConfig
                 'attribute' => 'semester',
                 'label' => 'Semester Name',
                 'value' => function ($model) {
-                    return $model->semester->season->Name . ' - ' . $model->semester->Year;
+                    return $model->semester->Season . ' - ' . $model->semester->Year;
                 },
             ],
             [

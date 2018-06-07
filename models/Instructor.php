@@ -23,6 +23,14 @@ use Yii;
  */
 class Instructor extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
     /**
      * @inheritdoc
      */
@@ -37,7 +45,7 @@ class Instructor extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['UniversityId', 'FirstName', 'LastName', 'Email', 'PhoneExtension', 'Title', 'CreatedByUserId'], 'required'],
+            [['UniversityId', 'FirstName', 'LastName', 'Email', 'PhoneExtension', 'Title'], 'required'],
             [['CreatedByUserId'], 'integer'],
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],

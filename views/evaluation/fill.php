@@ -123,6 +123,8 @@ use yii\data\ArrayDataProvider;
             'form' => $form,
             'config' => ['type' => 'number'],
             'contentOptions' => ['style' => 'min-width:80px'],
+            'pageSummary' => '<u>Step1</u> Insert number of absences',
+            'pageSummaryOptions' => ['style' => 'text-align:center']
         ],
         [
             'label' => 'LetterGrade',
@@ -133,7 +135,9 @@ use yii\data\ArrayDataProvider;
                 return $form->field($model, "[{$index}]Grade")->dropDownList(Yii::$app->params['gpaSelector'], [
                     'prompt' => ''
                 ])->label(false);
-            }
+            },
+            'pageSummary' => '<u>Step2</u> Insert the letter grade',
+            'pageSummaryOptions' => ['style' => 'text-align:center']
         ],
         [
             'class' => FormInputColumn::className(),
@@ -272,7 +276,8 @@ use yii\data\ArrayDataProvider;
         'dataProvider' => new ArrayDataProvider(['allModels' => $evaluations]),
         'pjax' => false,
         'resizableColumns' => false,
-        'columns' => $columns
+        'columns' => $columns,
+        'showPageSummary' => false,
     ]);
     ?>
     <?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-danger']) ?>

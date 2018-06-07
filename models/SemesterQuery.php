@@ -25,7 +25,7 @@ class SemesterQuery extends \yii\db\ActiveQuery
 
     public function filter()
     {
-        return $this->select(['SemesterId', 'SeasonId', 'StartDate', 'EndDate', 'DateAdded', 'IsCurrent', 'Year']);
+        return $this->select(['SemesterId', 'Season', 'StartDate', 'EndDate', 'DateAdded', 'IsCurrent', 'Year']);
     }
 
     /**
@@ -42,10 +42,6 @@ class SemesterQuery extends \yii\db\ActiveQuery
         }, 0);
     }
 
-    public function withSeason()
-    {
-        return $this->innerJoinWith('season');
-    }
 
     /**
      * @inheritdoc

@@ -17,6 +17,14 @@ use Yii;
  */
 class Cycle extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
     /**
      * @inheritdoc
      */
@@ -31,7 +39,7 @@ class Cycle extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Name', 'CreatedByUserId'], 'required'],
+            [['Name'], 'required'],
             [['CreatedByUserId'], 'integer'],
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],

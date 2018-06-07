@@ -12,6 +12,7 @@ namespace app\models\providers;
 use app\components\GridConfig;
 use app\components\Math;
 use app\components\Queries;
+use app\components\QueriesExecutor;
 use app\components\Tools;
 use app\models\Campus;
 use app\models\search\EvaluationReportSearchModel;
@@ -47,6 +48,7 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
     public function init()
     {
         $this->sql = Queries::StudyPlan($this->student->StudentId, $this->student->CurrentMajor);
+        $this->pagination->pageSize = false;
         parent::init();
     }
 
@@ -61,22 +63,36 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
                 'class' => DataColumn::className(),
                 'attribute' => 'StudyPlanYear',
                 'group' => true,
+                'hAlign' => GridView::ALIGN_CENTER,
+                'vAlign' => GridView::ALIGN_MIDDLE,
                 'value' => function ($model) {
-                    return \Yii::$app->params['yearSelector'][$model['StudyPlanYear']] . ' Year';
+                    if (isset(\Yii::$app->params['yearSelector'][$model['StudyPlanYear']])) {
+                        return \Yii::$app->params['yearSelector'][$model['StudyPlanYear']] . ' Year';
+                    } else {
+                        return $model['StudyPlanYear'];
+                    }
                 },
                 'groupOddCssClass' => 'kv-grouped-row',
                 'groupEvenCssClass' => 'kv-grouped-row',
                 'groupFooter' => function ($model, $key, $index) {
+                    $gpa = QueriesExecutor::number(Queries::gpa($this->student, $model['StudyPlanYear']));
+                    $mgpa = QueriesExecutor::number(Queries::mgpa($this->student, $model['StudyPlanYear']));
+                    $gpa = $gpa === null ? 0 : $gpa;
+                    $mgpa = $mgpa === null ? 0 : $mgpa;
                     return [
                         'mergeColumns' => [[0, 3]],
                         'content' => [
                             0 => 'Year Total:',
-                            4 => Gridview::F_AVG,
+                            4 => "GPA:$gpa - mGPA:$mgpa",
                             5 => Gridview::F_SUM,
                         ],
                         'contentFormats' => [
-                            4 => ['format' => 'callback', 'func' => 'avg'],
                             5 => ['format' => 'callback', 'func' => 'sum'],
+                        ],
+                        'contentOptions' => [
+                            1 => ['style' => 'vertical-align: middle'],
+                            4 => ['style' => 'vertical-align: middle'],
+                            5 => ['style' => 'vertical-align: middle'],
                         ],
                         'options' => ['class' => 'success', 'style' => 'font-weight:bold;'],
                     ];
@@ -85,34 +101,44 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
             [
                 'label' => 'Season',
                 'class' => DataColumn::className(),
+                'hAlign' => GridView::ALIGN_CENTER,
+                'vAlign' => GridView::ALIGN_MIDDLE,
                 'attribute' => 'StudyPlanSeason',
                 'group' => true,
                 'subGroupOf' => 0,
                 'groupOddCssClass' => 'kv-grouped-row',
                 'groupEvenCssClass' => 'kv-grouped-row',
-                'groupFooter' => function ($model, $key, $index) {
+                'groupFooter' => function ($model, $key, $index, $widget) {
+                    $gpa = QueriesExecutor::number(Queries::gpa($this->student, $model['StudyPlanYear'], $model['StudyPlanSeason']));
+                    $mgpa = QueriesExecutor::number(Queries::mgpa($this->student, $model['StudyPlanYear'], $model['StudyPlanSeason']));
+                    $gpa = $gpa === null ? 0 : $gpa;
+                    $mgpa = $mgpa === null ? 0 : $mgpa;
                     return [
                         'mergeColumns' => [[1, 3]],
                         'content' => [
                             1 => 'Season Total:',
-                            4 => GridView::F_AVG,
+                            4 => "GPA:$gpa - mGPA:$mgpa",
                             5 => GridView::F_SUM,
                         ],
                         'contentFormats' => [
-                            4 => ['format' => 'callback', 'func' => 'avg'],
                             5 => ['format' => 'callback', 'func' => 'sum'],
+                        ],
+                        'contentOptions' => [
+                            1 => ['style' => 'vertical-align: middle'],
+                            4 => ['style' => 'vertical-align: middle'],
+                            5 => ['style' => 'vertical-align: middle'],
                         ],
                         'options' => ['class' => 'info', 'style' => 'font-weight:bold;'],
                     ];
                 },
             ],
             [
-                'label' => 'Course Letter',
+                'label' => 'Offered Course',
                 'class' => DataColumn::className(),
                 'attribute' => 'CourseLetter',
             ],
             [
-                'label' => 'Course Name',
+                'label' => 'Enrolled Course',
                 'class' => DataColumn::className(),
                 'attribute' => 'CourseName',
                 'pageSummary' => 'Total',
@@ -123,7 +149,11 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
                 'attribute' => 'FinalGrade',
                 'pageSummary' => true,
                 'pageSummaryFunc' => function ($data) {
-                    return round(Math::avg($data), 2);
+                    $gpa = QueriesExecutor::number(Queries::gpa($this->student));
+                    $mgpa = QueriesExecutor::number(Queries::mgpa($this->student));
+                    $gpa = $gpa === null ? 0 : $gpa;
+                    $mgpa = $mgpa === null ? 0 : $mgpa;
+                    return "GPA:$gpa - mGPA:$mgpa";
                 }
             ],
             [
@@ -158,13 +188,6 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
 
     public function searchModel($params = null)
     {
-        if ($this->searchModel === null) {
-            $this->searchModel = new EvaluationReportSearchModel();
-        }
-        if ($params) {
-            $this->searchModel->load($params, '');
-        }
-
-        return $this->searchModel;
+        return null;
     }
 }

@@ -13,18 +13,25 @@ use app\models\Student;
 use app\models\StudentCourseEnrollment;
 use app\models\StudentSemesterEnrollment;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
+use yii\web\HttpException;
 
 class EnrollmentController extends \yii\web\Controller
 {
-    public function actionIndex($student)
+
+
+    public function actionIndex($uid)
     {
+        $student = Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $uid])->one();
         $provider = new EnrollmentDataProvider(['student' => $student]);
-        $isEnrolledInSemester = StudentSemesterEnrollment::find()->innerJoinWith('student')->where(['UniversityId' => $student, 'studentsemesterenrollment.IsDeleted' => 0])->count() > 0;
-        $studentSemesterEnrollment = StudentSemesterEnrollment::find()->innerJoinWith('student')->where(['UniversityId' => $student])->one();
+        $isEnrolledInSemester = StudentSemesterEnrollment::find()->innerJoinWith('student')->where(['UniversityId' => $uid, 'studentsemesterenrollment.IsDeleted' => 0])->count() > 0;
+        $studentSemesterEnrollment = StudentSemesterEnrollment::find()->innerJoinWith('student')->where(['UniversityId' => $uid])->one();
         return $this->render('index', [
             'provider' => $provider,
-            'student' => Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $student])->one(), 'isEnrolledInSemester' => $isEnrolledInSemester, 'studentSemesterEnrollment' => $studentSemesterEnrollment,
+            'student' => $student,
+            'isEnrolledInSemester' => $isEnrolledInSemester,
+            'studentSemesterEnrollment' => $studentSemesterEnrollment,
             'currentSemester' => Semester::find()->current(),
         ]);
     }
@@ -42,7 +49,6 @@ class EnrollmentController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax) {
             $id = \Yii::$app->request->post('StudentCourseEnrollment')['StudentCourseEnrollmentId'];
             $model = $id === "" ? new StudentCourseEnrollment() : StudentCourseEnrollment::find()->active()->id($id)->one();
-            if ($model->isNewRecord) $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
@@ -81,9 +87,32 @@ class EnrollmentController extends \yii\web\Controller
             $enrollment->CreatedByUserId = Yii::$app->user->identity->UserId;
         }
         $enrollment->save();
-        return $this->redirect(['enrollment/index', 'student' => $student->UniversityId]);
+        return $this->redirect(['enrollment/index', 'uid' => $student->UniversityId]);
     }
 
+    public function actionRegisterCourse()
+    {
+        $post = Yii::$app->request->post();
+        $hasEditable = ArrayHelper::getValue($post, 'hasEditable', false);
+        $StudyPlanId = ArrayHelper::getValue($post, 'StudyPlanId', false);
+        $OfferedCourseId = ArrayHelper::getValue($post, 'OfferedCourseId', false);
+        $StudentId = ArrayHelper::getValue($post, 'StudentId', false);
+        if ($hasEditable && $StudyPlanId && $OfferedCourseId && $StudentId) {
+            $enrollment = new StudentCourseEnrollment();
+            $enrollment->OfferedCourseId = $OfferedCourseId;
+            $enrollment->CreatedByUserId = Yii::$app->user->identity->UserId;
+            $enrollment->StudyPlanId = $StudyPlanId;
+            $enrollment->StudentSemesterEnrollmentId = StudentSemesterEnrollment::find()->semester()->student($StudentId)->one()->StudentSemesterEnrollmentId;
+            $message = '';
+            if (!$enrollment->save()) {
+                $errors = $enrollment->getFirstErrors();
+                $message = reset($errors);
+            }
+            echo Json::encode(['output' => 'OK', 'message' => $message]);
+            Yii::$app->end(200);
+        }
+        return false;
+    }
 
     public function actionDrop($id)
     {

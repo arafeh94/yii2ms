@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\Cached;
 use Yii;
 
 /**
@@ -26,6 +27,21 @@ use Yii;
  */
 class OfferedCourse extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        Cached::offeredCourseSelector(null, true);
+        parent::afterSave($insert, $changedAttributes);
+    }
+
     /**
      * @inheritdoc
      */
@@ -40,7 +56,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CampusId', 'SemesterId', 'InstructorId', 'CourseId', 'CRN', 'Section', 'CreatedByUserId'], 'required'],
+            [['CampusId', 'SemesterId', 'InstructorId', 'CourseId', 'CRN', 'Section'], 'required'],
             [['CampusId', 'SemesterId', 'InstructorId', 'CourseId', 'CRN', 'Section', 'CreatedByUserId'], 'integer'],
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],

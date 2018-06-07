@@ -46,20 +46,20 @@ class CourseDataProvider extends ActiveDataProvider implements GridConfig
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'major',
-                'label' => 'Major Name',
+                'label' => 'Major',
                 'value' => function ($model) {
                     return $model->major->Name;
                 }
             ],
             [
-                'label' => 'Course Name',
+                'label' => 'Title',
                 'class' => DataColumn::className(),
                 'attribute' => 'Name',
             ],
             [
-                'label' => 'Number',
+                'label' => 'Course',
                 'class' => DataColumn::className(),
-                'attribute' => 'Number',
+                'attribute' => 'Letter',
             ],
             [
                 'label' => 'Credits',

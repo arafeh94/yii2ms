@@ -18,10 +18,17 @@ use Yii;
  *
  * @property Course[] $courses
  * @property Department $department
- * @property StudentPlan[] $studentPlan
  */
 class Major extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
     /**
      * @inheritdoc
      */
@@ -36,7 +43,7 @@ class Major extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['DepartmentId', 'Name', 'Abbreviation', 'RequiredCredits', 'CreatedByUserId'], 'required'],
+            [['DepartmentId', 'Name', 'Abbreviation', 'RequiredCredits'], 'required'],
             [['DepartmentId', 'RequiredCredits', 'CreatedByUserId'], 'integer'],
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],

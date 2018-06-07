@@ -9,7 +9,11 @@
 namespace app\models\providers;
 
 
+use app\components\Cached;
 use app\components\GridConfig;
+use app\components\Math;
+use app\components\Queries;
+use app\components\Tools;
 use app\models\Campus;
 use app\models\Course;
 use app\models\Department;
@@ -19,23 +23,30 @@ use app\models\OfferedCourse;
 use app\models\search\DepartmentSearchModel;
 use app\models\search\MajorSearchModel;
 use app\models\search\OfferedCourseSearchModel;
+use app\models\Student;
 use app\models\StudentCourseEnrollment;
+use kartik\editable\Editable;
+use kartik\form\ActiveForm;
 use kartik\grid\DataColumn;
+use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
+use kartik\grid\SerialColumn;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
+use yii\data\SqlDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
-class EnrollmentDataProvider extends ActiveDataProvider implements GridConfig
+class EnrollmentDataProvider extends SqlDataProvider implements GridConfig
 {
     public $searchModel;
+    /** @var Student */
     public $student;
 
     public function init()
     {
+        $this->sql = Queries::enrollment($this->student->StudentId, $this->student->CurrentMajor);
         parent::init();
-        $this->query = StudentCourseEnrollment::find()->innerJoinWith('offeredCourse')->innerJoinWith('studentSemesterEnrollment')->innerJoinWith('studentSemesterEnrollment.student')->where(['student.UniversityId' => $this->student])->innerJoinWith('offeredCourse.instructor')->innerJoinWith('offeredCourse.campus')->innerJoinWith('offeredCourse.course')->active();
     }
 
     /**
@@ -45,80 +56,77 @@ class EnrollmentDataProvider extends ActiveDataProvider implements GridConfig
     {
         return [
             [
+                'label' => 'Year',
                 'class' => DataColumn::className(),
-                'attribute' => 'campus',
-                'label' => 'Campus',
+                'attribute' => 'StudyPlanYear',
+                'hAlign' => GridView::ALIGN_CENTER,
+                'vAlign' => GridView::ALIGN_MIDDLE,
+                'group' => true,
                 'value' => function ($model) {
-                    return $model->offeredCourse->campus->Name;
+                    if (isset(\Yii::$app->params['yearSelector'][$model['StudyPlanYear']])) {
+                        return \Yii::$app->params['yearSelector'][$model['StudyPlanYear']] . ' Year';
+                    } else {
+                        return $model['StudyPlanYear'];
+                    }
                 },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Campus::find()->orderBy('Name')->active()->all(), 'Name', 'Name'),
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => ''],
+                'groupOddCssClass' => 'kv-grouped-row',
+                'groupEvenCssClass' => 'kv-grouped-row',
             ],
             [
+                'label' => 'Season',
                 'class' => DataColumn::className(),
-                'attribute' => 'course',
-                'label' => 'Course',
-                'value' => function ($model) {
-                    return $model->offeredCourse->course->Name;
+                'attribute' => 'StudyPlanSeason',
+                'hAlign' => GridView::ALIGN_CENTER,
+                'vAlign' => GridView::ALIGN_MIDDLE,
+                'group' => true,
+                'subGroupOf' => 0,
+                'groupOddCssClass' => 'kv-grouped-row',
+                'groupEvenCssClass' => 'kv-grouped-row',
+            ],
+            [
+                'label' => 'Suggested Course',
+                'class' => DataColumn::className(),
+                'attribute' => 'CourseLetter',
+            ],
+            [
+                'label' => 'Enrolled Course',
+                'class' => EditableColumn::className(),
+                'attribute' => 'CourseName',
+                'refreshGrid' => true,
+                'readonly' => function ($model) {
+                    return !$model['StudyPlanId'];
                 },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Course::find()->orderBy('Name')->active()->all(), 'Name', 'Name'),
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => ''],
-            ],
-            [
-                'class' => DataColumn::className(),
-                'attribute' => 'instructor',
-                'label' => 'Instructor',
-                'value' => function ($model) {
-                    return $model->offeredCourse->instructor->Title . '. ' . $model->offeredCourse->instructor->FirstName . ' ' . $model->offeredCourse->instructor->LastName;
+                'editableOptions' => function ($model, $key, $index, $column) {
+                    return [
+                        'beforeInput' => function ($form, $widget) {
+                            echo Html::hiddenInput('StudyPlanId', $widget->model['StudyPlanId']);
+                            echo Html::hiddenInput('StudentId', $widget->model['StudentId']);
+                        },
+                        'name' => 'OfferedCourseId',
+                        'header' => 'Course Enrollment',
+                        'inputType' => Editable::INPUT_SELECT2,
+                        'formOptions' => [
+                            'method' => 'post',
+                            'action' => ['enrollment/register-course']
+                        ],
+                        'options' => [
+                            'options' => [
+                                'prompt' => 'Select Course',
+                            ],
+                            'data' => Cached::offeredCourseSelector($model['CourseLetter'])
+                        ]
+                    ];
                 },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Instructor::find()->orderBy('FirstName')->active()->all(), function ($model) {
-                    return $model->FirstName . ' ' . $model->LastName;
-                }, function ($model) {
-                    return $model->FirstName . ' ' . $model->LastName;
-                }),
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => ''],
-            ],
-            [
-                'class' => DataColumn::className(),
-                'attribute' => 'offeredCourse.CRN',
-                'width' => '100px'
-            ],
-            [
-                'class' => DataColumn::className(),
-                'attribute' => 'offeredCourse.Section',
-                'width' => '100px'
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{drop} {delete}',
+                'template' => '{delete}',
                 'buttons' => [
-                    'drop' => function ($key, $model, $index) {
-                        $url = Url::to(['enrollment/drop', 'id' => $model->OfferedCourseId]);
-                        $arrow = $model->IsDropped ? 'up' : 'down';
-                        $title = $model->IsDropped ? 'enroll' : 'drop';
-                        return Html::tag('span', '', [
-                            'class' => "glyphicon glyphicon-arrow-$arrow pointer",
-                            'onclick' => "gridControl.drop(this,'$url')",
-                            'data-toggle' => "tooltip",
-                            'title' => "$title"
-                        ]);
-                    },
                     'delete' => function ($key, $model, $index) {
-                        $url = Url::to(['enrollment/delete', 'id' => $model->StudentCourseEnrollmentId]);
+                        $url = Url::to(['enrollment/drop', 'id' => $model['StudentCourseEnrollmentId']]);
                         return Html::tag('span', '', [
-                            'class' => "glyphicon glyphicon-trash pointer",
+                            'class' => "glyphicon glyphicon-arrow-down pointer",
+                            'title' => 'drop',
                             'onclick' => "gridControl.delete(this,'$url')",
                         ]);
                     },

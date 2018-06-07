@@ -21,7 +21,7 @@ class CourseQuery extends \yii\db\ActiveQuery
 
     public function filter()
     {
-        return $this->select(['CourseId','MajorId','Name','Number','Credits','DateAdded']);
+        return $this->select(['CourseId', 'MajorId', 'Name', 'Letter', 'Credits', 'DateAdded']);
     }
 
     /**

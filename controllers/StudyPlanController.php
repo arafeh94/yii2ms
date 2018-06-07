@@ -65,7 +65,6 @@ class StudyPlanController extends \yii\web\Controller
                 foreach (explode(',', $letters) as $letter) {
                     $model = new StudyPlan();
                     $model->MajorId = $major;
-                    $model->CreatedByUserId = \Yii::$app->user->identity->UserId;
                     $model->CourseLetter = trim($letter);
                     $model->Year = ArrayHelper::getValue($post, 'StudyPlan.Year', null);
                     $model->Season = ArrayHelper::getValue($post, 'StudyPlan.Season', null);

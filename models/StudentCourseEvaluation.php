@@ -36,6 +36,7 @@ use Yii;
  */
 class StudentCourseEvaluation extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */

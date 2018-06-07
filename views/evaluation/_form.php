@@ -31,7 +31,7 @@ if (!isset($model)) $model = new EvaluationEmail();
     'options' => ['data-pjax' => '']
 ]) ?>
 <?= $form->field($model, 'EvaluationEmailId')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'SemesterId')->dropDownList([$semester->SemesterId => $semester->Year . ' - ' . $semester->season->Name], ['data-add-value' => $semester->SemesterId, 'readonly' => 'readonly', 'disabled' => 'disabled']); ?>
+<?= $form->field($model, 'SemesterId')->dropDownList([$semester->SemesterId => $semester->Year . ' - ' . $semester->Season], ['data-add-value' => $semester->SemesterId, 'readonly' => 'readonly', 'disabled' => 'disabled']); ?>
 <?= $form->field($model, 'Description')->textInput() ?>
 <?= $form->field($model, 'Quarter')->dropDownList(Yii::$app->params['quarterSelector']) ?>
 <?= $form->field($model, 'AvailableForInstructors')->dropDownList(Yii::$app->params['booleanSelector']) ?>

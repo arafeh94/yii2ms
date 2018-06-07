@@ -95,3 +95,9 @@ function count($data) {
 function avg($data) {
     return sum($data) / count($data) || 0;
 }
+
+function gpa($source, $data) {
+    console.log('source', $source);
+    console.log('data', $data);
+    return 1;
+}

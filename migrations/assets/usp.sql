@@ -1,14 +1,11 @@
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS studentsemesterenrollment;
-DROP TABLE IF EXISTS studentplanrow;
 DROP TABLE IF EXISTS studyplan;
-DROP TABLE IF EXISTS studentplan;
 DROP TABLE IF EXISTS studentcourseevaluation;
 DROP TABLE IF EXISTS studentcourseenrollment;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS semester;
-DROP TABLE IF EXISTS season;
 DROP TABLE IF EXISTS school;
 DROP TABLE IF EXISTS offeredcourse;
 DROP TABLE IF EXISTS migration;
@@ -38,7 +35,7 @@ CREATE TABLE course
     PRIMARY KEY,
   MajorId         INT                                 NOT NULL,
   Name            VARCHAR(255)                        NOT NULL,
-  Number          VARCHAR(8)                          NOT NULL,
+  Letter          VARCHAR(12)                         NOT NULL,
   Credits         INT                                 NOT NULL,
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL,
@@ -162,14 +159,6 @@ ALTER TABLE course
   ADD CONSTRAINT course_ibfk_1
 FOREIGN KEY (MajorId) REFERENCES major (MajorId);
 
-CREATE TABLE migration
-(
-  version    VARCHAR(180) NOT NULL
-    PRIMARY KEY,
-  apply_time INT          NULL
-)
-  ENGINE = MyISAM;
-
 CREATE TABLE offeredcourse
 (
   OfferedCourseId INT AUTO_INCREMENT
@@ -183,6 +172,8 @@ CREATE TABLE offeredcourse
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   IsDeleted       BIT DEFAULT b'0'                    NOT NULL,
+  CONSTRAINT offeredcourse_ibfk_1
+  FOREIGN KEY (CampusId) REFERENCES campus (CampusId),
   CONSTRAINT offeredcourse_ibfk_3
   FOREIGN KEY (InstructorId) REFERENCES instructor (InstructorId),
   CONSTRAINT offeredcourse_ibfk_2
@@ -216,43 +207,29 @@ ALTER TABLE department
   ADD CONSTRAINT department_ibfk_1
 FOREIGN KEY (SchoolId) REFERENCES school (SchoolId);
 
-CREATE TABLE season
-(
-  SeasonId  INT AUTO_INCREMENT
-    PRIMARY KEY,
-  Name      VARCHAR(255)     NULL,
-  IsDeleted BIT DEFAULT b'0' NULL
-)
-  ENGINE = InnoDB
-  COLLATE = utf8_bin;
 
 CREATE TABLE semester
 (
   SemesterId      INT AUTO_INCREMENT
     PRIMARY KEY,
   Year            INT                                 NOT NULL,
-  SeasonId        INT                                 NOT NULL,
+  Season          VARCHAR(8)                          NOT NULL,
   StartDate       DATE                                NOT NULL,
   EndDate         DATE                                NOT NULL,
   IsCurrent       BIT                                 NOT NULL,
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  IsDeleted       BIT DEFAULT b'0'                    NOT NULL,
-  CONSTRAINT semester_ibfk_1
-  FOREIGN KEY (SeasonId) REFERENCES season (SeasonId)
+  IsDeleted       BIT DEFAULT b'0'                    NOT NULL
 )
   ENGINE = InnoDB
   COLLATE = utf8_bin;
-
-CREATE INDEX SeasonId
-  ON semester (SeasonId);
 
 ALTER TABLE evaluationemail
   ADD CONSTRAINT evaluationemail_ibfk_1
 FOREIGN KEY (SemesterId) REFERENCES semester (SemesterId);
 
 ALTER TABLE offeredcourse
-  ADD CONSTRAINT offeredcourse_ibfk_1
+  ADD CONSTRAINT offeredcourse_ibfk_5
 FOREIGN KEY (SemesterId) REFERENCES semester (SemesterId);
 
 CREATE TABLE student
@@ -365,6 +342,7 @@ CREATE TABLE studentcourseenrollment
   IsDeleted                   BIT DEFAULT b'0'                    NOT NULL,
   CreatedByUserId             INT                                 NOT NULL,
   DateAdded                   TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  StudyPlanId                 INT                                 NULL,
   CONSTRAINT studentcourseenrollment_ibfk_3
   FOREIGN KEY (OfferedCourseId) REFERENCES offeredcourse (OfferedCourseId)
 )
@@ -376,6 +354,9 @@ CREATE INDEX StudentSemesterEnrollmentId
 
 CREATE INDEX OfferedCourseId
   ON studentcourseenrollment (OfferedCourseId);
+
+CREATE INDEX StudyPlanId
+  ON studentcourseenrollment (StudyPlanId);
 
 CREATE TABLE studentcourseevaluation
 (
@@ -402,38 +383,25 @@ CREATE TABLE studentcourseevaluation
   Other                       VARCHAR(255)                        NULL,
   Other2                      VARCHAR(255)                        NULL,
   Other3                      VARCHAR(255)                        NULL,
+  Withdraw                    VARCHAR(2)                          NULL,
+  CONSTRAINT studentcourseevaluation_ibfk_3
+  FOREIGN KEY (StudentCourseEnrollmentId) REFERENCES studentcourseenrollment (StudentCourseEnrollmentId),
   CONSTRAINT studentcourseevaluation_ibfk_1
   FOREIGN KEY (InstructorEvaluationEmailId) REFERENCES instructorevaluationemail (InstructorEvaluationEmailId),
   CONSTRAINT studentcourseevaluation_ibfk_2
-  FOREIGN KEY (StudentId) REFERENCES student (StudentId),
-  CONSTRAINT studentcourseevaluation_ibfk_3
-  FOREIGN KEY (StudentCourseEnrollmentId) REFERENCES studentcourseenrollment (StudentCourseEnrollmentId)
+  FOREIGN KEY (StudentId) REFERENCES student (StudentId)
 )
   ENGINE = InnoDB
   COLLATE = utf8_bin;
+
+CREATE INDEX studentcourseevaluation_ibfk_3
+  ON studentcourseevaluation (StudentCourseEnrollmentId);
 
 CREATE INDEX InstructorEvaluationEmailId
   ON studentcourseevaluation (InstructorEvaluationEmailId);
 
 CREATE INDEX StudentId
   ON studentcourseevaluation (StudentId);
-
-CREATE TABLE studyplan
-(
-  StudyPlanId     INT AUTO_INCREMENT PRIMARY KEY,
-  MajorId         INT                                 NOT NULL,
-  CourseLetter    VARCHAR(50)                         NOT NULL,
-  Year            TINYINT(1)                          NOT NULL,
-  Season          VARCHAR(8)                          NOT NULL,
-  CreatedByUserId INT                                 NOT NULL,
-  DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  IsDeleted       BIT DEFAULT b'0'                    NOT NULL,
-  CONSTRAINT studentplanrow_ibfk_1
-  FOREIGN KEY (MajorId) REFERENCES major (MajorId)
-)
-  ENGINE = InnoDB
-  COLLATE = utf8_bin;
-
 
 CREATE TABLE studentsemesterenrollment
 (
@@ -462,6 +430,30 @@ ALTER TABLE studentcourseenrollment
   ADD CONSTRAINT studentcourseenrollment_ibfk_2
 FOREIGN KEY (StudentSemesterEnrollmentId) REFERENCES studentsemesterenrollment (StudentSemesterEnrollmentId);
 
+CREATE TABLE studyplan
+(
+  StudyPlanId     INT AUTO_INCREMENT
+    PRIMARY KEY,
+  MajorId         INT                                 NOT NULL,
+  CourseLetter    VARCHAR(50)                         NOT NULL,
+  Year            TINYINT(1)                          NOT NULL,
+  Season          VARCHAR(8)                          NOT NULL,
+  CreatedByUserId INT                                 NOT NULL,
+  DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  IsDeleted       BIT DEFAULT b'0'                    NOT NULL,
+  CONSTRAINT studentplanrow_ibfk_1
+  FOREIGN KEY (MajorId) REFERENCES major (MajorId)
+)
+  ENGINE = InnoDB
+  COLLATE = utf8_bin;
+
+CREATE INDEX studentplanrow_ibfk_1
+  ON studyplan (MajorId);
+
+ALTER TABLE studentcourseenrollment
+  ADD CONSTRAINT studentcourseenrollment_ibfk_4
+FOREIGN KEY (StudyPlanId) REFERENCES studyplan (StudyPlanId);
+
 CREATE TABLE user
 (
   UserId          INT AUTO_INCREMENT
@@ -486,15 +478,6 @@ CREATE TABLE user
 INSERT INTO `campus` (`CampusId`, `Name`, `IsDeleted`) VALUES
   (1, 'Beirut', b'0'),
   (2, 'Byblos', b'0');
-
---
--- Dumping data for table `season`
---
-
-INSERT INTO `season` (`SeasonId`, `Name`, `IsDeleted`) VALUES
-  (1, 'Spring', b'0'),
-  (2, 'Fall', b'0'),
-  (3, 'Summer', b'0');
 
 --
 -- Dumping data for table `user`

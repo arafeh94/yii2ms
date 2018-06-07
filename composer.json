@@ -23,7 +23,8 @@
         "dmirogin/yii2-js-urlmanager": "^1.2",
         "yiisoft/yii2-jui": "*",
         "kartik-v/yii2-widgets": "^3.4",
-        "kartik-v/yii2-editable": "^1.7"
+        "kartik-v/yii2-editable": "^1.7",
+        "phpoffice/phpspreadsheet": "^1.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

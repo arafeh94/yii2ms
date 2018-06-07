@@ -35,7 +35,7 @@ if (!isset($model)) $model = new Semester();
 ]) ?>
 <?= $form->field($model, 'SemesterId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'Year')->textInput() ?>
-<?= $form->field($model, 'SeasonId')->dropDownList(ArrayHelper::map($seasons, 'SeasonId', 'Name')); ?>
+<?= $form->field($model, 'Season')->dropDownList(Yii::$app->params['seasonSelector']); ?>
 <?= $form->field($model, 'StartDate')->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'options' => ['class' => 'form-control', 'autocomplete' => 'off']]) ?>
 <?= $form->field($model, 'EndDate')->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'options' => ['class' => 'form-control', 'autocomplete' => 'off']]) ?>
 <?= $form->field($model, 'IsCurrent')->dropDownList(Yii::$app->params['booleanSelector']) ?>

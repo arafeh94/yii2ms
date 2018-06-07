@@ -105,6 +105,15 @@ use Yii;
  */
 class Student extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
     /**
      * @inheritdoc
      */
@@ -119,7 +128,7 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CycleId', 'UniversityId', 'FirstName', 'FatherName', 'LastName', 'CreatedByUserId', 'CurrentMajor'], 'required'],
+            [['CycleId', 'UniversityId', 'FirstName', 'FatherName', 'LastName', 'CurrentMajor'], 'required'],
             [['CycleId', 'DOBMonth', 'DOBYear', 'CurrentMajor', 'Certificate', 'CreatedByUserId'], 'integer'],
             [['TwelveGrade', 'TenGrade', 'ElevenGrade', 'EnglishExamScore'], 'number'],
             [['IsDataEntryComplete', 'IsInitialVettingDone', 'VettingUpdated', 'AntiTerrorismCertification', 'StudentMOUSigned', 'HasLaptop', 'IsGraduated', 'TookAcademicCourseLeadership', 'IsUpdatingIDP', 'IsDeleted'], 'boolean'],

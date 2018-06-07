@@ -24,6 +24,14 @@ use yii\db\ActiveRecord;
  */
 class EvaluationEmail extends ActiveRecord
 {
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
     /**
      * @inheritdoc
      */
@@ -39,7 +47,7 @@ class EvaluationEmail extends ActiveRecord
     {
         return [
             [['EvaluationEmailId', 'SemesterId', 'CreatedByUserId', 'AvailableForInstructors'], 'integer'],
-            [['SemesterId', 'Date', 'Quarter', 'Description', 'CreatedByUserId'], 'required'],
+            [['SemesterId', 'Date', 'Quarter', 'Description'], 'required'],
             [['Date', 'DateAdded'], 'safe'],
             [['IsEnabled', 'IsDeleted'], 'boolean'],
             [['Quarter'], 'string', 'max' => 25],

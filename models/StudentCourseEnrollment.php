@@ -15,6 +15,7 @@ use Yii;
  * @property bool $IsDeleted
  * @property int $CreatedByUserId
  * @property string $DateAdded
+ * @property string $StudyPlanId
  *
  * @property Student $student
  * @property StudentSemesterEnrollment $studentSemesterEnrollment
@@ -23,6 +24,13 @@ use Yii;
 class StudentCourseEnrollment extends \yii\db\ActiveRecord
 {
 
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->CreatedByUserId = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
 
     /**
      * @inheritdoc
@@ -38,8 +46,8 @@ class StudentCourseEnrollment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId'], 'required'],
-            [['StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId'], 'integer'],
+            [['StudentSemesterEnrollmentId', 'OfferedCourseId'], 'required'],
+            [['StudentSemesterEnrollmentId', 'OfferedCourseId', 'CreatedByUserId', 'StudyPlanId'], 'integer'],
             [['OfferedCourseId'], 'unique', 'targetAttribute' => ['OfferedCourseId', 'StudentSemesterEnrollmentId'], 'filter' => ['IsDeleted' => 0, 'IsDropped' => 0], 'message' => 'Already enrolled in this semester'],
             [['IsDropped', 'IsDeleted'], 'boolean'],
             [['DateAdded'], 'safe'],
