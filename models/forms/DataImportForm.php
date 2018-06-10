@@ -42,6 +42,7 @@ class DataImportForm extends Model
         if ($this->validate()) {
             $date = date('ymdhis');
             $this->savedName = "import_$date.{$this->dataFile->extension}";
+            if (!file_exists('uploads')) mkdir('uploads', 0777, true);
             $this->dataFile->saveAs("uploads/{$this->savedName}");
             return true;
         } else {
