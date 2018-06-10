@@ -9,11 +9,13 @@
 /** @var $model Student */
 
 /** @var $cycles Cycle[] */
+
 /** @var $majors Major[] */
 
 use app\models\Cycle;
 use app\models\Major;
 use app\models\Student;
+use kartik\widgets\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
@@ -49,10 +51,18 @@ if (!isset($model)) $model = new Student();
     <div id="personal-info" class="tab-pane fade in active">
         <?= $form->field($model, 'CycleId')->dropDownList(ArrayHelper::map($cycles, 'CycleId', 'Name'), ['prompt' => '']); ?>
         <?= $form->field($model, 'UniversityId')->textInput(); ?>
-        <?= $form->field($model, 'CurrentMajor')->dropDownList(ArrayHelper::map($majors, 'MajorId', 'Name')); ?>
         <?= $form->field($model, 'FirstName')->textInput(); ?>
         <?= $form->field($model, 'FatherName')->textInput(); ?>
         <?= $form->field($model, 'LastName')->textInput(); ?>
+        <?= $form->field($model, 'CurrentMajor')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map($majors, 'MajorId', 'Name'),
+            'options' => ['placeholder' => ''],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]); ?>
+        <?= $form->field($model, 'TransferredCredits')->textInput(['type' => 'number']); ?>
+        <?= $form->field($model, 'TransferredCreditsDetails')->textInput(); ?>
         <?= $form->field($model, 'Gender')->dropDownList(['M' => 'Male', 'F' => 'Female'], ['prompt' => '']); ?>
         <?= $form->field($model, 'MeritStatus')->dropDownList(['Single' => 'Single', 'Engaged' => 'Engaged', 'Married' => 'Married'], ['prompt' => '']); ?>
         <?= $form->field($model, 'Email')->textInput(['type' => 'email']); ?>

@@ -9,6 +9,7 @@ use app\models\providers\StudyPlanDataProvider;
 use app\models\providers\StudyPlanReportDataProvider;
 use app\models\Student;
 use app\models\StudyPlan;
+use app\models\User;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
@@ -54,7 +55,7 @@ class StudyPlanController extends \yii\web\Controller
             $id = \Yii::$app->request->post('StudyPlan')['StudyPlanId'];
             if ($id) {
                 $model = StudyPlan::find()->active()->id($id)->one();
-                if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+                if ($model->load(\Yii::$app->request->post()) && $model->validateCourseLetter() && $model->validate()) {
                     $saved = $model->save();
                 }
             } else {
@@ -68,7 +69,8 @@ class StudyPlanController extends \yii\web\Controller
                     $model->CourseLetter = trim($letter);
                     $model->Year = ArrayHelper::getValue($post, 'StudyPlan.Year', null);
                     $model->Season = ArrayHelper::getValue($post, 'StudyPlan.Season', null);
-                    if ($model->validate() && $model->save()) {
+                    $model->CreatedByUserId = User::get()->UserId;
+                    if ($model->validateCourseLetter() && $model->validate() && $model->save()) {
                         $saved = true;
                     } else {
                         $saved = false;
@@ -77,7 +79,7 @@ class StudyPlanController extends \yii\web\Controller
                 }
                 $saved ? $transaction->commit() : $transaction->rollBack();
             }
-            return $this->renderPartial('_form', ['model' => $model, 'majors' => Major::find()->active()->all(), 'saved' => $saved]);
+            return $this->renderAjax('_form', ['model' => $model, 'majors' => Major::find()->active()->all(), 'saved' => $saved]);
         }
         return false;
     }

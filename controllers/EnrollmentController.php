@@ -12,6 +12,7 @@ use app\models\SemesterQuery;
 use app\models\Student;
 use app\models\StudentCourseEnrollment;
 use app\models\StudentSemesterEnrollment;
+use app\models\User;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
@@ -49,11 +50,12 @@ class EnrollmentController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax) {
             $id = \Yii::$app->request->post('StudentCourseEnrollment')['StudentCourseEnrollmentId'];
             $model = $id === "" ? new StudentCourseEnrollment() : StudentCourseEnrollment::find()->active()->id($id)->one();
+            if ($model->isNewRecord) $model->CreatedByUserId = User::get()->UserId;
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
             }
-            return $this->renderPartial('_form', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
                 'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(),
                 'saved' => $saved,

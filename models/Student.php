@@ -97,8 +97,11 @@ use Yii;
  * @property bool $IsDeleted
  * @property int $CreatedByUserId
  * @property string $DateAdded
+ * @property string $TransferredCredits
+ * @property string $TransferredCreditsDetails
  *
  * @property Cycle $cycle
+ * @property Major $major
  * @property StudentCourseEvaluation[] $studentCourseEvaluation
  * @property StudentSemesterEnrollment[] $studentSemesterEnrollments
  * @property Course[] $courses
@@ -106,13 +109,6 @@ use Yii;
 class Student extends \yii\db\ActiveRecord
 {
 
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->CreatedByUserId = Yii::$app->user->identity->getId();
-        }
-        return parent::beforeSave($insert);
-    }
 
     /**
      * @inheritdoc
@@ -129,13 +125,13 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             [['CycleId', 'UniversityId', 'FirstName', 'FatherName', 'LastName', 'CurrentMajor'], 'required'],
-            [['CycleId', 'DOBMonth', 'DOBYear', 'CurrentMajor', 'Certificate', 'CreatedByUserId'], 'integer'],
+            [['CycleId', 'DOBMonth', 'DOBYear', 'CurrentMajor', 'Certificate', 'TransferredCredits', 'CreatedByUserId'], 'integer'],
             [['TwelveGrade', 'TenGrade', 'ElevenGrade', 'EnglishExamScore'], 'number'],
             [['IsDataEntryComplete', 'IsInitialVettingDone', 'VettingUpdated', 'AntiTerrorismCertification', 'StudentMOUSigned', 'HasLaptop', 'IsGraduated', 'TookAcademicCourseLeadership', 'IsUpdatingIDP', 'IsDeleted'], 'boolean'],
             [['SIIDate', 'Duration', 'StartOfEmployment', 'DateOfPhoneCall', 'DateAdded', 'OverallImpression', 'EnrollmentConditions', 'SupportProgram', 'HousingTransportAllowance', 'PreparatorySemester',], 'safe'],
             [['UniversityId'], 'string', 'max' => 9],
             [['UniversityId'], 'unique', 'targetAttribute' => ['UniversityId'], 'filter' => ['IsDeleted' => 0]],
-            [['FirstName', 'LastName', 'PhoneNumber', 'Email', 'Village', 'Caza', 'Mouhafaza', 'SchoolName', 'LaptopSerialNumber', 'ExpectedGraduation', 'SEESATScores', 'AdmissionSemester', 'AdmissionMajor', 'TD', 'AcademicCoordinator', 'StudentMentor', 'CommunityDevelopmentProject', 'BankAccount', 'Branch', 'IDPCompleted', 'EligibilitySummer', 'SummersTakenCount', 'ReferredToCounselor', 'CSPCompleted', 'SchoolBackground', 'OverallImpression', 'Issues', 'Faculty', 'OldMajor', 'ConditionsChangeMajor', 'EnrolledTeachingDiploma', 'ParticipatedUSPSponsored', 'EnrolledDoubleMajor', 'EnrolledMajorMinor', 'CurrentEnrollmentStatus', 'Probation', 'ProbationRemovalDeadline', 'MeritStatus', 'Internship', 'InternshipHost', 'EngagedWorkshops', 'EngagedSoftSkills', 'EngagedEntrepreneurship', 'LeadershipTraining', 'CivicEngagement', 'CommunityService', 'USPCompetition', 'StudentClub', 'NameOfClub', 'EmploymentStatus', 'EmploymentLocation', 'IsFullTimePosition', 'GraduateStudies', 'GraduateStudiesLocation', 'PhoneCallMadeBy', 'RemarkableAchievements', 'EnrollmentConditions', 'SupportProgram', 'HousingTransportAllowance', 'PreparatorySemester'], 'string', 'max' => 255],
+            [['FirstName', 'LastName', 'PhoneNumber', 'Email', 'Village', 'Caza', 'Mouhafaza', 'SchoolName', 'LaptopSerialNumber', 'ExpectedGraduation', 'SEESATScores', 'AdmissionSemester', 'AdmissionMajor', 'TD', 'AcademicCoordinator', 'StudentMentor', 'CommunityDevelopmentProject', 'BankAccount', 'Branch', 'IDPCompleted', 'EligibilitySummer', 'SummersTakenCount', 'ReferredToCounselor', 'CSPCompleted', 'SchoolBackground', 'OverallImpression', 'Issues', 'Faculty', 'OldMajor', 'ConditionsChangeMajor', 'EnrolledTeachingDiploma', 'ParticipatedUSPSponsored', 'EnrolledDoubleMajor', 'EnrolledMajorMinor', 'CurrentEnrollmentStatus', 'Probation', 'ProbationRemovalDeadline', 'MeritStatus', 'Internship', 'InternshipHost', 'EngagedWorkshops', 'EngagedSoftSkills', 'EngagedEntrepreneurship', 'LeadershipTraining', 'CivicEngagement', 'CommunityService', 'USPCompetition', 'StudentClub', 'NameOfClub', 'EmploymentStatus', 'EmploymentLocation', 'IsFullTimePosition', 'GraduateStudies', 'GraduateStudiesLocation', 'PhoneCallMadeBy', 'RemarkableAchievements', 'EnrollmentConditions', 'SupportProgram', 'HousingTransportAllowance', 'PreparatorySemester', 'TransferredCreditsDetails'], 'string', 'max' => 255],
             [['Gender'], 'string', 'max' => 1],
             [['CycleId'], 'exist', 'skipOnError' => true, 'targetClass' => Cycle::className(), 'targetAttribute' => ['CycleId' => 'CycleId']],
         ];
@@ -236,6 +232,8 @@ class Student extends \yii\db\ActiveRecord
             'IsDeleted' => Yii::t('app', 'Is Deleted'),
             'CreatedByUserId' => Yii::t('app', 'Created By User ID'),
             'DateAdded' => Yii::t('app', 'Date Added'),
+            'TransferredCredits' => Yii::t('app', 'Transferred Credits'),
+            'TransferredCreditsDetails' => Yii::t('app', 'Transferred Credits Details'),
         ];
     }
 
@@ -272,6 +270,10 @@ class Student extends \yii\db\ActiveRecord
         return $this->hasOne(StudentSemesterEnrollment::className(), ['StudentId' => 'StudentId'])->where(['SemesterId' => Semester::find()->current()->SemesterId]);
     }
 
+    public function getMajor()
+    {
+        return $this->hasOne(Major::className(), ['MajorId' => 'CurrentMajor']);
+    }
 
     /**
      * @inheritdoc

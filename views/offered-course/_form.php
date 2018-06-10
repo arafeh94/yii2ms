@@ -14,6 +14,7 @@
  */
 
 use app\models\OfferedCourse;
+use kartik\widgets\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
@@ -39,10 +40,21 @@ if (!isset($model)) $model = new OfferedCourse();
 <?= $form->field($model, 'SemesterId')->dropDownList(ArrayHelper::map($semesters, 'SemesterId', function ($model) {
     return $model->Season . ' - ' . $model->Year;
 })) ?>
-<?= $form->field($model, 'CourseId')->dropDownList(ArrayHelper::map($courses, 'CourseId', 'Name')) ?>
-<?= $form->field($model, 'InstructorId')->dropDownList(ArrayHelper::map($instructors, 'InstructorId', function ($model) {
-    return $model->FirstName . ' ' . $model->LastName;
-})) ?>
+<?= $form->field($model, 'CourseId')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map($courses, 'CourseId', 'Name'),
+    'options' => ['placeholder' => ''],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); ?>
+
+<?= $form->field($model, 'InstructorId')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map($instructors, 'InstructorId', 'fullName'),
+    'options' => ['placeholder' => ''],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); ?>
 <?= $form->field($model, 'CRN')->textInput(['type' => 'number']) ?>
 <?= $form->field($model, 'Section')->textInput(['type' => 'number']) ?>
 <div class="button-container">

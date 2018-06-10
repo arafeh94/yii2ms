@@ -8,16 +8,24 @@
 
 namespace app\models\forms;
 
+use app\components\DataImporter;
 use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
+/**
+ * Class DataImportForm
+ * @package app\models\forms
+ *
+ * @property String $savedFile
+ */
 class DataImportForm extends Model
 {
     /**
      * @var UploadedFile
      */
     public $dataFile;
+    private $savedName;
 
     public function rules()
     {
@@ -32,22 +40,19 @@ class DataImportForm extends Model
     public function upload()
     {
         if ($this->validate()) {
-            $this->dataFile->saveAs('uploads/' . $this->dataFile->baseName . '.' . $this->dataFile->extension);
+            $date = date('ymdhis');
+            $this->savedName = "import_$date.{$this->dataFile->extension}";
+            $this->dataFile->saveAs("uploads/{$this->savedName}");
             return true;
         } else {
+            $this->addError('dataFile', 'file not uploaded');
             return false;
         }
     }
 
-    public function import()
+    public function getSavedFile()
     {
-        if (!$this->upload()) {
-            $this->addError('dataFile', 'file not uploaded');
-            return;
-        }
-        $file = Yii::$app->basePath . "/web/uploads/{$this->dataFile->name}";
+        return Yii::$app->basePath . "/web/uploads/{$this->savedName}";
     }
-
-
 
 }

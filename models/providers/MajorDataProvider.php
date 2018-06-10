@@ -66,6 +66,12 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
                 'filterInputOptions' => ['placeholder' => ''],
             ],
             [
+                'label' => 'Required Credits',
+                'class' => DataColumn::className(),
+                'attribute' => 'RequiredCredits',
+                'filterInputOptions' => ['placeholder' => 'bellow or equal','class'=>'form-control'],
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{study-plan} {update} {delete}',
                 'buttons' => [
@@ -100,6 +106,9 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
         $this->searchModel($params);
         $this->query->andFilterWhere(['like', 'lower(major.Name)', strtolower(ArrayHelper::getValue($params, 'Name', ''))]);
         $this->query->andFilterWhere(['like', "concat(school.Name,' - ',department.Name)", ArrayHelper::getValue($params, 'department', '')]);
+        if (($credits = ArrayHelper::getValue($params, 'RequiredCredits', null)) !== null) {
+            $this->query->andFilterWhere(['<=', "major.RequiredCredits", $credits]);
+        }
     }
 
     public function searchModel($params = null)

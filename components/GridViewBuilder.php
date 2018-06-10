@@ -31,17 +31,20 @@ class GridViewBuilder
             'filterModel' => $provider->searchModel(),
             'columns' => $provider->gridColumns(),
             'autoXlFormat' => true,
-            'hover'=>true,
+            'hover' => true,
             'export' => [
                 'fontAwesome' => true,
                 'showConfirmAlert' => false,
                 'target' => GridView::TARGET_BLANK
             ],
+            'exportConfig' => [
+                GridView::PDF => Yii::$app->params['pdf']($title),
+            ],
             'toolbar' => [
                 ['content' =>
                     Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type' => 'button', 'title' => Yii::t('app', "Add"), 'class' => 'btn btn-success', 'onclick' => 'modalForm(this)']) . ' ' .
                     Html::button('<i class="glyphicon glyphicon-repeat"></i>', ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('app', 'Reset Grid'), 'onclick' => 'gridControl.reload(true)']) . ' ' .
-                    ArrayHelper::getValue($config,'content','')
+                    ArrayHelper::getValue($config, 'content', '')
                 ],
                 '{export}',
                 '{toggleData}',

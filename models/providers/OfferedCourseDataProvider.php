@@ -45,8 +45,8 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
             'desc' => ['course.Name' => SORT_DESC],
         ];
         $this->sort->attributes['instructor'] = [
-            'asc' => ['instructor.Name' => SORT_ASC],
-            'desc' => ['instructor.Name' => SORT_DESC],
+            'asc' => ['instructor.FirstName' => SORT_ASC],
+            'desc' => ['instructor.FirstName' => SORT_DESC],
         ];
         $this->sort->attributes['campus'] = [
             'asc' => ['campus.Name' => SORT_ASC],

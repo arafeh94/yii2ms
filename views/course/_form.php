@@ -11,6 +11,7 @@
 /** @var $majors \app\models\Major[] */
 
 use app\models\Course;
+use kartik\widgets\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
@@ -32,7 +33,13 @@ if (!isset($model)) $model = new Course();
     'options' => ['data-pjax' => '']
 ]) ?>
 <?= $form->field($model, 'CourseId')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'MajorId')->dropDownList(ArrayHelper::map($majors, 'MajorId', 'Name'))->label('Major') ?>
+<?= $form->field($model, 'MajorId')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map($majors, 'MajorId', 'Name'),
+    'options' => ['placeholder' => ''],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); ?>
 <?= $form->field($model, 'Name')->textInput() ?>
 <?= $form->field($model, 'Letter')->textInput() ?>
 <?= $form->field($model, 'Credits')->textInput(['type' => 'number']) ?>

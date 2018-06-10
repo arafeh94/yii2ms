@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Department;
 use app\models\providers\SchoolDataProvider;
 use app\models\School;
+use app\models\User;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -45,11 +46,12 @@ class SchoolController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax) {
             $id = \Yii::$app->request->post('School')['SchoolId'];
             $model = $id === "" ? new School() : School::find()->active()->id($id)->one();
+            if ($model->isNewRecord) $model->CreatedByUserId = User::get()->UserId;
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
             }
-            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved]);
+            return $this->renderAjax('_form', ['model' => $model, 'saved' => $saved]);
         }
         return false;
     }

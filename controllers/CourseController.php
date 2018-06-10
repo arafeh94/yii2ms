@@ -7,6 +7,7 @@ use app\models\Major;
 use app\models\OfferedCourse;
 use app\models\providers\CourseDataProvider;
 use app\models\Student;
+use app\models\User;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -48,10 +49,12 @@ class CourseController extends \yii\web\Controller
             $id = \Yii::$app->request->post('Course')['CourseId'];
             $model = $id === "" ? new Course() : Course::find()->active()->id($id)->one();
             $saved = null;
+
+            if ($model->isNewRecord) $model->CreatedByUserId = User::get()->UserId;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
             }
-            return $this->renderPartial('_form', ['model' => $model, 'majors' => Major::find()->active()->all(), 'saved' => $saved]);
+            return $this->renderAjax('_form', ['model' => $model, 'majors' => Major::find()->active()->all(), 'saved' => $saved]);
         }
         return false;
     }

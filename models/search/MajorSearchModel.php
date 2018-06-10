@@ -18,7 +18,7 @@ class MajorSearchModel extends Major
     public function rules()
     {
         return [
-            [['Name', 'department'], 'safe']
+            [['Name', 'department', 'RequiredCredits'], 'safe']
         ];
     }
 }

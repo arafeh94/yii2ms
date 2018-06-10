@@ -45,6 +45,7 @@ $navigation = [
     ['label' => 'Offered Courses', 'url' => ['offered-course/index'], 'type' => 2],
     ['label' => 'Evaluations', 'url' => ['evaluation/index'], 'type' => 2],
     ['label' => 'Mails', 'url' => ['evaluation/mailing'], 'type' => 1],
+    ['label' => 'Import', 'url' => ['import/index'], 'type' => 1],
 ];
 ?>
 

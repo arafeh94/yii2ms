@@ -21,13 +21,7 @@ use Yii;
  */
 class Course extends \yii\db\ActiveRecord
 {
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->CreatedByUserId = Yii::$app->user->identity->getId();
-        }
-        return parent::beforeSave($insert);
-    }
+
 
     /**
      * @inheritdoc

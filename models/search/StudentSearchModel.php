@@ -14,11 +14,12 @@ use app\models\Student;
 class StudentSearchModel extends Student
 {
     public $cycle;
+    public $major;
 
     public function rules()
     {
         return [
-            [['cycle', 'FirstName', 'LastName', 'FatherName'], 'safe']
+            [['cycle', 'major' ,'FirstName', 'LastName', 'FatherName'], 'safe']
         ];
     }
 }

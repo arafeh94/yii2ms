@@ -37,7 +37,13 @@
     function load(data) {
         $('#dialog-form').find('input, select').each(function () {
             var att = attribute(this);
-            if (att && typeof data[att] !== 'undefined') $(this).val(map(data[att]));
+            if (att && typeof data[att] !== 'undefined') {
+                var el = $(this);
+                el.val(map(data[att]));
+                if (el.data('select2')) {
+                    el.trigger('change.select2');
+                }
+            }
         });
     }
 

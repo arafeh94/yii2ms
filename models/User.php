@@ -26,14 +26,14 @@ class User extends ActiveRecord implements IdentityInterface
     public static $ADMIN = 1;
     public static $USER = 2;
 
-
-    public function beforeSave($insert)
+    /**
+     * @return User
+     */
+    public static function get()
     {
-        if ($insert) {
-            $this->CreatedByUserId = Yii::$app->user->identity->getId();
-        }
-        return parent::beforeSave($insert);
+        return Yii::$app->user->identity;
     }
+
 
     /**
      * @inheritdoc

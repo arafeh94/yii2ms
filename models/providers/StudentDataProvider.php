@@ -11,6 +11,7 @@ namespace app\models\providers;
 
 use app\components\GridConfig;
 use app\models\Cycle;
+use app\models\Major;
 use app\models\search\StudentSearchModel;
 use app\models\Student;
 use kartik\grid\DataColumn;
@@ -27,10 +28,13 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
     public function init()
     {
         parent::init();
-        $this->query = Student::find()->joinWith('cycle')->active();
+        $this->query = Student::find()->joinWith('cycle')->joinWith('major')->active();
         $this->sort->attributes['cycle'] = [
             'asc' => ['cycle.Name' => SORT_ASC],
             'desc' => ['cycle.Name' => SORT_DESC],
+        ];$this->sort->attributes['major'] = [
+            'asc' => ['major.Name' => SORT_ASC],
+            'desc' => ['major.Name' => SORT_DESC],
         ];
     }
 
@@ -65,6 +69,20 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'FatherName'
+            ],
+            [
+                'label' => 'Major',
+                'class' => DataColumn::className(),
+                'attribute' => 'major',
+                'value' => function ($model) {
+                    return $model->major->Name;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Major::find()->orderBy('Name')->active()->all(), 'Name', 'Name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => ''],
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -109,6 +127,9 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
         if (isset($params['cycle'])) {
             $this->query->andFilterWhere(['like', 'cycle.Name', $params['cycle']]);
             unset($params['cycle']);
+        }if (isset($params['major'])) {
+            $this->query->andFilterWhere(['like', 'major.Name', $params['major']]);
+            unset($params['major']);
         }
         foreach ($params as $key => $value) {
             $this->query->andFilterWhere(['like', "lower({$key})", strtolower($value)]);

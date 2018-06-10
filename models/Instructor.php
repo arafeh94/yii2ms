@@ -24,13 +24,6 @@ use Yii;
 class Instructor extends \yii\db\ActiveRecord
 {
 
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->CreatedByUserId = Yii::$app->user->identity->getId();
-        }
-        return parent::beforeSave($insert);
-    }
     /**
      * @inheritdoc
      */
@@ -77,7 +70,11 @@ class Instructor extends \yii\db\ActiveRecord
 
     public function getFullName()
     {
-        return $this->Title . '. ' . $this->FirstName . ' ' . $this->LastName;
+        if ($this->FirstName && $this->LastName) {
+            return $this->Title . '. ' . $this->FirstName . ' ' . $this->LastName;
+        } else {
+            return 'none';
+        }
     }
 
     /**

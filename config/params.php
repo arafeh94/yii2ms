@@ -14,5 +14,61 @@ return [
     'evaluationSelector' => ["Can't Tell" => "Can't Tell", "Top 25%" => "Top 25%", "Above Class Average" => "Above Class Average", "Average Student" => "Average Student", "Below Class Average" => "Below Class Average", "Must Withdraw" => "Must Withdraw", "?" => "?"],
     'yearSelector' => ['1' => 'First', '2' => 'Second', '3' => 'Third', '4' => 'Forth', '5' => 'Fifth'],
     'withdrawSelector' => ['I' => 'I', 'WI' => 'WI', 'WF' => 'WF', 'WP' => 'WP'],
-    'seasonSelector' => ['FALL' => 'FALL', 'Summer' => 'Summer', 'Spring' => 'Spring']
+    'seasonSelector' => ['FALL' => 'FALL', 'Summer' => 'Summer', 'Spring' => 'Spring'],
+    'pdf' => function ($title) {
+
+        $pdfHeader = [
+            'L' => [
+                'content' => '',
+            ],
+            'C' => [
+                'content' => $title,
+                'font-size' => 10,
+                'font-style' => 'B',
+                'font-family' => 'arial',
+                'color' => '#333333'
+            ],
+            'R' => [
+                'content' => 'PDF',
+            ],
+            'line' => true,
+        ];
+
+        $pdfFooter = [
+            'L' => [
+                'content' => '',
+                'font-size' => 10,
+                'color' => '#333333',
+                'font-family' => 'arial',
+            ],
+            'C' => [
+                'content' => '',
+            ],
+            'R' => [
+                'content' => '',
+                'font-size' => 10,
+                'color' => '#333333',
+                'font-family' => 'arial',
+            ],
+            'line' => true,
+        ];
+        return [
+            'filename' => $title,
+            'config' => [
+                'methods' => [
+                    'SetHeader' => [
+                        ['odd' => $pdfHeader, 'even' => $pdfHeader]
+                    ],
+                    'SetFooter' => [
+                        ['odd' => $pdfFooter, 'even' => $pdfFooter]
+                    ],
+                ],
+                'options' => [
+                    'title' => 'Preceptors',
+                    'subject' => 'Preceptors',
+                    'keywords' => 'pdf, preceptors, export, other, keywords, here'
+                ],
+            ]
+        ];
+    },
 ];

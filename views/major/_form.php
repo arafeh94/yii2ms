@@ -15,6 +15,7 @@
 use app\models\Department;
 use app\models\Major;
 use app\models\School;
+use kartik\widgets\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
@@ -40,7 +41,13 @@ if (!isset($model)) $model = new Major();
 <?php $departmentsSelect = ArrayHelper::map($departments, 'DepartmentId', function ($model) {
     return $model->school->Name . ' - ' . $model->Name;
 }) ?>
-<?= $form->field($model, 'DepartmentId')->dropDownList($departmentsSelect) ?>
+<?= $form->field($model, 'DepartmentId')->widget(Select2::classname(), [
+    'data' => $departmentsSelect,
+    'options' => ['placeholder' => ''],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); ?>
 <?= $form->field($model, 'Name')->textInput() ?>
 <?= $form->field($model, 'Abbreviation')->textInput() ?>
 <?= $form->field($model, 'RequiredCredits')->textInput(['type' => 'number']) ?>

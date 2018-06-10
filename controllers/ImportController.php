@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\DataImporter;
 use app\components\Tools;
 use app\models\Cycle;
 use app\models\forms\DataImportForm;
@@ -32,18 +33,27 @@ class ImportController extends \yii\web\Controller
     public function actionIndex()
     {
         $model = new DataImportForm();
-
+        $importer = DataImporter::getInstance();
         if (Yii::$app->request->isPost) {
             $model->dataFile = UploadedFile::getInstance($model, 'dataFile');
-            $file = $model->import();
+            if ($model->upload()) {
+                $importer = DataImporter::getInstance($model->savedFile);
+                $importer->exec();
+            }
         }
-        return $this->render('index', ['model' => $model]);
+        return $this->render('index', [
+            'model' => $model,
+            'importer' => $importer,
+            'completed' => Yii::$app->request->get('completed', false)
+        ]);
     }
 
-    public function import()
+    public function actionProgress()
     {
-
+        if (Yii::$app->request->isAjax) {
+            $importer = DataImporter::getInstance();
+            return Json::encode(['status' => $importer->getStatus(), 'progress' => $importer->getProgress()]);
+        }
+        return $this->redirect(['site/index', 200]);
     }
-
-
 }

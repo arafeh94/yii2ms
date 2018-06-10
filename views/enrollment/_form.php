@@ -13,6 +13,7 @@
 
 use app\models\Student;
 use app\models\StudentCourseEnrollment;
+use kartik\widgets\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
@@ -36,9 +37,17 @@ if (!isset($model)) $model = new StudentCourseEnrollment();
 <?= $form->field($model, 'StudentSemesterEnrollmentId')->hiddenInput([
     'data-add-value' => $student->studentSemesterEnrollmentForCurrentSemester->StudentSemesterEnrollmentId
 ])->label(false) ?>
-<?= $form->field($model, 'OfferedCourseId')->dropDownList(ArrayHelper::map($offeredCourses, 'OfferedCourseId', function ($model) {
-    return $model->CRN . ' - ' . $model->course->Letter;
-}))->label('Name') ?>
+
+<?= $form->field($model, 'SchoolId')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map($offeredCourses, 'OfferedCourseId', function ($model) {
+        return $model->CRN . ' - ' . $model->course->Letter;
+    }),
+    'options' => ['placeholder' => ''],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+])->label('Name'); ?>
+
 <div class="button-container">
     <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
     <?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>

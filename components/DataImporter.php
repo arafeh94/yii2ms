@@ -19,134 +19,256 @@ use app\models\School;
 use app\models\Semester;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use yii\helpers\ArrayHelper;
 
 class DataImporter
 {
-    static $CACHE_KEY = 'import_info';
+    static $INFO_CACHE_KEY = 'import_info';
+    static $ERRORS_CACHE_KEY = 'import_errors';
 
     private $header;
-    private static $info;
+    private $info;
+    private $errors;
 
-    public static function getInstance()
+    /** @var Worksheet */
+    private $sheet;
+
+    /**
+     * @param null $file
+     * @return DataImporter
+     */
+    public static function getInstance($file = null)
     {
-        self::$info = \Yii::$app->cache->getOrSet(self::$CACHE_KEY, function () {
-            return [
-                'status' => 'nothing',
-                'progress' => '0',
-            ];
+        $importer = new DataImporter();
+        $importer->info = \Yii::$app->cache->getOrSet(self::$INFO_CACHE_KEY, function () use ($file) {
+            return self::defaults($file);
         });
-    }
-
-    public function info($status, $progress = 0)
-    {
-        self::$info['status'] = $status;
-        self::$info['progress'] = $progress;
-        \Yii::$app->cache->set(self::$CACHE_KEY, self::$info);
-    }
-
-    public function import($file)
-    {
-        $this->info('importing', 0);
-        $reader = IOFactory::createReaderForFile($file);
-        $reader->setReadDataOnly(true);
-        $spreadsheet = $reader->load($file);
-        $sheet = $spreadsheet->getActiveSheet();
-        $this->buildHeader($sheet);
-        foreach ($sheet->getRowIterator(2) as $i => $row) {
-            $this->info('importing', ($i / $sheet->getHighestRow()));
-            //campus : Campus
-            $campus = Campus::find()->where(['Name' => $sheet->getCell("{$this->header('Campus')}{$i}")])->one();
-            if (!$campus) {
-                $campus = new Campus();
-                $campus->Name = $sheet->getCell("{$this->header('Campus')}{$i}");
-                $campus->save();
-            }
-
-            //School : School
-            $school = School::find()->where(['Name' => $sheet->getCell("{$this->header('School')}{$i}")])->one();
-            if ($school) {
-                $school = new School();
-                $school->Name = $sheet->getCell("{$this->header('School')}{$i}");
-                $school->save();
-            }
-
-            //Department : -school, Department
-            $department = Department::find()->where(['SchoolId' => $school->SchoolId, 'Name' => $sheet->getCell("{$this->header('Department')}{$i}")])->one();
-            if (!$department) {
-                $department = new Department();
-                $department->SchoolId = $school->SchoolId;
-                $department->Name = $sheet->getCell("{$this->header('Department')}{$i}");
-                $department->save();
-            }
-
-            //Semester : Term seperated by space
-            $term = explode(" ", $sheet->getCell("{$this->header('Term')}{$i}"));
-            $season = $term[0];
-            $year = $term[1];
-            $semester = Semester::find()->where(['Season' => $season, 'Year' => $year])->one();
-            if (!$semester) {
-                $semester = new Semester();
-                $semester->Year = $year;
-                $semester->Season = $season;
-                $semester->StartDate = '1970-01-01';
-                $semester->EndDate = '1970-01-01';
-                $semester->save();
-            }
-            //Instructor : Instructor ID, Instructor, Instructor Rank, Instructor Email
-            $instructor = Instructor::find()->where(['UniversityId' => $sheet->getCell("{$this->header('Instructor ID')}{$i}")]);
-            if (!$instructor) {
-                $fullName = explode(',', $sheet->getCell("{$this->header('Instructor')}{$i}"));
-                $instructor = new Instructor();
-                $instructor->UniversityId = $sheet->getCell("{$this->header('Instructor ID')}{$i}");
-                $instructor->FirstName = $fullName[1];
-                $instructor->LastName = $fullName[0];
-                $instructor->Email = $sheet->getCell("{$this->header('Instructor Email')}{$i}");
-                $instructor->Title = 'Mr';
-                $instructor->save();
-            }
-
-            //major
-            $major = Major::find()->where(['shi' => ''])->one();
-            if (!$major) {
-                $major = new Major();
-                $major->Name = ''; //TODO : need major name
-                $major->DepartmentId = $department->DepartmentId;
-                $major->RequiredCredits = '';//todo : need major required credits
-                $major->Abbreviation = '';
-            }
-
-            //Course : Course, Title, Credits
-            $course = Course::find()->where(['Letter' => $sheet->getCell("{$this->header('Course')}{$i}")])->one();
-            if (!$course) {
-                $course = new Course();
-                $course->Letter = $sheet->getCell("{$this->header('Course')}{$i}");
-                $course->Name = $sheet->getCell("{$this->header('Title')}{$i}");
-                $course->Credits = $sheet->getCell("{$this->header('Credits')}{$i}");
-                $course->MajorId = 0; //TODO : missing major
-                $course->save();
-            }
-
-            //OfferedCourse : CRN, Section
-            $offeredCourse = OfferedCourse::find()->where(['CRN' => $sheet->getCell("{$this->header('CRN')}{$i}"), 'Section' => $sheet->getCell("{$this->header('Section')}{$i}")])->one();
-            if (!$offeredCourse) $offeredCourse = new OfferedCourse();
-            $offeredCourse->CRN = $sheet->getCell("{$this->header('CRN')}{$i}");
-            $offeredCourse->Section = $sheet->getCell("{$this->header('Section')}{$i}");
-            $offeredCourse->CourseId = $course->CourseId;
-            $offeredCourse->InstructorId = $instructor->InstructorId;
-            $offeredCourse->SemesterId = $semester->SemesterId;
-            $offeredCourse->CampusId = $campus->CampusId;
-            $offeredCourse->save();
+        $importer->errors = \Yii::$app->cache->get(self::$ERRORS_CACHE_KEY);
+        if ($file !== null) {
+            if ($file != $importer->getFile()) $importer->reset($file);
         }
-        $this->info('completed', 100);
+        return $importer;
+    }
+
+    private static function defaults($file)
+    {
+        return [
+            'status' => 'idle',
+            'progress' => '0',
+            'file' => $file,
+        ];
+    }
+
+    public function clearErrors()
+    {
+        \Yii::$app->cache->delete(self::$ERRORS_CACHE_KEY);
+        $this->errors = [];
+    }
+
+    public function reset($file = null)
+    {
+        \Yii::$app->cache->delete(self::$INFO_CACHE_KEY);
+        $this->info = self::defaults($file);
+        \Yii::$app->cache->set(self::$INFO_CACHE_KEY, $this->info);
+    }
+
+    public function setProgress($status, $progress = 0)
+    {
+        $this->info['status'] = $status;
+        $this->info['progress'] = $progress;
+        \Yii::$app->cache->set(self::$INFO_CACHE_KEY, $this->info);
+    }
+
+    public function addError($error)
+    {
+        if (!$this->errors) $this->errors = [];
+        $this->errors[] = $error;
+        \Yii::$app->cache->set(self::$ERRORS_CACHE_KEY, $this->errors);
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    public function getFile()
+    {
+        return $this->info['file'];
+    }
+
+    public function getProgress()
+    {
+        return $this->info['progress'];
+    }
+
+    public function getStatus()
+    {
+        return $this->info['status'];
+    }
+
+    public function isImporting()
+    {
+        return $this->info['status'] === 'importing';
+    }
+
+    public function isCompleted()
+    {
+        return $this->info['status'] === 'completed';
+    }
+
+
+    public function isIdle()
+    {
+        return $this->info['status'] === 'idle';
+    }
+
+    public function exec()
+    {
+        if ($this->isImporting()) return true;
+        $this->setProgress('importing', 0);
+        $cr = new ConsoleRunner(['file' => '@app/yii']);
+        $cr->run('import/run');
+        return true;
+    }
+
+    private function load()
+    {
+        $reader = IOFactory::createReaderForFile($this->getFile());
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load($this->getFile());
+        $this->sheet = $spreadsheet->getActiveSheet();
+        $this->buildHeader();
+    }
+
+    public function import()
+    {
+        try {
+            $this->clearErrors();
+            $this->load();
+            $this->setProgress('importing', 0);
+            foreach ($this->sheet->getRowIterator(2) as $i => $row) {
+                $this->setProgress('importing', ($i / $this->sheet->getHighestRow()));
+                //campus : Campus
+                $campus = Campus::find()->where(['Name' => $this->cell('Campus', $i)])->one();
+                if (!$campus) {
+                    $campus = new Campus();
+                    $campus->Name = $this->cell('Campus', $i);
+                    $campus->save();
+                }
+
+                //School : School
+                $school = School::find()->where(['Name' => $this->cell('School', $i)])->one();
+                if (!$school) {
+                    $school = new School();
+                    $school->Name = $this->cell('School', $i);
+                    $school->CreatedByUserId = 1;
+                    $school->save();
+                }
+
+                //Department : -school, Department
+                $department = Department::find()->where(['SchoolId' => $school->SchoolId, 'Name' => $this->cell('Department', $i)])->one();
+                if (!$department) {
+                    $department = new Department();
+                    $department->SchoolId = $school->SchoolId;
+                    $department->Name = $this->cell('Department', $i);
+                    $department->CreatedByUserId = 1;
+                    $department->save();
+                }
+
+                //Semester : Term seperated by space
+                $term = explode(" ", $this->cell('Term', $i));
+                $season = $term[0];
+                $year = $term[1];
+                $semester = Semester::find()->where(['Season' => $season, 'Year' => $year])->one();
+                if (!$semester) {
+                    $semester = new Semester();
+                    $semester->Year = $year;
+                    $semester->Season = $season;
+                    $semester->StartDate = '1970-01-01';
+                    $semester->EndDate = '1970-01-01';
+                    $semester->CreatedByUserId = 1;
+                    $semester->save();
+                }
+                //Instructor : Instructor ID, Instructor, Instructor Rank, Instructor Email
+                $universityId = $this->cell('Instructor ID', $i) ? $this->cell('Instructor ID', $i) : '-1';
+                $instructor = Instructor::find()->where(['UniversityId' => $universityId])->one();
+                if (!$instructor) {
+                    $fullName = $this->cell('Instructor', $i) ? $this->cell('Instructor', $i) : ',';
+                    $fullName = explode(',', $fullName);
+                    $instructor = new Instructor();
+                    $instructor->UniversityId = $universityId;
+                    $instructor->FirstName = $fullName[1];
+                    $instructor->LastName = $fullName[0];
+                    $instructor->Email = $this->cell('Instructor Email', $i) ? $this->cell('Instructor Email', $i) : '';
+                    $instructor->Title = $this->cell('Instructor', $i) ? 'Mr' : '';
+                    $instructor->PhoneExtension = '';
+                    $instructor->CreatedByUserId = 1;
+                    $instructor->save(false);
+                }
+
+                //major
+                $major = Major::find()->where(['Name' => $this->cell('Department', $i)])->one();
+                if (!$major) {
+                    $major = new Major();
+                    $major->Name = $this->cell('Department', $i); //TODO : need major name
+                    $major->DepartmentId = $department->DepartmentId;
+                    $major->RequiredCredits = '50';//todo : need major required credits
+                    $major->Abbreviation = '---';
+                    $major->CreatedByUserId = 1;
+                    $major->save();
+                }
+
+                //Course : Course, Title, Credits
+                $course = Course::find()->where(['Letter' => $this->cell('Course', $i)])->one();
+                if (!$course) {
+                    $course = new Course();
+                    $course->Letter = $this->cell('Course', $i);
+                    $course->Name = $this->cell('Title', $i);
+                    $course->Credits = $this->cell('Credits', $i);
+                    $course->MajorId = $major->MajorId; //TODO : missing major
+                    $course->CreatedByUserId = 1;
+                    $course->save();
+                }
+
+                //OfferedCourse : CRN, Section
+                $offeredCourse = OfferedCourse::find()->where([
+                    'CRN' => $this->cell('CRN', $i),
+                    'Section' => $this->cell('Section', $i)
+                ])->one();
+                if (!$offeredCourse) $offeredCourse = new OfferedCourse();
+                $offeredCourse->CRN = $this->cell('CRN', $i);
+                $offeredCourse->Section = $this->cell('Section', $i);
+                $offeredCourse->CourseId = $course->CourseId;
+                $offeredCourse->InstructorId = $instructor->InstructorId;
+                $offeredCourse->SemesterId = $semester->SemesterId;
+                $offeredCourse->CampusId = $campus->CampusId;
+                $offeredCourse->CreatedByUserId = 1;
+                $offeredCourse->save();
+            }
+            $this->setProgress('completed', 1);
+            return true;
+        } catch (\Exception $e) {
+            $this->reset();
+            $this->setProgress('error', 0);
+            $this->addError($e->getMessage());
+            return false;
+        }
     }
 
     /**
-     * @param Worksheet $sheet
+     * @param string $header
+     * @param int $row
+     * @return mixed
      */
-    private function buildHeader($sheet)
+    private function cell($header, $row)
+    {
+        return $this->sheet->getCell("{$this->header($header)}{$row}")->getValue();
+    }
+
+    private function buildHeader()
     {
         $this->header = [];
-        foreach ($sheet->getRowIterator(1, 1) as $i => $row) {
+        foreach ($this->sheet->getRowIterator(1, 1) as $i => $row) {
             foreach ($row->getCellIterator() as $j => $col) {
                 $this->header[$col->getValue()] = $j;
             }
@@ -155,7 +277,10 @@ class DataImporter
 
     private function header($name)
     {
-        return $this->header[$name];
+        if (isset($this->header[$name])) {
+            return $this->header[$name];
+        }
+        throw new \Exception("column <b>$name</b> does not exists<br> please check if you choose the right file");
     }
 
 

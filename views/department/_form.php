@@ -12,6 +12,7 @@
 
 use app\models\Department;
 use app\models\School;
+use kartik\widgets\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
@@ -33,7 +34,13 @@ if (!isset($model)) $model = new Department();
     'options' => ['data-pjax' => '']
 ]) ?>
 <?= $form->field($model, 'DepartmentId')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'SchoolId')->dropDownList(ArrayHelper::map($schools,'SchoolId','Name'))?>
+<?= $form->field($model, 'SchoolId')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map($schools, 'SchoolId', 'Name'),
+    'options' => ['placeholder' => ''],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); ?>
 <?= $form->field($model, 'Name')->textInput() ?>
 <div class="button-container">
     <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>

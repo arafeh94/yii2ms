@@ -7,6 +7,7 @@ use app\models\Major;
 use app\models\providers\DepartmentDataProvider;
 use app\models\School;
 use app\models\search\DepartmentSearchModel;
+use app\models\User;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -48,10 +49,11 @@ class DepartmentController extends \yii\web\Controller
             $id = \Yii::$app->request->post('Department')['DepartmentId'];
             $model = $id === "" ? new Department() : Department::find()->active()->id($id)->one();
             $saved = null;
+            if ($model->isNewRecord) $model->CreatedByUserId = User::get()->UserId;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
             }
-            return $this->renderPartial('_form', ['model' => $model, 'schools' => School::find()->active()->all(), 'saved' => $saved]);
+            return $this->renderAjax('_form', ['model' => $model, 'schools' => School::find()->active()->all(), 'saved' => $saved]);
         }
         return false;
     }

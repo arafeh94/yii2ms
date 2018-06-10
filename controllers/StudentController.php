@@ -7,6 +7,7 @@ use app\models\Major;
 use app\models\providers\StudentDataProvider;
 use app\models\search\StudentSearchModel;
 use app\models\Student;
+use app\models\User;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -47,11 +48,12 @@ class StudentController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax) {
             $id = \Yii::$app->request->post('Student')['StudentId'];
             $model = $id === "" ? new Student() : Student::find()->active()->id($id)->one();
+            if ($model->isNewRecord) $model->CreatedByUserId = User::get()->UserId;
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
             }
-            return $this->renderPartial('_form', ['model' => $model,
+            return $this->renderAjax('_form', ['model' => $model,
                 'cycles' => Cycle::find()->active()->all(),
                 'majors' => Major::find()->active()->all(),
                 'saved' => $saved

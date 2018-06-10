@@ -7,6 +7,7 @@ use app\models\search\SemesterSearchModel;
 use app\models\Season;
 use app\models\Semester;
 use app\models\StudentSemesterEnrollment;
+use app\models\User;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -47,6 +48,7 @@ class TermController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax) {
             $id = \Yii::$app->request->post('Semester')['SemesterId'];
             $model = $id === "" ? new Semester() : Semester::find()->active()->id($id)->one();
+            if ($model->isNewRecord) $model->CreatedByUserId = User::get()->UserId;
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
@@ -54,7 +56,7 @@ class TermController extends \yii\web\Controller
                     \Yii::$app->db->createCommand("update semester set IsCurrent = 0 WHERE SemesterId != $model->SemesterId")->execute();
                 }
             }
-            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved]);
+            return $this->renderAjax('_form', ['model' => $model, 'saved' => $saved]);
         }
         return false;
     }

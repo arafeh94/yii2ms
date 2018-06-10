@@ -10,6 +10,7 @@ use app\models\providers\OfferedCourseDataProvider;
 use app\models\search\OfferedCourseSearchModel;
 use app\models\Semester;
 use app\models\StudentCourseEnrollment;
+use app\models\User;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 
@@ -50,11 +51,12 @@ class OfferedCourseController extends \yii\web\Controller
         if (\Yii::$app->request->isAjax) {
             $id = \Yii::$app->request->post('OfferedCourse')['OfferedCourseId'];
             $model = $id === "" ? new OfferedCourse() : OfferedCourse::find()->active()->id($id)->one();
+            if ($model->isNewRecord) $model->CreatedByUserId = User::get()->UserId;
             $saved = null;
             if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
                 $saved = $model->save();
             }
-            return $this->renderPartial('_form', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
                 'campuses' => Campus::find()->active()->all(),
                 'semesters' => Semester::find()->active()->all(),

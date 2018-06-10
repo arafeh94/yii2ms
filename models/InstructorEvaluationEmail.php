@@ -32,7 +32,7 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        if ($insert) {
+        if ($insert && !Yii::$app->user->isGuest) {
             $message = Yii::$app->mailer
                 ->compose('evaluation/html', ['instructorEvaluationEmail' => $this, 'instructor' => $this->instructor])
                 ->setFrom(Yii::$app->params['adminEmail'])

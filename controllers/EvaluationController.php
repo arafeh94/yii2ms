@@ -86,7 +86,7 @@ class EvaluationController extends Controller
                 $saved = $model->save();
                 if ($saved && $isNewRecord) $this->sendInstructorEmails($model);
             }
-            return $this->renderPartial('_form', ['model' => $model, 'saved' => $saved, 'semester' => Semester::find()->current()]);
+            return $this->renderAjax('_form', ['model' => $model, 'saved' => $saved, 'semester' => Semester::find()->current()]);
         }
         return false;
     }

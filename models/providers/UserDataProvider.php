@@ -38,10 +38,6 @@ class UserDataProvider extends ActiveDataProvider implements GridConfig
         return [
             [
                 'class' => DataColumn::className(),
-                'attribute' => 'UserId'
-            ],
-            [
-                'class' => DataColumn::className(),
                 'attribute' => 'FirstName'
             ],
             [

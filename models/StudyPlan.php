@@ -21,13 +21,6 @@ use Yii;
 class StudyPlan extends \yii\db\ActiveRecord
 {
 
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->CreatedByUserId = Yii::$app->user->identity->getId();
-        }
-        return parent::beforeSave($insert);
-    }
 
     /**
      * @inheritdoc
@@ -47,11 +40,20 @@ class StudyPlan extends \yii\db\ActiveRecord
             [['MajorId', 'Year', 'CreatedByUserId'], 'integer'],
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],
-            [['CourseLetter',], 'string', 'min' => '6', 'max' => 8],
+            [['CourseLetter',], 'string'],
             [['Season'], 'string', 'max' => 8],
             [['Year'], 'integer', 'min' => 1, 'max' => 5],
             [['MajorId'], 'exist', 'skipOnError' => true, 'targetClass' => Major::className(), 'targetAttribute' => ['MajorId' => 'MajorId']],
         ];
+    }
+
+    public function validateCourseLetter()
+    {
+        if (strlen($this->CourseLetter) < 6 || strlen($this->CourseLetter) > 8) {
+            $this->addError('CourseLetter', 'Must be between 6 and 8 characters');
+            return false;
+        }
+        return true;
     }
 
     /**
