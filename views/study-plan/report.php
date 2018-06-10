@@ -26,7 +26,7 @@ $tableSummary = $this->render('summary', [
     'requiredCredits' => $requiredCredits,
     'transferredCreditsDetails' => $student->TransferredCreditsDetails,
     'transferredCredits' => $student->TransferredCredits,
-    'gradCredits' => $gradCredits,
+    'gradCredits' => $gradCredits < 0 ? 0 : $gradCredits,
     'passedCredits' => $passedCredits ? $passedCredits : 0,
 ]);
 

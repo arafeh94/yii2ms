@@ -31,6 +31,7 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
         $this->query = Major::find()
             ->innerJoinWith('department', true)
             ->innerJoinWith('department.school', true)
+            ->orderBy('major.Name')
             ->active();
         $this->sort->attributes['department'] = [
             'asc' => ['department.Name' => SORT_ASC],
@@ -45,14 +46,14 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
     {
         return [
             [
-                'label' => 'Major Name',
+                'label' => 'Major',
                 'class' => DataColumn::className(),
                 'attribute' => 'Name',
             ],
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'department',
-                'label' => 'Department Name',
+                'label' => 'Department',
                 'value' => function ($model) {
                     return $model->department->school->Name . ' - ' . $model->department->Name;
                 },
@@ -69,7 +70,7 @@ class MajorDataProvider extends ActiveDataProvider implements GridConfig
                 'label' => 'Required Credits',
                 'class' => DataColumn::className(),
                 'attribute' => 'RequiredCredits',
-                'filterInputOptions' => ['placeholder' => 'bellow or equal','class'=>'form-control'],
+                'filterInputOptions' => ['placeholder' => 'bellow or equal', 'class' => 'form-control'],
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

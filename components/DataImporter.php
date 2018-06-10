@@ -216,7 +216,7 @@ class DataImporter
                     $major = new Major();
                     $major->Name = $this->cell('Department', $i); //TODO : need major name
                     $major->DepartmentId = $department->DepartmentId;
-                    $major->RequiredCredits = '50';//todo : need major required credits
+                    $major->RequiredCredits = '150';//todo : need major required credits
                     $major->Abbreviation = '---';
                     $major->CreatedByUserId = 1;
                     $major->save();

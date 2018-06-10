@@ -21,6 +21,7 @@ use app\models\Student;
 use app\models\StudentCourseEnrollment;
 use app\models\StudentCourseEvaluation;
 use app\models\StudentSemesterEnrollment;
+use app\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
@@ -77,6 +78,7 @@ class EvaluationController extends Controller
             $model = $id === "" ? new EvaluationEmail() : EvaluationEmail::find()->active()->id($id)->one();
             $isNewRecord = $model->isNewRecord;
             if ($isNewRecord) {
+                $model->CreatedByUserId = User::get()->UserId;
                 $model->Date = Tools::currentDate();
                 $model->SemesterId = Semester::find()->current()->SemesterId;
             }

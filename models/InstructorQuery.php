@@ -11,7 +11,7 @@ class InstructorQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[instructor.IsDeleted]]=0');
+        return $this->andWhere('[[instructor.IsDeleted]]=0')->andWhere('instructor.UniversityId != -1');
     }
 
 

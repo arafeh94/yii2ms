@@ -493,4 +493,4 @@ VALUES
   (2, 'user', 'user', 'user@user.com', 'User', 'User', 2, 0, 0, '2018-05-15 17:06:17');
 
 INSERT INTO instructor (InstructorId, UniversityId, FirstName, LastName, Email, PhoneExtension, Title, CreatedByUserId, DateAdded, IsDeleted)
-VALUES (-1, '', '', '', '', '', '', 1, current_timestamp, 0);
+VALUES (1, '-1', '', '', '', '', '', 1, current_timestamp, 0);

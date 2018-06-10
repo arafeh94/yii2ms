@@ -99,8 +99,13 @@ class EnrollmentController extends \yii\web\Controller
         $StudyPlanId = ArrayHelper::getValue($post, 'StudyPlanId', false);
         $OfferedCourseId = ArrayHelper::getValue($post, 'OfferedCourseId', false);
         $StudentId = ArrayHelper::getValue($post, 'StudentId', false);
+        $StudentCourseEnrollmentId = ArrayHelper::getValue($post, 'StudentCourseEnrollmentId', 0);
         if ($hasEditable && $StudyPlanId && $OfferedCourseId && $StudentId) {
-            $enrollment = new StudentCourseEnrollment();
+            if ($StudentCourseEnrollmentId) {
+                $enrollment = StudentCourseEnrollment::find()->id($StudentCourseEnrollmentId)->one();
+            } else {
+                $enrollment = new StudentCourseEnrollment();
+            }
             $enrollment->OfferedCourseId = $OfferedCourseId;
             $enrollment->CreatedByUserId = Yii::$app->user->identity->UserId;
             $enrollment->StudyPlanId = $StudyPlanId;

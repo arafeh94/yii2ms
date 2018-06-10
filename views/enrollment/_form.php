@@ -38,7 +38,7 @@ if (!isset($model)) $model = new StudentCourseEnrollment();
     'data-add-value' => $student->studentSemesterEnrollmentForCurrentSemester->StudentSemesterEnrollmentId
 ])->label(false) ?>
 
-<?= $form->field($model, 'SchoolId')->widget(Select2::classname(), [
+<?= $form->field($model, 'OfferedCourseId')->widget(Select2::classname(), [
     'data' => ArrayHelper::map($offeredCourses, 'OfferedCourseId', function ($model) {
         return $model->CRN . ' - ' . $model->course->Letter;
     }),

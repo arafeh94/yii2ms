@@ -99,6 +99,10 @@ class EnrollmentDataProvider extends SqlDataProvider implements GridConfig
                 'editableOptions' => function ($model, $key, $index, $column) {
                     return [
                         'beforeInput' => function ($form, $widget) {
+                            echo Html::hiddenInput(
+                                'StudentCourseEnrollmentId',
+                                ArrayHelper::getValue($widget->model, 'StudentCourseEnrollmentId', 0)
+                            );
                             echo Html::hiddenInput('StudyPlanId', $widget->model['StudyPlanId']);
                             echo Html::hiddenInput('StudentId', $widget->model['StudentId']);
                         },
