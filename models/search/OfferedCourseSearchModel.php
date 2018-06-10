@@ -16,11 +16,12 @@ class OfferedCourseSearchModel extends OfferedCourse
     public $campus;
     public $instructor;
     public $course;
+    public $semester;
 
     public function rules()
     {
         return [
-            [['CRN', 'Section', 'campus', 'instructor', 'course'], 'safe']
+            [['CRN', 'Section', 'campus', 'instructor', 'course', 'semester'], 'safe']
         ];
     }
 }

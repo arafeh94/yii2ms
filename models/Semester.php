@@ -29,7 +29,9 @@ class Semester extends ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        Semester::find()->current(true);
+        if ($insert && $this->IsCurrent == true) {
+            Semester::find()->current(true);
+        }
     }
 
     /**

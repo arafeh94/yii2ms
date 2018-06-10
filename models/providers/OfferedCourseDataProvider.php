@@ -19,6 +19,7 @@ use app\models\OfferedCourse;
 use app\models\search\DepartmentSearchModel;
 use app\models\search\MajorSearchModel;
 use app\models\search\OfferedCourseSearchModel;
+use app\models\Semester;
 use kartik\grid\DataColumn;
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
@@ -66,7 +67,17 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
                 'label' => 'Semester',
                 'value' => function ($model) {
                     return $model->semester->Season . ' - ' . $model->semester->Year;
-                }
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Semester::find()->active()->all(), function ($model) {
+                    return $model->Year . ' - ' . $model->Season;
+                }, function ($model) {
+                    return $model->Year . ' - ' . $model->Season;
+                }),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => ''],
             ],
             [
                 'class' => DataColumn::className(),
@@ -155,6 +166,7 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
         $this->query->andFilterWhere(['like', 'campus.Name', ArrayHelper::getValue($params, 'campus', '')]);
         $this->query->andFilterWhere(['like', 'CRN', ArrayHelper::getValue($params, 'CRN', '')]);
         $this->query->andFilterWhere(['like', 'Section', ArrayHelper::getValue($params, 'Section', '')]);
+        $this->query->andFilterWhere(['like', "concat(semester.Year,' - ',semester.Season)", ArrayHelper::getValue($params, 'semester', '')]);
     }
 
     public function searchModel($params = null)

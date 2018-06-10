@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\components\exceptions\SemesterNotSetException;
+use app\components\Tools;
 use Yii;
 
 /**

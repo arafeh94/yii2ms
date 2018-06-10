@@ -18,7 +18,6 @@ DROP TABLE IF EXISTS cycle;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS campus;
 SET FOREIGN_KEY_CHECKS = 1;
-
 CREATE TABLE campus
 (
   CampusId  INT AUTO_INCREMENT
@@ -182,6 +181,9 @@ CREATE TABLE offeredcourse
   ENGINE = InnoDB
   COLLATE = utf8_bin;
 
+CREATE INDEX offeredcourse_ibfk_1
+  ON offeredcourse (CampusId);
+
 CREATE INDEX SemesterId
   ON offeredcourse (SemesterId);
 
@@ -323,7 +325,9 @@ CREATE TABLE student
   PreparatorySemester          BIT                                 NULL,
   IsDeleted                    BIT DEFAULT b'0'                    NULL,
   CreatedByUserId              INT                                 NOT NULL,
-  DateAdded                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL
+  DateAdded                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL,
+  TransferredCredits           INT                                 NULL,
+  TransferredCreditsDetails    VARCHAR(255)                        NULL
 )
   ENGINE = InnoDB
   COLLATE = utf8_bin;
@@ -487,3 +491,6 @@ INSERT INTO `user` (`UserId`, `Username`, `Password`, `Email`, `FirstName`, `Las
 VALUES
   (1, 'admin', 'admin', 'admin@admin.com', 'Admin', 'Admin', 1, 0, 0, '2018-05-15 17:04:57'),
   (2, 'user', 'user', 'user@user.com', 'User', 'User', 2, 0, 0, '2018-05-15 17:06:17');
+
+INSERT INTO instructor (InstructorId, UniversityId, FirstName, LastName, Email, PhoneExtension, Title, CreatedByUserId, DateAdded, IsDeleted)
+VALUES (-1, '', '', '', '', '', '', 1, current_timestamp, 0);

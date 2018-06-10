@@ -31,7 +31,6 @@ class OfferedCourse extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        Cached::offeredCourseSelector(null, true);
         parent::afterSave($insert, $changedAttributes);
     }
 

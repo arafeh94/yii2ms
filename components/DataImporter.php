@@ -45,7 +45,10 @@ class DataImporter
         });
         $importer->errors = \Yii::$app->cache->get(self::$ERRORS_CACHE_KEY);
         if ($file !== null) {
-            if ($file != $importer->getFile()) $importer->reset($file);
+            if ($file != $importer->getFile()) {
+                $importer->reset($file);
+                $importer->clearErrors();
+            }
         }
         return $importer;
     }
@@ -186,6 +189,7 @@ class DataImporter
                     $semester->Season = $season;
                     $semester->StartDate = '1970-01-01';
                     $semester->EndDate = '1970-01-01';
+                    $semester->IsCurrent = 0;
                     $semester->CreatedByUserId = 1;
                     $semester->save();
                 }
@@ -248,9 +252,10 @@ class DataImporter
             $this->setProgress('completed', 1);
             return true;
         } catch (\Exception $e) {
+            \Yii::error($e);
             $this->reset();
             $this->setProgress('error', 0);
-            $this->addError($e->getMessage());
+            $this->addError(print_r([$e->getLine(), $e->getMessage(), $e->getTrace()], true));
             return false;
         }
     }
