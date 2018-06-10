@@ -30,7 +30,7 @@ use yii\bootstrap\Html;
 ]) ?>
 <?= $form->field($model, 'StudyPlanId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'Major')->hiddenInput(['value' => $model->MajorId])->label(false) ?>
-<?= $form->field($model, 'CourseLetter')->textInput(['placeholder' => 'multiple values separated by , use _ as wild card']) ?>
+<?= $form->field($model, 'CourseLetter')->textInput(['placeholder' => 'multiple values separated by , use - as wild card']) ?>
 <?= $form->field($model, 'Year')->dropDownList(Yii::$app->params['yearSelector']) ?>
 <?= $form->field($model, 'Season')->dropDownList(['Fall' => 'Fall', 'Spring' => 'Spring', 'Summer' => 'Summer']) ?>
 <div class="button-container">
