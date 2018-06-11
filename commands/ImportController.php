@@ -40,7 +40,6 @@ class ImportController extends Controller
         $file = Yii::$app->basePath . "/web/uploads/{$file}";
         DataImporter::getInstance()->reset();
         $importer = DataImporter::getInstance($file);
-        Tools::var_dump($file);
         $importer->import();
     }
 }
