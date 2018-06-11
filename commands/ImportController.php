@@ -9,6 +9,7 @@ namespace app\commands;
 
 use app\components\DataImporter;
 use app\components\Tools;
+use Yii;
 use yii\console\Controller;
 
 class ImportController extends Controller
@@ -32,5 +33,14 @@ class ImportController extends Controller
     {
         $importer = DataImporter::getInstance();
         $importer->reset();
+    }
+
+    public function actionTest($file)
+    {
+        $file = Yii::$app->basePath . "/web/uploads/{$file}";
+        DataImporter::getInstance()->reset();
+        $importer = DataImporter::getInstance($file);
+        Tools::var_dump($file);
+        $importer->import();
     }
 }
