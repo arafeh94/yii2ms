@@ -158,27 +158,27 @@ class DataImporter
                     $campus->Name = $this->cell('Campus', $i);
                     $campus->save();
                 }
+//
+//                //School : School
+//                $school = School::find()->where(['Name' => $this->cell('School', $i)])->one();
+//                if (!$school) {
+//                    $school = new School();
+//                    $school->Name = $this->cell('School', $i);
+//                    $school->CreatedByUserId = 1;
+//                    $school->save();
+//                }
+//
+//                //Department : -school, Department
+//                $department = Department::find()->where(['SchoolId' => $school->SchoolId, 'Name' => $this->cell('Department', $i)])->one();
+//                if (!$department) {
+//                    $department = new Department();
+//                    $department->SchoolId = $school->SchoolId;
+//                    $department->Name = $this->cell('Department', $i);
+//                    $department->CreatedByUserId = 1;
+//                    $department->save();
+//                }
 
-                //School : School
-                $school = School::find()->where(['Name' => $this->cell('School', $i)])->one();
-                if (!$school) {
-                    $school = new School();
-                    $school->Name = $this->cell('School', $i);
-                    $school->CreatedByUserId = 1;
-                    $school->save();
-                }
-
-                //Department : -school, Department
-                $department = Department::find()->where(['SchoolId' => $school->SchoolId, 'Name' => $this->cell('Department', $i)])->one();
-                if (!$department) {
-                    $department = new Department();
-                    $department->SchoolId = $school->SchoolId;
-                    $department->Name = $this->cell('Department', $i);
-                    $department->CreatedByUserId = 1;
-                    $department->save();
-                }
-
-                //Semester : Term seperated by space
+                //Semester : Term separated by space
                 $term = explode(" ", $this->cell('Term', $i));
                 $season = $term[0];
                 $year = $term[1];
@@ -213,10 +213,14 @@ class DataImporter
                 //major
                 $major = Major::find()->where(['Name' => $this->cell('Department', $i)])->one();
                 if (!$major) {
+                    $abbr = Tools::getLetterUntilNumberFound($this->cell('Course', $i));
+                    $department = Department::find()->where("Courses like '%{$abbr}%'")->one();
+                    if (!$department) $department = Department::findOne(1);
+
                     $major = new Major();
-                    $major->Name = $this->cell('Department', $i); //TODO : need major name
+                    $major->Name = $this->cell('Department', $i);
                     $major->DepartmentId = $department->DepartmentId;
-                    $major->RequiredCredits = '150';//todo : need major required credits
+                    $major->RequiredCredits = '150';
                     $major->Abbreviation = '---';
                     $major->CreatedByUserId = 1;
                     $major->save();
@@ -229,7 +233,7 @@ class DataImporter
                     $course->Letter = $this->cell('Course', $i);
                     $course->Name = $this->cell('Title', $i);
                     $course->Credits = $this->cell('Credits', $i);
-                    $course->MajorId = $major->MajorId; //TODO : missing major
+                    $course->MajorId = $major->MajorId;
                     $course->CreatedByUserId = 1;
                     $course->save();
                 }

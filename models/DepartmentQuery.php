@@ -21,7 +21,7 @@ class DepartmentQuery extends \yii\db\ActiveQuery
 
     public function filter()
     {
-        return $this->select(['DepartmentId', 'Name', 'DateAdded', 'SchoolId']);
+        return $this->select(['DepartmentId', 'Name', 'DateAdded', 'SchoolId', 'Courses']);
     }
 
     /**

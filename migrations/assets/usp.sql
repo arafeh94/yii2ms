@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS cycle;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS campus;
 SET FOREIGN_KEY_CHECKS = 1;
+
 CREATE TABLE campus
 (
   CampusId  INT AUTO_INCREMENT
@@ -66,6 +67,7 @@ CREATE TABLE department
   Name            VARCHAR(255)                        NOT NULL,
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  MajorsAbbr      TEXT                                NULL,
   IsDeleted       BIT DEFAULT b'0'                    NOT NULL
 )
   ENGINE = InnoDB
@@ -494,3 +496,12 @@ VALUES
 
 INSERT INTO instructor (InstructorId, UniversityId, FirstName, LastName, Email, PhoneExtension, Title, CreatedByUserId, DateAdded, IsDeleted)
 VALUES (1, '-1', '', '', '', '', '', 1, current_timestamp, 0);
+
+
+INSERT INTO `school` (SchoolId, Name, CreatedByUserId, IsDeleted) VALUES (1, '-', 1, 0);
+
+INSERT INTO `department` (DepartmentId, SchoolId, Name, CreatedByUserId, DateAdded, Courses, IsDeleted)
+VALUES (1, 1, '-', 1, current_timestamp, '', 0);
+
+INSERT INTO major (MajorId, DepartmentId, Name, Abbreviation, RequiredCredits, CreatedByUserId)
+VALUES (1, 1, '-', '', 0, 1)

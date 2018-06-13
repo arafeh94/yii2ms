@@ -54,4 +54,13 @@ class Tools extends Component
         return $randomString;
     }
 
+    public static function getLetterUntilNumberFound($str)
+    {
+        $matches = [];
+        if (preg_match('/^([A-Z]+)([0-9]+)$/i', $str, $matches)) {
+            return $matches ? $matches[1] : false;
+        }
+        return false;
+    }
+
 }

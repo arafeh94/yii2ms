@@ -13,6 +13,7 @@ use Yii;
  * @property int $CreatedByUserId
  * @property string $DateAdded
  * @property bool $IsDeleted
+ * @property string $Courses
  *
  * @property School $school
  * @property Major[] $majors
@@ -36,9 +37,10 @@ class Department extends \yii\db\ActiveRecord
         return [
             [['SchoolId', 'Name'], 'required'],
             [['SchoolId', 'CreatedByUserId'], 'integer'],
-            [['DateAdded'], 'safe'],
+            [['DateAdded', 'Courses'], 'safe'],
             [['IsDeleted'], 'boolean'],
             [['Name'], 'string', 'max' => 255],
+            [['Courses'], 'string'],
             [['Name'], 'unique', 'targetAttribute' => ['Name'], 'filter' => ['IsDeleted' => 0]],
             [['SchoolId'], 'exist', 'skipOnError' => true, 'targetClass' => School::className(), 'targetAttribute' => ['SchoolId' => 'SchoolId']],
         ];
@@ -55,6 +57,7 @@ class Department extends \yii\db\ActiveRecord
             'Name' => Yii::t('app', 'Name'),
             'CreatedByUserId' => Yii::t('app', 'Created By User ID'),
             'DateAdded' => Yii::t('app', 'Date Added'),
+            'Courses' => Yii::t('app', 'Included Courses'),
             'IsDeleted' => Yii::t('app', 'Is Deleted'),
         ];
     }
@@ -82,5 +85,10 @@ class Department extends \yii\db\ActiveRecord
     public static function find()
     {
         return new DepartmentQuery(get_called_class());
+    }
+
+    public static function creator()
+    {
+        return new DepartmentCreator(get_called_class());
     }
 }
