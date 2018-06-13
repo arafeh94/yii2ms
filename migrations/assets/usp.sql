@@ -67,7 +67,7 @@ CREATE TABLE department
   Name            VARCHAR(255)                        NOT NULL,
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  MajorsAbbr      TEXT                                NULL,
+  Courses      TEXT                                NULL,
   IsDeleted       BIT DEFAULT b'0'                    NOT NULL
 )
   ENGINE = InnoDB
