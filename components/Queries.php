@@ -22,6 +22,9 @@ class Queries
     {
         return <<<SQL
 SELECT
+  `studentcourseevaluation`.StudentCourseEvaluationId,
+  `studentcourseevaluation`.UserNote,
+  `studentcourseevaluation`.AdminNote,
   concat(student.FirstName, ' ', student.LastName)                                   AS `StudentName`,
   `Quarter`                                                                          AS `Quarter`,
   `campus`.Name                                                                      AS `CampusName`,

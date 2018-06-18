@@ -14,8 +14,12 @@ use app\components\Queries;
 use app\components\Tools;
 use app\models\Campus;
 use app\models\search\EvaluationReportSearchModel;
+use app\models\User;
+use kartik\editable\Editable;
 use kartik\grid\DataColumn;
+use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
+use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Course;
 use app\models\Cycle;
@@ -120,6 +124,27 @@ class EvaluationReportDataProvider extends SqlDataProvider implements GridConfig
                 'class' => DataColumn::className(),
                 'attribute' => 'Comment',
             ],
+            [
+                'label' => User::get()->Type === User::$USER ? 'User Note' : 'Admin Note',
+                'class' => EditableColumn::className(),
+                'attribute' => User::get()->Type === User::$USER ? 'UserNote' : 'AdminNote',
+                'refreshGrid' => true,
+                'editableOptions' => function ($model, $key, $index, $column) {
+                    return [
+                        'beforeInput' => function ($form, $widget) {
+                            echo Html::hiddenInput(
+                                'StudentCourseEvaluationId', $widget->model['StudentCourseEvaluationId']
+                            );
+                        },
+                        'name' => User::get()->Type === User::$USER ? 'UserNote' : 'AdminNote',
+                        'header' => 'Note',
+                        'formOptions' => [
+                            'method' => 'post',
+                            'action' => ['evaluation/set-note']
+                        ],
+                    ];
+                },
+            ]
         ];
     }
 
@@ -140,6 +165,8 @@ class EvaluationReportDataProvider extends SqlDataProvider implements GridConfig
             if (isset($param['mGPA']) && $param['mGPA']) $this->sql .= " And mGPA <=  '{$param["mGPA"]}'";
             if (isset($param['majorCredit']) && $param['majorCredit']) $this->sql .= " And majorCredit <=  '{$param["majorCredit"]}'";
             if (isset($param['Comment']) && $param['Comment']) $this->sql .= " And lower(Comment) like  lower('%{$param["Comment"]}%')";
+            if (isset($param['AdminNote']) && $param['AdminNote']) $this->sql .= " And lower(AdminNote) like  lower('%{$param["AdminNote"]}%')";
+            if (isset($param['UserNote']) && $param['UserNote']) $this->sql .= " And lower(UserNote) like  lower('%{$param["UserNote"]}%')";
         }
     }
 

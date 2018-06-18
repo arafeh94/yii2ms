@@ -26,11 +26,13 @@ class EvaluationReportSearchModel extends EvaluationEmail
     public $mGPA;
     public $majorCredit;
     public $Comment;
+    public $AdminNote;
+    public $UserNote;
 
     public function rules()
     {
         return [
-            [['Quarter', 'StudentName', 'CampusName', 'MajorName', 'CourseName', 'InstructorName', 'Grade', 'GPA', 'creditTaken', 'mGPA', 'majorCredit', 'Comment'], 'safe']
+            [['Quarter', 'StudentName', 'CampusName', 'MajorName', 'CourseName', 'InstructorName', 'Grade', 'GPA', 'creditTaken', 'mGPA', 'majorCredit', 'Comment','AdminNote','UserNote'], 'safe']
         ];
     }
 }

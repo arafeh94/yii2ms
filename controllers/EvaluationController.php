@@ -247,6 +247,30 @@ class EvaluationController extends Controller
         ]);
     }
 
+    public function actionSetNote()
+    {
+        $request = Yii::$app->request;
+        $hasEditable = $request->post('hasEditable', false);
+        $StudentCourseEvaluationId = $request->post('StudentCourseEvaluationId', false);
+        if ($hasEditable && $StudentCourseEvaluationId) {
+            $studentCourseEvaluation = StudentCourseEvaluation::findOne($StudentCourseEvaluationId);
+            if ($request->post('UserNote', false)) {
+                $studentCourseEvaluation->UserNote = $request->post('UserNote');
+            } else if ($request->post('AdminNote', false)) {
+                $studentCourseEvaluation->AdminNote = $request->post('AdminNote');
+            }
+            $message = '';
+            if (!$studentCourseEvaluation->save()) {
+                $errors = $studentCourseEvaluation->getFirstErrors();
+                $message = reset($errors);
+            }
+            echo Json::encode(['output' => 'OK', 'message' => $message]);
+            Yii::$app->end(200);
+        }
+        return false;
+    }
+
+
     public function actionValidate($evaluationId)
     {
         return $this->renderPartial('validate', ['provider' => new EvaluationValidateDataProvider(['evaluationEmailId' => $evaluationId])]);

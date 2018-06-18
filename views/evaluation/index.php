@@ -19,6 +19,9 @@ use yii\helpers\Html;
         'showConfirmAlert' => false,
         'target' => GridView::TARGET_BLANK
     ],
+    'exportConfig' => [
+        GridView::PDF => Yii::$app->params['pdf']('Evaluation'),
+    ],
     'toolbar' => [
         ['content' =>
             Html::button('<i class="glyphicon glyphicon-repeat"></i>', ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('app', 'Reset Grid'), 'onclick' => 'gridControl.reload(true)'])
