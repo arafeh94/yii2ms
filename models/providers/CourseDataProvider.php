@@ -94,7 +94,7 @@ class CourseDataProvider extends ActiveDataProvider implements GridConfig
         $this->searchModel($params);
         $this->query->andFilterWhere(['like', 'lower(course.Name)', strtolower(ArrayHelper::getValue($params, 'Name', ''))]);
         $this->query->andFilterWhere(['like', 'lower(major.Name)', strtolower(ArrayHelper::getValue($params, 'major', ''))]);
-        $this->query->andFilterWhere(['like', 'Number', ArrayHelper::getValue($params, 'Number', '')]);
+        $this->query->andFilterWhere(['like', 'Letter', ArrayHelper::getValue($params, 'Letter', '')]);
         $this->query->andFilterWhere(['like', 'Credits', ArrayHelper::getValue($params, 'Credits', '')]);
     }
 

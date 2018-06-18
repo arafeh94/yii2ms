@@ -22,6 +22,7 @@ use app\models\StudentCourseEnrollment;
 use app\models\StudentCourseEvaluation;
 use app\models\StudentSemesterEnrollment;
 use app\models\User;
+use Symfony\Component\Finder\Glob;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
@@ -174,7 +175,6 @@ class EvaluationController extends Controller
             ->andWhere(['studentcourseenrollment.IsDropped' => 0])
             ->all();
 
-
         if ($evaluations) {
             $transaction = Yii::$app->db->beginTransaction();
             try {
@@ -224,8 +224,8 @@ class EvaluationController extends Controller
                     ->innerJoinWith('studentCourseEnrollment')
                     ->innerJoinWith('studentCourseEnrollment.studentSemesterEnrollment')
                     ->where(['InstructorEvaluationEmailId' => $instructorEvaluationEmail->InstructorEvaluationEmailId])
-                    ->where(['studentcourseenrollment.IsDeleted' => 0])
-                    ->where(['studentcourseenrollment.IsDropped' => 0])
+                    ->andWhere(['studentcourseenrollment.IsDeleted' => 0])
+                    ->andWhere(['studentcourseenrollment.IsDropped' => 0])
                     ->all();
             } else {
                 foreach ($enrollments as $enrollment) {
@@ -238,6 +238,7 @@ class EvaluationController extends Controller
 
             }
         }
+
 
         return $this->render('fill', [
             'instructorEvaluationEmail' => $instructorEvaluationEmail,

@@ -80,7 +80,7 @@ $tableSummary = $this->render('summary', [
                 [
                     'content' => "Student Name",
                     'options' => [
-                        'colspan' => 2
+                        'colspan' => 3
                     ]
                 ],
                 [
@@ -102,7 +102,7 @@ $tableSummary = $this->render('summary', [
                 [
                     'content' => "$student->FirstName $student->LastName",
                     'options' => [
-                        'colspan' => 2
+                        'colspan' => 3
                     ]
                 ],
                 [
@@ -121,7 +121,7 @@ $tableSummary = $this->render('summary', [
                 [
                     'content' => '',
                     'options' => [
-                        'colspan' => 5
+                        'colspan' => 6
                     ]
                 ],
                 [

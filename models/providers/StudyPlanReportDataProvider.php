@@ -17,6 +17,7 @@ use kartik\grid\DataColumn;
 use kartik\grid\GridView;
 use app\models\Student;
 use yii\data\SqlDataProvider;
+use yii\helpers\ArrayHelper;
 
 class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
 {
@@ -66,13 +67,13 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
                         'mergeColumns' => [[0, 3]],
                         'content' => [
                             0 => 'Year Total:',
-                            4 => $this->ulTable('GPA', $gpa, 'MGPA', $mgpa),
-                            5 => $this->ulTable('Cr', $cr, 'sCr', self::$crYearTotal),
+                            5 => $this->ulTable('GPA', $gpa, 'MGPA', $mgpa),
+                            6 => $this->ulTable('Cr', $cr, 'sCr', self::$crYearTotal),
                         ],
                         'contentOptions' => [
                             1 => ['style' => 'vertical-align: middle'],
-                            4 => ['style' => 'vertical-align: middle'],
                             5 => ['style' => 'vertical-align: middle'],
+                            6 => ['style' => 'vertical-align: middle'],
                         ],
                         'options' => ['class' => 'success', 'style' => 'font-weight:bold;'],
                     ];
@@ -99,13 +100,13 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
                         'mergeColumns' => [[1, 3]],
                         'content' => [
                             1 => 'Season Total:',
-                            4 => $this->ulTable('GPA', $gpa, 'MGPA', $mgpa),
-                            5 => $this->ulTable('Cr', $cr, 'sCr', self::$crSeasonTotal),
+                            5 => $this->ulTable('GPA', $gpa, 'MGPA', $mgpa),
+                            6 => $this->ulTable('Cr', $cr, 'sCr', self::$crSeasonTotal),
                         ],
                         'contentOptions' => [
                             1 => ['style' => 'vertical-align: middle'],
-                            4 => ['style' => 'vertical-align: middle'],
                             5 => ['style' => 'vertical-align: middle'],
+                            6 => ['style' => 'vertical-align: middle'],
                         ],
                         'options' => ['class' => 'info', 'style' => 'font-weight:bold;'],
                     ];
@@ -123,9 +124,17 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
                 'pageSummary' => 'Total',
             ],
             [
+                'label' => 'Section',
+                'class' => DataColumn::className(),
+                'attribute' => 'Section',
+            ],
+            [
                 'label' => 'Grade',
                 'class' => DataColumn::className(),
                 'attribute' => 'FinalGrade',
+                'value' => function ($model) {
+                    return ArrayHelper::getValue(\Yii::$app->params['gpaSelector'], $model['FinalGrade'], null);
+                },
                 'pageSummary' => true,
                 'pageSummaryFunc' => function ($data) {
                     $gpa = QueriesExecutor::number(Queries::gpa($this->student));

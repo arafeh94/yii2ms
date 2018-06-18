@@ -133,7 +133,8 @@ FROM (SELECT
         c.Name            AS CourseName,
         s4.FinalGrade     AS FinalGrade,
         c.Credits         AS CourseCredit,
-        m.RequiredCredits AS MajorCredit
+        m.RequiredCredits AS MajorCredit,
+        o2.Section        AS Section
       FROM studyplan s
         INNER JOIN major m ON s.MajorId = m.MajorId
         LEFT JOIN studentsemesterenrollment s5 ON s5.StudentId = {$student} AND s5.IsDeleted = 0
@@ -154,7 +155,8 @@ FROM (SELECT
         c2.Name            AS CourseName,
         s2.FinalGrade      AS FinalGrade,
         c2.Credits         AS CourseCredit,
-        m2.RequiredCredits AS MajorCredit
+        m2.RequiredCredits AS MajorCredit,
+        offeredcourse.Section AS Section
       FROM offeredcourse
         INNER JOIN studentcourseenrollment s2
           ON offeredcourse.OfferedCourseId = s2.OfferedCourseId AND s2.IsDropped = 0 AND s2.IsDeleted = 0 AND

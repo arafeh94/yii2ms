@@ -16,6 +16,7 @@ use yii\data\ArrayDataProvider;
 /** @var \app\models\StudentCourseEvaluation [] $evaluations */
 /** @var \app\models\InstructorEvaluationEmail $instructorEvaluationEmail */
 /** @var $enrollments [] */
+\app\components\Tools::console($enrollments);
 ?>
 
     <h3>Hello
