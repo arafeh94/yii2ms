@@ -58,7 +58,7 @@ class StudentCourseEvaluation extends \yii\db\ActiveRecord
             [['DateAdded', 'Grade', 'Exam1', 'Exam2', 'Final', 'Other', 'Other2', 'Other3', 'Withdraw',], 'safe'],
             [['Participation', 'Effort', 'Attitude', 'Evaluation'], 'string', 'max' => 20],
             [['InstructorNotes', 'UserNote', 'AdminNote'], 'string', 'max' => 255],
-            [['InstructorEvaluationEmailId'], 'exist', 'skipOnError' => true, 'targetClass' => Instructorevaluationemail::className(), 'targetAttribute' => ['InstructorEvaluationEmailId' => 'InstructorEvaluationEmailId']],
+            [['InstructorEvaluationEmailId'], 'exist', 'skipOnError' => true, 'targetClass' => InstructorEvaluationEmail::className(), 'targetAttribute' => ['InstructorEvaluationEmailId' => 'InstructorEvaluationEmailId']],
             [['StudentId'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['StudentId' => 'StudentId']],
         ];
     }
@@ -93,7 +93,7 @@ class StudentCourseEvaluation extends \yii\db\ActiveRecord
      */
     public function getInstructorEvaluationEmail()
     {
-        return $this->hasOne(Instructorevaluationemail::className(), ['InstructorEvaluationEmailId' => 'InstructorEvaluationEmailId']);
+        return $this->hasOne(InstructorEvaluationEmail::className(), ['InstructorEvaluationEmailId' => 'InstructorEvaluationEmailId']);
     }
 
     /**
