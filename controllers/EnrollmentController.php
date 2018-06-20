@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\Tools;
+use app\models\forms\EnrollmentForm;
 use app\models\Instructor;
 use app\models\OfferedCourse;
 use app\models\providers\EnrollmentDataProvider;
@@ -12,6 +13,7 @@ use app\models\SemesterQuery;
 use app\models\Student;
 use app\models\StudentCourseEnrollment;
 use app\models\StudentSemesterEnrollment;
+use app\models\StudyPlan;
 use app\models\User;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -48,15 +50,29 @@ class EnrollmentController extends \yii\web\Controller
     public function actionUpdate($student)
     {
         if (\Yii::$app->request->isAjax) {
-            $id = \Yii::$app->request->post('StudentCourseEnrollment')['StudentCourseEnrollmentId'];
-            $model = $id === "" ? new StudentCourseEnrollment() : StudentCourseEnrollment::find()->active()->id($id)->one();
-            if ($model->isNewRecord) $model->CreatedByUserId = User::get()->UserId;
+            $enrollmentForm = new EnrollmentForm();
+            $loaded = $enrollmentForm->load(Yii::$app->request->post());
+            $validated = $enrollmentForm->validate();
             $saved = null;
-            if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
-                $saved = $model->save();
+            if ($loaded && $validated) {
+                $studyPlan = StudyPlan::findOne(['MajorId'=>null,'Season'=>$enrollmentForm->Season,'Year'=>$enrollmentForm->Year]);
+                if (!$studyPlan) $studyPlan = new StudyPlan();
+                $studyPlan->Season = $enrollmentForm->Season;
+                $studyPlan->Year = $enrollmentForm->Year;
+                $studyPlan->MajorId = null;
+                $studyPlan->CourseLetter = null;
+                $studyPlan->CreatedByUserId = User::get()->UserId;
+                $studyPlan->save(false);
+                $studentCourseEnrollment = new StudentCourseEnrollment();
+                $studentCourseEnrollment->StudentSemesterEnrollmentId = $enrollmentForm->StudentSemesterEnrollmentId;
+                $studentCourseEnrollment->OfferedCourseId = $enrollmentForm->OfferedCourseId;
+                $studentCourseEnrollment->StudyPlanId = $studyPlan->StudyPlanId;
+                $studentCourseEnrollment->CreatedByUserId = User::get()->UserId;
+                $studentCourseEnrollment->save();
+                $saved = true;
             }
             return $this->renderAjax('_form', [
-                'model' => $model,
+                'model' => $enrollmentForm,
                 'offeredCourses' => OfferedCourse::find()->with('course')->active()->all(),
                 'saved' => $saved,
                 'student' => Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $student])->one()

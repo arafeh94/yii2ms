@@ -14,7 +14,7 @@ return [
     'evaluationSelector' => ["Can't Tell" => "Can't Tell", "Top 25%" => "Top 25%", "Above Class Average" => "Above Class Average", "Average Student" => "Average Student", "Below Class Average" => "Below Class Average", "Must Withdraw" => "Must Withdraw", "?" => "?"],
     'yearSelector' => ['1' => 'First', '2' => 'Second', '3' => 'Third', '4' => 'Forth', '5' => 'Fifth'],
     'withdrawSelector' => ['I' => 'I', 'WI' => 'WI', 'WF' => 'WF', 'WP' => 'WP'],
-    'seasonSelector' => ['FALL' => 'FALL', 'Summer' => 'Summer', 'Spring' => 'Spring'],
+    'seasonSelector' => ['Fall' => 'Fall', 'Summer' => 'Summer', 'Spring' => 'Spring'],
     'pdf' => function ($title) {
 
         $pdfHeader = [

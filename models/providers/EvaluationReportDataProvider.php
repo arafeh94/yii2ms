@@ -96,6 +96,9 @@ class EvaluationReportDataProvider extends SqlDataProvider implements GridConfig
                 'label' => 'Grade',
                 'class' => DataColumn::className(),
                 'attribute' => 'Grade',
+                'value' => function ($model) {
+                    return ArrayHelper::getValue(\Yii::$app->params['gpaSelector'], $model['Grade'], null);
+                },
             ],
             [
                 'label' => 'GPA',

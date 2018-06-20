@@ -154,7 +154,7 @@ FROM (SELECT
       SELECT
         s7.Year            AS StudyPlanYear,
         s7.Season          AS StudyPlanSeason,
-        NULL               AS CourseLetter,
+        s7.CourseLetter    AS CourseLetter,
         c2.Name            AS CourseName,
         s2.FinalGrade      AS FinalGrade,
         c2.Credits         AS CourseCredit,
@@ -162,10 +162,9 @@ FROM (SELECT
         offeredcourse.Section AS Section
       FROM offeredcourse
         INNER JOIN studentcourseenrollment s2
-          ON offeredcourse.OfferedCourseId = s2.OfferedCourseId AND s2.IsDropped = 0 AND s2.IsDeleted = 0 AND
-             s2.StudyPlanId IS NULL
+          ON offeredcourse.OfferedCourseId = s2.OfferedCourseId AND s2.IsDropped = 0 AND s2.IsDeleted = 0
         INNER JOIN studentsemesterenrollment s3 ON s2.StudentSemesterEnrollmentId = s3.StudentSemesterEnrollmentId
-        INNER JOIN semester s7 ON s3.SemesterId = s7.SemesterId
+        INNER JOIN studyplan s7 ON s2.StudyPlanId = s7.StudyPlanId AND s7.MajorId IS NULL
         INNER JOIN course c2 ON offeredcourse.CourseId = c2.CourseId
         INNER JOIN student s6 ON s6.StudentId = {$student}
         INNER JOIN major m2 ON m2.MajorId = {$major}
@@ -178,7 +177,7 @@ SQL;
     public static function enrollment($student, $major)
     {
         if ($major === null) $major = Student::findOne($student)->CurrentMajor;
-        return <<<SQL
+        $sql = <<<SQL
 SELECT *
 FROM (SELECT
         s.StudyPlanId     AS StudyPlanId,
@@ -203,27 +202,27 @@ FROM (SELECT
       UNION
 
       SELECT
-        NULL               AS StudyPlanId,
-        s7.Year            AS StudyPlanYear,
-        s7.Season          AS StudyPlanSeason,
-        NULL               AS CourseLetter,
-        c2.Name            AS CourseName,
-        c2.Credits         AS CourseCredit,
-        m2.RequiredCredits AS MajorCredit,
-        s6.StudentId       AS StudentId,
+        s7.StudyPlanId             AS StudyPlanId,
+        s7.Year                    AS StudyPlanYear,
+        s7.Season                  AS StudyPlanSeason,
+        s7.CourseLetter            AS CourseLetter,
+        c2.Name                    AS CourseName,
+        c2.Credits                 AS CourseCredit,
+        m2.RequiredCredits         AS MajorCredit,
+        s6.StudentId               AS StudentId,
         s2.StudentCourseEnrollmentId
       FROM offeredcourse
         INNER JOIN studentcourseenrollment s2
-          ON offeredcourse.OfferedCourseId = s2.OfferedCourseId AND s2.IsDropped = 0 AND s2.IsDeleted = 0 AND
-             s2.StudyPlanId IS NULL
+          ON offeredcourse.OfferedCourseId = s2.OfferedCourseId AND s2.IsDropped = 0 AND s2.IsDeleted = 0
         INNER JOIN studentsemesterenrollment s3 ON s2.StudentSemesterEnrollmentId = s3.StudentSemesterEnrollmentId
-        INNER JOIN semester s7 ON s3.SemesterId = s7.SemesterId
+        INNER JOIN studyplan s7 ON s2.StudyPlanId = s7.StudyPlanId AND s7.MajorId IS NULL
         INNER JOIN course c2 ON offeredcourse.CourseId = c2.CourseId
         INNER JOIN student s6 ON s6.StudentId = {$student}
         INNER JOIN major m2 ON m2.MajorId = {$major}
      ) AS qr
 ORDER BY qr.StudyPlanYear, qr.StudyPlanSeason
 SQL;
+        return $sql;
     }
 
     public static function offeredCourses($semester = null)
@@ -263,8 +262,7 @@ SELECT {$select}
                WHERE sce2.IsDeleted = 0 AND sce2.IsDropped = 0
                GROUP BY sce2.StudentSemesterEnrollmentId, sce2.OfferedCourseId
               ) AS e1 ON e1.max = sce.StudentCourseEnrollmentId
-   WHERE sse.StudentId = {$student->StudentId} 
-   AND sce.FinalGrade IS NOT NULL 
+   WHERE sse.StudentId = {$student->StudentId}  
    AND sse.IsDeleted = 0 
    AND sce.IsDeleted = 0 
    AND sce.IsDropped = 0
@@ -290,7 +288,10 @@ SQL;
      */
     public static function gpa($student, $year = null, $season = null)
     {
-        return self::studentInfo1(['select' => "sum(FinalGrade * Credits) / sum(Credits) as GPA"], $student, $year, $season);
+        return self::studentInfo1([
+            'select' => "ROUND(sum(FinalGrade * Credits) / sum(Credits),1) as GPA",
+            'where' => 'AND sce.FinalGrade IS NOT NULL'
+        ], $student, $year, $season);
     }
 
     /**
@@ -302,8 +303,8 @@ SQL;
     public static function mgpa($student, $year = null, $season = null)
     {
         return self::studentInfo1([
-            'select' => 'sum(FinalGrade * Credits) / sum(Credits) as MGPA',
-            'where' => "AND sc.MajorId = {$student->CurrentMajor}"
+            'select' => 'ROUND(sum(FinalGrade * Credits) / sum(Credits),1) as MGPA',
+            'where' => "AND sc.MajorId = {$student->CurrentMajor} AND sce.FinalGrade IS NOT NULL"
         ], $student, $year, $season);
     }
 
@@ -319,7 +320,7 @@ SQL;
     {
         return self::studentInfo1([
             'select' => 'sum(Credits) as PassedCredits',
-            'where' => "AND sce.FinalGrade > 0"
+            'where' => "AND sce.FinalGrade IS NOT NULL AND sce.FinalGrade > 0"
         ], $student, $year, $season);
     }
 }

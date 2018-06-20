@@ -11,6 +11,7 @@
 
 /** @var $offeredCourses \app\models\OfferedCourse[] */
 
+use app\models\forms\EnrollmentForm;
 use app\models\Student;
 use app\models\StudentCourseEnrollment;
 use kartik\widgets\Select2;
@@ -19,7 +20,7 @@ use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 
-if (!isset($model)) $model = new StudentCourseEnrollment();
+if (!isset($model)) $model = new EnrollmentForm();
 ?>
 
 <?php if (isset($saved) && $saved): ?>
@@ -33,7 +34,6 @@ if (!isset($model)) $model = new StudentCourseEnrollment();
     'action' => ['enrollment/update', 'student' => $student->UniversityId],
     'options' => ['data-pjax' => '']
 ]) ?>
-<?= $form->field($model, 'StudentCourseEnrollmentId')->hiddenInput()->label(false) ?>
 <?= $form->field($model, 'StudentSemesterEnrollmentId')->hiddenInput([
     'data-add-value' => $student->studentSemesterEnrollmentForCurrentSemester->StudentSemesterEnrollmentId
 ])->label(false) ?>
@@ -46,7 +46,24 @@ if (!isset($model)) $model = new StudentCourseEnrollment();
     'pluginOptions' => [
         'allowClear' => true
     ],
-])->label('Name'); ?>
+]); ?>
+
+<?= $form->field($model, 'Year')->widget(Select2::classname(), [
+    'data' => Yii::$app->params['yearSelector'],
+    'options' => ['placeholder' => ''],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); ?>
+
+<?= $form->field($model, 'Season')->widget(Select2::classname(), [
+    'data' => Yii::$app->params['seasonSelector'],
+    'options' => ['placeholder' => ''],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); ?>
+
 
 <div class="button-container">
     <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>

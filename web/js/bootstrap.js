@@ -36,6 +36,10 @@ function clearForm(form) {
             case "select-one":
             case "select-multi":
                 elements[i].selectedIndex = -1;
+                var el = $(elements[i]);
+                if (el.data('select2')) {
+                    el.trigger('change.select2');
+                }
                 break;
             default:
                 break;

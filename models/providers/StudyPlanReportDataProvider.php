@@ -13,6 +13,7 @@ use app\components\GridConfig;
 use app\components\Queries;
 use app\components\QueriesExecutor;
 use app\components\Table;
+use app\components\Tools;
 use kartik\grid\DataColumn;
 use kartik\grid\GridView;
 use app\models\Student;
@@ -23,6 +24,7 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
 {
     private static $crSeasonTotal = 0;
     private static $crYearTotal = 0;
+    private static $cached = [];
     public $searchModel;
     /** @var Student */
     public $student;
@@ -57,26 +59,29 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
                 'groupOddCssClass' => 'kv-grouped-row',
                 'groupEvenCssClass' => 'kv-grouped-row',
                 'groupFooter' => function ($model, $key, $index) {
-                    $gpa = QueriesExecutor::number(Queries::gpa($this->student, $model['StudyPlanYear']));
-                    $mgpa = QueriesExecutor::number(Queries::mgpa($this->student, $model['StudyPlanYear']));
-                    $cr = QueriesExecutor::number(Queries::credits($this->student, $model['StudyPlanYear']));
-                    $gpa = $gpa === null ? 0 : $gpa;
-                    $mgpa = $mgpa === null ? 0 : $mgpa;
-                    self::$crYearTotal += $cr;
-                    return [
-                        'mergeColumns' => [[0, 3]],
-                        'content' => [
-                            0 => 'Year Total:',
-                            5 => $this->ulTable('GPA', $gpa, 'MGPA', $mgpa),
-                            6 => $this->ulTable('Cr', $cr, 'sCr', self::$crYearTotal),
-                        ],
-                        'contentOptions' => [
-                            1 => ['style' => 'vertical-align: middle'],
-                            5 => ['style' => 'vertical-align: middle'],
-                            6 => ['style' => 'vertical-align: middle'],
-                        ],
-                        'options' => ['class' => 'success', 'style' => 'font-weight:bold;'],
-                    ];
+                    if (!isset(self::$cached[$model['StudyPlanYear']])) {
+                        $gpa = QueriesExecutor::number(Queries::gpa($this->student, $model['StudyPlanYear']));
+                        $mgpa = QueriesExecutor::number(Queries::mgpa($this->student, $model['StudyPlanYear']));
+                        $cr = QueriesExecutor::number(Queries::credits($this->student, $model['StudyPlanYear']));
+                        $gpa = $gpa === null ? 0 : $gpa;
+                        $mgpa = $mgpa === null ? 0 : $mgpa;
+                        self::$crYearTotal += $cr;
+                        self::$cached[$model['StudyPlanYear']] = [
+                            'mergeColumns' => [[0, 3]],
+                            'content' => [
+                                0 => 'Year Total:',
+                                5 => $this->ulTable('GPA', $gpa, 'MGPA', $mgpa),
+                                6 => $this->ulTable('Cr', $cr, 'sCr', self::$crYearTotal),
+                            ],
+                            'contentOptions' => [
+                                1 => ['style' => 'vertical-align: middle'],
+                                5 => ['style' => 'vertical-align: middle'],
+                                6 => ['style' => 'vertical-align: middle'],
+                            ],
+                            'options' => ['class' => 'success', 'style' => 'font-weight:bold;'],
+                        ];
+                    }
+                    return self::$cached[$model['StudyPlanYear']];
                 },
             ],
             [
@@ -90,30 +95,33 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
                 'groupOddCssClass' => 'kv-grouped-row',
                 'groupEvenCssClass' => 'kv-grouped-row',
                 'groupFooter' => function ($model, $key, $index, $widget) {
-                    $gpa = QueriesExecutor::number(Queries::gpa($this->student, $model['StudyPlanYear'], $model['StudyPlanSeason']));
-                    $mgpa = QueriesExecutor::number(Queries::mgpa($this->student, $model['StudyPlanYear'], $model['StudyPlanSeason']));
-                    $cr = QueriesExecutor::number(Queries::credits($this->student, $model['StudyPlanYear'], $model['StudyPlanSeason']));
-                    $gpa = $gpa === null ? 0 : $gpa;
-                    $mgpa = $mgpa === null ? 0 : $mgpa;
-                    self::$crSeasonTotal += $cr;
-                    return [
-                        'mergeColumns' => [[1, 3]],
-                        'content' => [
-                            1 => 'Season Total:',
-                            5 => $this->ulTable('GPA', $gpa, 'MGPA', $mgpa),
-                            6 => $this->ulTable('Cr', $cr, 'sCr', self::$crSeasonTotal),
-                        ],
-                        'contentOptions' => [
-                            1 => ['style' => 'vertical-align: middle'],
-                            5 => ['style' => 'vertical-align: middle'],
-                            6 => ['style' => 'vertical-align: middle'],
-                        ],
-                        'options' => ['class' => 'info', 'style' => 'font-weight:bold;'],
-                    ];
+                    if (!isset(self::$cached["{$model['StudyPlanYear']}-{$model['StudyPlanSeason']}"])) {
+                        $gpa = QueriesExecutor::number(Queries::gpa($this->student, $model['StudyPlanYear'], $model['StudyPlanSeason']));
+                        $mgpa = QueriesExecutor::number(Queries::mgpa($this->student, $model['StudyPlanYear'], $model['StudyPlanSeason']));
+                        $cr = QueriesExecutor::number(Queries::credits($this->student, $model['StudyPlanYear'], $model['StudyPlanSeason']));
+                        $gpa = $gpa === null ? 0 : $gpa;
+                        $mgpa = $mgpa === null ? 0 : $mgpa;
+                        self::$crSeasonTotal += $cr;
+                        self::$cached["{$model['StudyPlanYear']}-{$model['StudyPlanSeason']}"] = [
+                            'mergeColumns' => [[1, 3]],
+                            'content' => [
+                                1 => 'Season Total:',
+                                5 => $this->ulTable('GPA', $gpa, 'MGPA', $mgpa),
+                                6 => $this->ulTable('Cr', $cr, 'sCr', self::$crSeasonTotal),
+                            ],
+                            'contentOptions' => [
+                                1 => ['style' => 'vertical-align: middle'],
+                                5 => ['style' => 'vertical-align: middle'],
+                                6 => ['style' => 'vertical-align: middle'],
+                            ],
+                            'options' => ['class' => 'info', 'style' => 'font-weight:bold;'],
+                        ];
+                    }
+                    return self::$cached["{$model['StudyPlanYear']}-{$model['StudyPlanSeason']}"];
                 },
             ],
             [
-                'label' => 'Offered Course',
+                'label' => 'Course Number',
                 'class' => DataColumn::className(),
                 'attribute' => 'CourseLetter',
             ],

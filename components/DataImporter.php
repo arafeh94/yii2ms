@@ -211,24 +211,28 @@ class DataImporter
                 }
 
                 //major
-                $major = Major::find()->where(['Name' => $this->cell('Department', $i)])->one();
-                if (!$major) {
-                    $abbr = Tools::getLetterUntilNumberFound($this->cell('Course', $i));
-                    $department = Department::find()->where("Courses like '%{$abbr}%'")->one();
-                    if (!$department) $department = Department::findOne(1);
+//                $major = Major::find()->where(['Name' => $this->cell('Department', $i)])->one();
+//                if (!$major) {
+//                    $abbr = Tools::getLetterUntilNumberFound($this->cell('Course', $i));
+//                    $department = Department::find()->where("Courses like '%{$abbr}%'")->one();
+//                    if (!$department) $department = Department::findOne(1);
+//
+//                    $major = new Major();
+//                    $major->Name = $this->cell('Department', $i);
+//                    $major->DepartmentId = $department->DepartmentId;
+//                    $major->RequiredCredits = '150';
+//                    $major->Abbreviation = '---';
+//                    $major->CreatedByUserId = 1;
+//                    $major->save();
+//                }
 
-                    $major = new Major();
-                    $major->Name = $this->cell('Department', $i);
-                    $major->DepartmentId = $department->DepartmentId;
-                    $major->RequiredCredits = '150';
-                    $major->Abbreviation = '---';
-                    $major->CreatedByUserId = 1;
-                    $major->save();
-                }
+                $abbr = Tools::getLetterUntilNumberFound($this->cell('Course', $i));
+                $major = Major::findOne(["Abbreviation" => $abbr]);
+                if (!$major) $major = Major::findOne(1);
 
                 //Course : Course, Title, Credits
                 $course = Course::find()->where(['Letter' => $this->cell('Course', $i)])->one();
-                if (!$course) {
+                if ($course) {
                     $course = new Course();
                     $course->Letter = $this->cell('Course', $i);
                     $course->Name = $this->cell('Title', $i);

@@ -85,7 +85,7 @@ class Major extends \yii\db\ActiveRecord
      */
     public function getStudentPlans()
     {
-        return $this->hasMany(StudentPlan::className(), ['MajorId' => 'MajorId']);
+        return $this->hasMany(StudyPlan::className(), ['MajorId' => 'MajorId']);
     }
 
     /**
