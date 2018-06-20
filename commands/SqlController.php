@@ -18,7 +18,7 @@ use yii\console\Controller;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class SQLController extends Controller
+class SqlController extends Controller
 {
     /**
      * This command clear and re-initialise database
