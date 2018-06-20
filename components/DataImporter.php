@@ -232,7 +232,7 @@ class DataImporter
 
                 //Course : Course, Title, Credits
                 $course = Course::find()->where(['Letter' => $this->cell('Course', $i)])->one();
-                if ($course) {
+                if (!$course) {
                     $course = new Course();
                     $course->Letter = $this->cell('Course', $i);
                     $course->Name = $this->cell('Title', $i);
