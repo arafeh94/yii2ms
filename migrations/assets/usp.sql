@@ -498,8 +498,8 @@ VALUES (1, '-1', '', '', '', '', '', 1, current_timestamp, 0);
 
 INSERT INTO `school` (SchoolId, Name, CreatedByUserId, IsDeleted) VALUES (1, '-', 1, 0);
 
-INSERT INTO `department` (DepartmentId, SchoolId, Name, CreatedByUserId, DateAdded, Courses, IsDeleted)
-VALUES (1, 1, '-', 1, current_timestamp, '', 0);
+INSERT INTO `department` (DepartmentId, SchoolId, Name, CreatedByUserId, DateAdded, IsDeleted)
+VALUES (1, 1, '-', 1, current_timestamp, 0);
 
 INSERT INTO major (MajorId, DepartmentId, Name, Abbreviation, RequiredCredits, CreatedByUserId)
 VALUES (1, 1, '-', '', 0, 1)
