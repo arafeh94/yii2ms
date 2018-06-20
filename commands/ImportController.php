@@ -33,6 +33,7 @@ class ImportController extends Controller
     {
         $importer = DataImporter::getInstance();
         $importer->reset();
+        $importer->clearErrors();
     }
 
     public function actionTest($file)
