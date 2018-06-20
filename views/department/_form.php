@@ -42,7 +42,6 @@ if (!isset($model)) $model = new Department();
     ],
 ]); ?>
 <?= $form->field($model, 'Name')->textInput() ?>
-<?= $form->field($model, 'Courses')->textInput(['placeholder' => 'values separated by , ex: JSC,ACC']) ?>
 
 <div class="button-container">
     <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>

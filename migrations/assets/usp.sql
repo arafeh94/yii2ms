@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS cycle;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS campus;
 SET FOREIGN_KEY_CHECKS = 1;
+
 CREATE TABLE campus
 (
   CampusId  INT AUTO_INCREMENT
@@ -66,7 +67,6 @@ CREATE TABLE department
   Name            VARCHAR(255)                        NOT NULL,
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  Courses         TEXT                                NULL,
   IsDeleted       BIT DEFAULT b'0'                    NOT NULL
 )
   ENGINE = InnoDB
