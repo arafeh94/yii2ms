@@ -25,5 +25,6 @@ class SqlController extends Controller
     {
         $path = __DIR__ . '/../migrations/assets/usp.sql';
         SQLFileExecutor::execute($path);
+        \Yii::$app->cache->flush();
     }
 }
