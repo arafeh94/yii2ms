@@ -36,6 +36,7 @@
 
     function load(data) {
         $('#dialog-form').find('input, select').each(function () {
+            debugger;
             var att = attribute(this);
             if (att && typeof data[att] !== 'undefined') {
                 var el = $(this);

@@ -8,8 +8,10 @@ if (!String.prototype.format) {
 }
 
 function attribute(of) {
-    var reg = "(?<=\\[).+?(?=\\])";
-    return (of.name.match(reg) || [false])[0];
+    var reg = "(\\[(.*?)\\])";
+    var matches = of.name.match(reg);
+    if (matches) return matches[2];
+    return false;
 }
 
 function reloadTable() {
