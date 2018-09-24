@@ -202,14 +202,14 @@ FROM (SELECT
       UNION
 
       SELECT
-        s7.StudyPlanId             AS StudyPlanId,
-        s7.Year                    AS StudyPlanYear,
-        s7.Season                  AS StudyPlanSeason,
-        s7.CourseLetter            AS CourseLetter,
-        c2.Name                    AS CourseName,
-        c2.Credits                 AS CourseCredit,
-        m2.RequiredCredits         AS MajorCredit,
-        s6.StudentId               AS StudentId,
+        s7.StudyPlanId     AS StudyPlanId,
+        s7.Year            AS StudyPlanYear,
+        s7.Season          AS StudyPlanSeason,
+        s7.CourseLetter    AS CourseLetter,
+        c2.Name            AS CourseName,
+        c2.Credits         AS CourseCredit,
+        m2.RequiredCredits AS MajorCredit,
+        s6.StudentId       AS StudentId,
         s2.StudentCourseEnrollmentId
       FROM offeredcourse
         INNER JOIN studentcourseenrollment s2
@@ -217,8 +217,9 @@ FROM (SELECT
         INNER JOIN studentsemesterenrollment s3 ON s2.StudentSemesterEnrollmentId = s3.StudentSemesterEnrollmentId
         INNER JOIN studyplan s7 ON s2.StudyPlanId = s7.StudyPlanId AND s7.MajorId IS NULL
         INNER JOIN course c2 ON offeredcourse.CourseId = c2.CourseId
-        INNER JOIN student s6 ON s6.StudentId = {$student}
+        INNER JOIN student s6 ON s6.StudentId = s3.StudentId
         INNER JOIN major m2 ON m2.MajorId = {$major}
+      where s6.StudentId = {$student}
      ) AS qr
 ORDER BY qr.StudyPlanYear, qr.StudyPlanSeason
 SQL;

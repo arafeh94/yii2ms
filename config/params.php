@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adminEmail' => 'lauusp@azzammourad.org',
+    'adminEmail' => 'usp.app@lau.edu',
     'timezone' => 'Asia/Beirut',
     'dateFormat' => 'yyyy-mm-dd',
     'timeFormat' => 'h:i:s',

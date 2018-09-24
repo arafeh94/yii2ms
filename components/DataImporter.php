@@ -263,7 +263,7 @@ class DataImporter
             \Yii::error($e);
             $this->reset();
             $this->setProgress('error', 0);
-            $this->addError(print_r([$e->getLine(), $e->getMessage(), $e->getTrace()], true));
+            $this->addError($e->getMessage());
             return false;
         }
     }

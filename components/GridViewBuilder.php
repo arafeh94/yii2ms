@@ -27,6 +27,7 @@ class GridViewBuilder
     {
         return GridView::widget([
             'id' => 'gridview',
+            'options'=>['class'=>'grid-view'],
             'dataProvider' => $provider,
             'filterModel' => $provider->searchModel(),
             'columns' => $provider->gridColumns(),

@@ -47,7 +47,7 @@ use yii\helpers\Url;
         <?php if ($importer->getErrors()) : ?>
             <?= Alert::widget([
                 'closeButton' => false,
-                'body' => "<b>errors occurred while importing last file</b><br>" . implode('<br>', $importer->getErrors()),
+                'body' => "<b>Errors occurred while importing last file</b><br>" . implode('<br>', $importer->getErrors()),
                 'options' => ['class' => 'alert-danger'],
             ]) ?>
         <?php endif; ?>
