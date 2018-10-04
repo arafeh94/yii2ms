@@ -6,4 +6,10 @@
  * Time: 12:35 PM
  */
 
-echo "echo this message";
+/** @var $content String */
+
+if ($content) {
+    echo $content;
+} else {
+    echo "test message";
+}

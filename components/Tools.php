@@ -28,7 +28,7 @@ class Tools extends Component
     static function prettyPrint($message)
     {
         $message = Json::encode($message);
-        echo "<pre>$message</pre>";
+        echo "<pre><code>$message</code></pre>";
     }
 
     static function console($msg)
@@ -61,6 +61,24 @@ class Tools extends Component
             return $matches ? $matches[1] : false;
         }
         return false;
+    }
+
+
+    static function array_orderby()
+    {
+        $args = func_get_args();
+        $data = array_shift($args);
+        foreach ($args as $n => $field) {
+            if (is_string($field)) {
+                $tmp = array();
+                foreach ($data as $key => $row)
+                    $tmp[$key] = $row[$field];
+                $args[$n] = $tmp;
+            }
+        }
+        $args[] = &$data;
+        call_user_func_array('array_multisort', $args);
+        return array_pop($args);
     }
 
 }

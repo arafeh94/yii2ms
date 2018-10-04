@@ -174,6 +174,12 @@ SQL;
         return $query;
     }
 
+    /**
+     * @deprecated replaced by {@link ArrayQueries::enrollment}
+     * @param $student
+     * @param $major
+     * @return string
+     */
     public static function enrollment($student, $major)
     {
         if ($major === null) $major = Student::findOne($student)->CurrentMajor;
@@ -277,7 +283,6 @@ SQL;
         if ($year) {
             $query .= " and if(s3.Year is null, s.Year = '{$year}', s3.Year = '{$year}')";
         }
-
         return $query;
     }
 

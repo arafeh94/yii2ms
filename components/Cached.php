@@ -10,6 +10,7 @@ namespace app\components;
 
 use app\models\Major;
 use app\models\OfferedCourse;
+use Symfony\Component\Finder\Glob;
 use yii\base\Component;
 use yii\db\Connection;
 use yii\db\Query;

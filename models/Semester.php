@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\Tools;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -26,13 +27,6 @@ class Semester extends ActiveRecord
 {
 
 
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        if ($insert && $this->IsCurrent == true) {
-            Semester::find()->current(true);
-        }
-    }
 
     /**
      * @inheritdoc

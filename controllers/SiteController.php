@@ -82,6 +82,16 @@ class SiteController extends AppController
      */
     public function actionLogin()
     {
+//        $s = Instructor::find()->all()[0];
+//        $s->Email = "arafeh198@gmail.com";
+//        $res = Yii::$app->mailer
+//            ->compose('test/html')
+//            ->setFrom('ahmad.hammoud08@lau.edu')
+//            ->setTo('arafeh198@gmail.com')
+//            ->setSubject('Evaluation Fill Request')
+//            ->send();
+//        Tools::forcePrint($res);
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }

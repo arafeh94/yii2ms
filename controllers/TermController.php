@@ -54,6 +54,7 @@ class TermController extends \yii\web\Controller
                 $saved = $model->save();
                 if ($saved && $model->IsCurrent) {
                     \Yii::$app->db->createCommand("update semester set IsCurrent = 0 WHERE SemesterId != $model->SemesterId")->execute();
+                    Semester::find()->current(true);
                 }
             }
             return $this->renderAjax('_form', ['model' => $model, 'saved' => $saved]);

@@ -38,7 +38,8 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
                 ->setFrom(Yii::$app->params['adminEmail'])
                 ->setTo($this->instructor->Email)
                 ->setSubject('Evaluation Fill Request');
-            $message->send();
+            $res = $message->send();
+            if ($res !== true) Yii::error($res);
         }
         parent::afterSave($insert, $changedAttributes);
     }

@@ -9,6 +9,7 @@
 namespace app\models\providers;
 
 
+use app\components\ArrayQueries;
 use app\components\Cached;
 use app\components\GridConfig;
 use app\components\Math;
@@ -33,11 +34,12 @@ use kartik\grid\GridView;
 use kartik\grid\SerialColumn;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\data\SqlDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
-class EnrollmentDataProvider extends SqlDataProvider implements GridConfig
+class EnrollmentDataProvider extends ArrayDataProvider implements GridConfig
 {
     public $searchModel;
     /** @var Student */
@@ -45,7 +47,7 @@ class EnrollmentDataProvider extends SqlDataProvider implements GridConfig
 
     public function init()
     {
-        $this->sql = Queries::enrollment($this->student->StudentId, $this->student->CurrentMajor);
+        $this->allModels = ArrayQueries::studyPlan($this->student);
         parent::init();
     }
 

@@ -6,6 +6,7 @@
 /** @var $studentSemesterEnrollment StudentSemesterEnrollment */
 
 /** @var $currentSemester \app\models\Semester|null */
+/** @var $provider \app\models\providers\EnrollmentDataProvider */
 
 use app\components\ModalForm;
 use app\models\Cycle;

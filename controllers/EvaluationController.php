@@ -112,7 +112,9 @@ class EvaluationController extends Controller
             ->setFrom(Yii::$app->params['adminEmail'])
             ->setTo($eval->instructor->Email)
             ->setSubject('Evaluation Fill Request');
-        return $message->send();
+        $res = $message->send();
+        if ($res !== true) Yii::error($res);
+        return $res;
     }
 
     /**
@@ -166,7 +168,7 @@ class EvaluationController extends Controller
             ->innerJoin(Student::tableName(), 'student.StudentId = studentsemesterenrollment.StudentId')
             ->innerJoin(Cycle::tableName(), 'student.CycleId = cycle.CycleId')
             ->orderBy('offeredcourse.CourseId')
-            ->where(['studentsemesterenrollment.SemesterId' => Semester::find()->current()->SemesterId])
+            ->where(['studentsemesterenrollment.SemesterId' => $instructorEvaluationEmail->evaluationEmail->SemesterId])
             ->andWhere(['instructor.InstructorId' => $instructorEvaluationEmail->InstructorId])
             ->andWhere(['instructor.IsDeleted' => 0])
             ->andWhere(['offeredcourse.IsDeleted' => 0])
@@ -174,7 +176,6 @@ class EvaluationController extends Controller
             ->andWhere(['studentcourseenrollment.IsDeleted' => 0])
             ->andWhere(['studentcourseenrollment.IsDropped' => 0])
             ->all();
-
         if ($evaluations) {
             $transaction = Yii::$app->db->beginTransaction();
             try {
@@ -184,8 +185,9 @@ class EvaluationController extends Controller
                     if ($studentCourseEvaluation->load($evaluation, '')) {
                         if ($evaluation['StudentCourseEvaluationId']) {
                             //if it's an old record
-                            $studentCourseEvaluation->StudentCourseEvaluationId = $evaluation['StudentCourseEvaluationId'];
-                            if ($studentCourseEvaluation->update() === false) $hasError = true;
+                            $studentCourseEvaluation = StudentCourseEvaluation::findOne($evaluation['StudentCourseEvaluationId']);
+                            $studentCourseEvaluation->load($evaluation, '');
+                            $studentCourseEvaluation->save();
                         } else {
                             //if it's a new record
                             if (!$studentCourseEvaluation->save()) $hasError = true;
@@ -216,9 +218,12 @@ class EvaluationController extends Controller
                 }
 
             } catch (\Exception $e) {
+                Tools::prettyPrint($e);
+
                 $transaction->rollBack();
             }
         } else {
+            //creating evaluation form
             if ($instructorEvaluationEmail->DateFilled && !Yii::$app->user->isGuest && !$evaluations) {
                 $evaluationsModels = StudentCourseEvaluation::find()
                     ->innerJoinWith('studentCourseEnrollment')
@@ -238,7 +243,6 @@ class EvaluationController extends Controller
 
             }
         }
-
 
         return $this->render('fill', [
             'instructorEvaluationEmail' => $instructorEvaluationEmail,
@@ -274,6 +278,23 @@ class EvaluationController extends Controller
     public function actionValidate($evaluationId)
     {
         return $this->renderPartial('validate', ['provider' => new EvaluationValidateDataProvider(['evaluationEmailId' => $evaluationId])]);
+    }
+
+    public function actionMailTest()
+    {
+        $res = null;
+        $request = Yii::$app->request;
+        $to = $request->post('to', false);
+        $content = $request->post('content', false);
+        if ($to && $content) {
+            $res = Yii::$app->mailer
+                ->compose('test/html', ['content' => $content])
+                ->setFrom(Yii::$app->params['adminEmail'])
+                ->setTo($to)
+                ->setSubject('USP Test Email')
+                ->send();
+        }
+        return $this->render('mail-test', ['res' => $res]);
     }
 
 }

@@ -103,7 +103,6 @@ function avg($data) {
 }
 
 function gpa($source, $data) {
-    console.log('source', $source);
-    console.log('data', $data);
     return 1;
 }
+

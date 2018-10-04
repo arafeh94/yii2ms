@@ -112,13 +112,13 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
                 'attribute' => 'instructor',
                 'label' => 'Instructor',
                 'value' => function ($model) {
-                    return $model->instructor->FirstName . ' ' . $model->instructor->LastName;
+                    return $model->instructor->fullName;
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Instructor::find()->orderBy('FirstName')->active()->all(), function ($model) {
-                    return $model->FirstName . ' ' . $model->LastName;
+                    return $model->fullName;
                 }, function ($model) {
-                    return $model->FirstName . ' ' . $model->LastName;
+                    return $model->fullName;
                 }),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
@@ -161,7 +161,7 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
     public function search($params)
     {
         $this->searchModel($params);
-        $this->query->andFilterWhere(['like', "concat(instructor.FirstName,' ',instructor.LastName)", ArrayHelper::getValue($params, 'instructor', '')]);
+        $this->query->andFilterWhere(['like', "concat(instructor.Title,'. ',instructor.FirstName,' ',instructor.LastName)", ArrayHelper::getValue($params, 'instructor', '')]);
         $this->query->andFilterWhere(['like', 'course.Name', ArrayHelper::getValue($params, 'course', '')]);
         $this->query->andFilterWhere(['like', 'campus.Name', ArrayHelper::getValue($params, 'campus', '')]);
         $this->query->andFilterWhere(['like', 'CRN', ArrayHelper::getValue($params, 'CRN', '')]);

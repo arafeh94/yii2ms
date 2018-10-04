@@ -34,6 +34,7 @@ if (!isset($model)) $model = new EnrollmentForm();
     'action' => ['enrollment/update', 'student' => $student->UniversityId],
     'options' => ['data-pjax' => '']
 ]) ?>
+
 <?= $form->field($model, 'StudentSemesterEnrollmentId')->hiddenInput([
     'data-add-value' => $student->studentSemesterEnrollmentForCurrentSemester->StudentSemesterEnrollmentId
 ])->label(false) ?>

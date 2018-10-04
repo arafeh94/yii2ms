@@ -28,7 +28,13 @@ class EnrollmentController extends \yii\web\Controller
     {
         $student = Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $uid])->one();
         $provider = new EnrollmentDataProvider(['student' => $student]);
-        $isEnrolledInSemester = StudentSemesterEnrollment::find()->innerJoinWith('student')->where(['UniversityId' => $uid, 'studentsemesterenrollment.IsDeleted' => 0])->count() > 0;
+        $isEnrolledInSemester = StudentSemesterEnrollment::find()
+                ->innerJoinWith('student')
+                ->where([
+                    'UniversityId' => $uid,
+                    'studentsemesterenrollment.IsDeleted' => 0,
+                    'studentsemesterenrollment.SemesterId' => Semester::find()->current()->SemesterId,
+                ])->count() > 0;
         $studentSemesterEnrollment = StudentSemesterEnrollment::find()->innerJoinWith('student')->where(['UniversityId' => $uid])->one();
         return $this->render('index', [
             'provider' => $provider,
@@ -55,7 +61,7 @@ class EnrollmentController extends \yii\web\Controller
             $validated = $enrollmentForm->validate();
             $saved = null;
             if ($loaded && $validated) {
-                $studyPlan = StudyPlan::findOne(['MajorId'=>null,'Season'=>$enrollmentForm->Season,'Year'=>$enrollmentForm->Year]);
+                $studyPlan = StudyPlan::findOne(['MajorId' => null, 'Season' => $enrollmentForm->Season, 'Year' => $enrollmentForm->Year]);
                 if (!$studyPlan) $studyPlan = new StudyPlan();
                 $studyPlan->Season = $enrollmentForm->Season;
                 $studyPlan->Year = $enrollmentForm->Year;
@@ -95,7 +101,10 @@ class EnrollmentController extends \yii\web\Controller
     public function actionEnroll($studentId)
     {
         $student = Student::findOne($studentId);
-        $enrollment = StudentSemesterEnrollment::find()->where(['StudentId' => $studentId])->one();
+        $enrollment = StudentSemesterEnrollment::find()->where([
+            'StudentId' => $studentId,
+            'studentsemesterenrollment.SemesterId' => Semester::find()->current()->SemesterId,
+        ])->one();
         if ($enrollment) {
             $enrollment->IsDeleted = !$enrollment->IsDeleted;
         } else {

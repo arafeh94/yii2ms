@@ -9,6 +9,7 @@
 namespace app\models\providers;
 
 
+use app\components\ArrayQueries;
 use app\components\GridConfig;
 use app\components\Queries;
 use app\components\QueriesExecutor;
@@ -17,10 +18,11 @@ use app\components\Tools;
 use kartik\grid\DataColumn;
 use kartik\grid\GridView;
 use app\models\Student;
+use yii\data\ArrayDataProvider;
 use yii\data\SqlDataProvider;
 use yii\helpers\ArrayHelper;
 
-class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
+class StudyPlanReportDataProvider extends ArrayDataProvider implements GridConfig
 {
     private static $crSeasonTotal = 0;
     private static $crYearTotal = 0;
@@ -31,7 +33,7 @@ class StudyPlanReportDataProvider extends SqlDataProvider implements GridConfig
 
     public function init()
     {
-        $this->sql = Queries::StudyPlan($this->student->StudentId, $this->student->CurrentMajor);
+        $this->allModels = ArrayQueries::studyPlan($this->student);
         $this->pagination->pageSize = false;
         parent::init();
     }
