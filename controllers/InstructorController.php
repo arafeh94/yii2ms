@@ -58,15 +58,16 @@ class InstructorController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
-        if (OfferedCourse::find()->where(['InstructorId' => $id])->count()) {
-            return false;
+        if (OfferedCourse::find()->active()->where(['InstructorId' => $id])->count()) {
+            return Json::encode("There are offered courses assigned to this instructor", 200);
         }
         if (\Yii::$app->request->isAjax) {
             $model = Instructor::findOne($id);
             $model->IsDeleted = 1;
-            return $model->save();
+            $model->save();
+            return Json::encode(true);
         }
-        return false;
+        return Json::encode(false);
     }
 
 }

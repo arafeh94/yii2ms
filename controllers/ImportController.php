@@ -33,11 +33,13 @@ class ImportController extends \yii\web\Controller
     public function actionIndex()
     {
         $model = new DataImportForm();
+
         $importer = DataImporter::getInstance();
         if (Yii::$app->request->isPost) {
             $model->dataFile = UploadedFile::getInstance($model, 'dataFile');
+            $model->template = Yii::$app->request->post('DataImportForm')['template'];
             if ($model->upload()) {
-                $importer = DataImporter::getInstance($model->savedFile);
+                $importer = DataImporter::getInstance($model->savedFile, $model->template);
                 $importer->exec();
             }
         }
@@ -46,6 +48,12 @@ class ImportController extends \yii\web\Controller
             'importer' => $importer,
             'completed' => Yii::$app->request->get('completed', false)
         ]);
+    }
+
+    public function actionCompleted()
+    {
+        $importer = DataImporter::getInstance();
+        return $this->render('completed', ['importer' => $importer]);
     }
 
     public function actionProgress()

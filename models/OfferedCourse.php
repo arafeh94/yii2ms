@@ -3,7 +3,9 @@
 namespace app\models;
 
 use app\components\Cached;
+use app\components\Tools;
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "offeredcourse".
@@ -53,6 +55,7 @@ class OfferedCourse extends \yii\db\ActiveRecord
             [['DateAdded'], 'safe'],
             [['IsDeleted'], 'boolean'],
             [['SemesterId'], 'exist', 'skipOnError' => true, 'targetClass' => Semester::className(), 'targetAttribute' => ['SemesterId' => 'SemesterId']],
+            [['CourseId'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['CourseId' => 'CourseId']],
         ];
     }
 
@@ -116,6 +119,25 @@ class OfferedCourse extends \yii\db\ActiveRecord
     }
 
     /**
+     * delete the current offered course and delete all the enrolled courses in it
+     * @return bool
+     */
+    public function remove()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $this->IsDeleted = 1;
+            $this->save();
+            StudentCourseEnrollment::updateAll(['IsDeleted' => 1], ['OfferedCourseId' => $this->OfferedCourseId]);
+            $transaction->commit();
+            return true;
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            return false;
+        }
+    }
+
+    /**
      * @inheritdoc
      * @return OfferedCourseQuery the active query used by this AR class.
      */
@@ -123,4 +145,6 @@ class OfferedCourse extends \yii\db\ActiveRecord
     {
         return new OfferedCourseQuery(get_called_class());
     }
+
+
 }

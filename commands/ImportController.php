@@ -36,11 +36,21 @@ class ImportController extends Controller
         $importer->clearErrors();
     }
 
-    public function actionTest($file)
+    public function actionTest($file, $type)
     {
         $file = Yii::$app->basePath . "/web/uploads/{$file}";
         DataImporter::getInstance()->reset();
-        $importer = DataImporter::getInstance($file);
+        $importer = DataImporter::getInstance($file, $type);
         $importer->import();
+    }
+
+    public function actionInfo()
+    {
+        $importer = DataImporter::getInstance();
+        echo "file: {$importer->getFile()}\n";
+        echo "type: {$importer->getTemplate()}\n";
+        echo "status: {$importer->getStatus()}\n";
+        echo "progress: {$importer->getProgress()}\n";
+        echo "errors : " . print_r($importer->getErrors(), true);
     }
 }

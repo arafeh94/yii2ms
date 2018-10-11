@@ -10,6 +10,7 @@ namespace app\models\providers;
 
 
 use app\components\GridConfig;
+use app\components\Tools;
 use app\models\Campus;
 use app\models\Course;
 use app\models\Department;
@@ -147,10 +148,10 @@ class OfferedCourseDataProvider extends ActiveDataProvider implements GridConfig
                         ]);
                     },
                     'delete' => function ($key, $model, $index) {
-                        $url = Url::to(['offered-course/delete', 'id' => $model->OfferedCourseId]);
+                        $url = Url::to(['offered-course/confirm-delete-content', 'offeredCourseId' => $model->OfferedCourseId]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-trash pointer",
-                            'onclick' => "gridControl.delete(this,'$url')",
+                            'onclick' => "modalController.show('$url')",
                         ]);
                     },
                 ]

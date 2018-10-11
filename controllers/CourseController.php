@@ -72,4 +72,15 @@ class CourseController extends \yii\web\Controller
         return false;
     }
 
+    public function actionDeactivate($id)
+    {
+
+        if (\Yii::$app->request->isAjax) {
+            $model = Course::findOne($id);
+            $model->IsActivate = !$model->IsActivate;
+            return $model->save();
+        }
+        return Json::encode("this course can't be deactivated");
+    }
+
 }

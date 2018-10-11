@@ -1,7 +1,7 @@
 <?php
 
 $params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
+
 
 $config = [
     'id' => 'basic',
@@ -38,19 +38,6 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            'useFileTransport' => false,
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.office365.com',
-                'username' => 'usp.app@lau.edu',
-                'password' => 'default#18',
-                'port' => '587',
-                'encryption'=>'tls',
-                'authMode'=>'LOGIN',
-            ]
-        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
@@ -60,7 +47,6 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -84,6 +70,8 @@ $config = [
     ],
     'params' => $params,
 ];
+
+$config = array_merge_recursive($config, require __DIR__ . '/config.php');
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

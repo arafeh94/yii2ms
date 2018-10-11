@@ -26,7 +26,7 @@ class EnrollmentForm extends Model
     {
         return [
             [['OfferedCourseId', 'Year', 'Season', 'StudentSemesterEnrollmentId'], 'required'],
-            [['OfferedCourseId'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['OfferedCourseId' => 'CourseId']],
+            [['OfferedCourseId'], 'exist', 'skipOnError' => true, 'targetClass' => OfferedCourse::className(), 'targetAttribute' => ['OfferedCourseId' => 'OfferedCourseId']],
             [['OfferedCourseId'], 'unique', 'targetClass' => StudentCourseEnrollment::className(), 'targetAttribute' => ['OfferedCourseId', 'StudentSemesterEnrollmentId'], 'filter' => ['IsDeleted' => 0, 'IsDropped' => 0], 'message' => Yii::t('app', 'Already Enrolled')],
         ];
     }

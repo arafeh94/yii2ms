@@ -14,6 +14,11 @@ class CourseQuery extends \yii\db\ActiveQuery
         return $this->andWhere('[[course.IsDeleted]]=0');
     }
 
+    public function activated()
+    {
+        return $this->andWhere('[[course.IsActivate]]=1');
+    }
+
     public function id($id)
     {
         return $this->andWhere(['course.CourseId' => $id]);

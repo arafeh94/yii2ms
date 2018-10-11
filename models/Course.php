@@ -15,6 +15,7 @@ use Yii;
  * @property int $CreatedByUserId
  * @property string $DateAdded
  * @property bool $IsDeleted
+ * @property bool $IsActivate
  *
  * @property Major $major
  * @property StudentCourseEnrollment[] $studentCourseEnrollments

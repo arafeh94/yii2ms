@@ -60,15 +60,18 @@ class EnrollmentController extends \yii\web\Controller
             $loaded = $enrollmentForm->load(Yii::$app->request->post());
             $validated = $enrollmentForm->validate();
             $saved = null;
+
             if ($loaded && $validated) {
                 $studyPlan = StudyPlan::findOne(['MajorId' => null, 'Season' => $enrollmentForm->Season, 'Year' => $enrollmentForm->Year]);
-                if (!$studyPlan) $studyPlan = new StudyPlan();
-                $studyPlan->Season = $enrollmentForm->Season;
-                $studyPlan->Year = $enrollmentForm->Year;
-                $studyPlan->MajorId = null;
-                $studyPlan->CourseLetter = null;
-                $studyPlan->CreatedByUserId = User::get()->UserId;
-                $studyPlan->save(false);
+                if (!$studyPlan) {
+                    $studyPlan = new StudyPlan();
+                    $studyPlan->Season = $enrollmentForm->Season;
+                    $studyPlan->Year = $enrollmentForm->Year;
+                    $studyPlan->MajorId = null;
+                    $studyPlan->CourseLetter = null;
+                    $studyPlan->CreatedByUserId = User::get()->UserId;
+                    $studyPlan->save(false);
+                }
                 $studentCourseEnrollment = new StudentCourseEnrollment();
                 $studentCourseEnrollment->StudentSemesterEnrollmentId = $enrollmentForm->StudentSemesterEnrollmentId;
                 $studentCourseEnrollment->OfferedCourseId = $enrollmentForm->OfferedCourseId;

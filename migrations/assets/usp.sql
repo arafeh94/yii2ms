@@ -39,7 +39,8 @@ CREATE TABLE course
   Credits         INT                                 NOT NULL,
   CreatedByUserId INT                                 NOT NULL,
   DateAdded       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL,
-  IsDeleted       BIT DEFAULT b'0'                    NULL
+  IsDeleted       BIT DEFAULT b'0'                    NULL,
+  IsActivate      BIT DEFAULT b'1'                    NULL
 )
   ENGINE = InnoDB
   COLLATE = utf8_bin;

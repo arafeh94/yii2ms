@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\Tools;
 use app\models\Campus;
 use app\models\Course;
 use app\models\Instructor;
@@ -9,6 +10,7 @@ use app\models\OfferedCourse;
 use app\models\providers\OfferedCourseDataProvider;
 use app\models\search\OfferedCourseSearchModel;
 use app\models\Semester;
+use app\models\Student;
 use app\models\StudentCourseEnrollment;
 use app\models\User;
 use yii\filters\AccessControl;
@@ -61,7 +63,7 @@ class OfferedCourseController extends \yii\web\Controller
                 'campuses' => Campus::find()->active()->all(),
                 'semesters' => Semester::find()->active()->all(),
                 'instructors' => Instructor::find()->active()->all(),
-                'courses' => Course::find()->active()->all(),
+                'courses' => Course::find()->active()->activated()->all(),
                 'saved' => $saved
             ]);
         }
@@ -70,15 +72,23 @@ class OfferedCourseController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
-        if (StudentCourseEnrollment::find()->where(['OfferedCourseId' => $id])->count()) {
-            return false;
+        return OfferedCourse::findOne($id)->remove();
+    }
+
+    public function actionConfirmDeleteContent($offeredCourseId)
+    {
+        $offeredCourse = OfferedCourse::findOne($offeredCourseId);
+        $enrollments = [];
+        foreach ($offeredCourse->studentCourseEnrollments as $courseEnrollment) {
+            $enrollment['student'] = $courseEnrollment->studentSemesterEnrollment->student->name;
+            $enrollment['enrolledDate'] = $courseEnrollment->DateAdded;
+            $enrollment['hasGrade'] = $courseEnrollment->FinalGrade != null ? "YES" : "NO";
+            $enrollments[] = $enrollment;
         }
-        if (\Yii::$app->request->isAjax) {
-            $model = OfferedCourse::findOne($id);
-            $model->IsDeleted = 1;
-            return $model->save();
-        }
-        return false;
+        return $this->renderAjax('_confirm_delete_content', [
+            'offeredCourse' => $offeredCourse,
+            'enrollments' => $enrollments
+        ]);
     }
 
 }

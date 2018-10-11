@@ -105,6 +105,7 @@ use Yii;
  * @property StudentCourseEvaluation[] $studentCourseEvaluation
  * @property StudentSemesterEnrollment[] $studentSemesterEnrollments
  * @property Course[] $courses
+ * @property String $name
  */
 class Student extends \yii\db\ActiveRecord
 {
@@ -273,6 +274,11 @@ class Student extends \yii\db\ActiveRecord
     public function getMajor()
     {
         return $this->hasOne(Major::className(), ['MajorId' => 'CurrentMajor']);
+    }
+
+    public function getName()
+    {
+        return $this->FirstName . ' ' . $this->LastName;
     }
 
     /**

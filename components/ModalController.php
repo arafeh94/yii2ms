@@ -10,6 +10,12 @@ namespace app\components;
 
 use yii\base\Widget;
 
+/**
+ * Class ModalController
+ * usage using javascript
+ * modalController.show(url)
+ * @package app\components
+ */
 class ModalController extends Widget
 {
     public $id;

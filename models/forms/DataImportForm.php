@@ -25,12 +25,14 @@ class DataImportForm extends Model
      * @var UploadedFile
      */
     public $dataFile;
+    public $template;
     private $savedName;
 
     public function rules()
     {
         return [
             [['dataFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xlsx'],
+            [['template'], 'default', 'value' => 'tp1'],
         ];
     }
 

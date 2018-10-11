@@ -1,7 +1,6 @@
 <?php
 
 $params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic-console',
@@ -20,7 +19,6 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
     ],
     'params' => $params,
     /*
@@ -31,6 +29,9 @@ $config = [
     ],
     */
 ];
+
+$config = array_merge_recursive($config, require __DIR__ . '/config.php');
+
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

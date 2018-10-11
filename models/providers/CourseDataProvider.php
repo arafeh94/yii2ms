@@ -10,13 +10,16 @@ namespace app\models\providers;
 
 
 use app\components\GridConfig;
+use app\components\Tools;
 use app\models\Course;
 use app\models\Department;
 use app\models\Major;
 use app\models\search\CourseSearchModel;
 use app\models\search\DepartmentSearchModel;
 use app\models\search\MajorSearchModel;
+use kartik\grid\BooleanColumn;
 use kartik\grid\DataColumn;
+use phpDocumentor\Reflection\Types\Boolean;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -67,8 +70,12 @@ class CourseDataProvider extends ActiveDataProvider implements GridConfig
                 'attribute' => 'Credits',
             ],
             [
+                'class' => BooleanColumn::className(),
+                'attribute' => 'IsActivate',
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
+                'template' => '{update} {deactivate} {delete}',
                 'buttons' => [
                     'update' => function ($key, $model, $index) {
                         $url = Url::to(['course/view', 'id' => $model->getPrimaryKey()]);
@@ -78,9 +85,17 @@ class CourseDataProvider extends ActiveDataProvider implements GridConfig
                         ]);
                     },
                     'delete' => function ($key, $model, $index) {
-                        $url = Url::to(['course/delete', 'id' => $model->MajorId]);
+                        $url = Url::to(['course/delete', 'id' => $model->CourseId]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-trash pointer",
+                            'onclick' => "gridControl.delete(this,'$url')",
+                        ]);
+                    },
+                    'deactivate' => function ($key, $model, $index) {
+                        $eye = $model->IsActivate ? 'glyphicon-eye-close' : 'glyphicon-eye-open';
+                        $url = Url::to(['course/deactivate', 'id' => $model->CourseId]);
+                        return Html::tag('span', '', [
+                            'class' => "glyphicon $eye pointer",
                             'onclick' => "gridControl.delete(this,'$url')",
                         ]);
                     },
@@ -96,6 +111,9 @@ class CourseDataProvider extends ActiveDataProvider implements GridConfig
         $this->query->andFilterWhere(['like', 'lower(major.Name)', strtolower(ArrayHelper::getValue($params, 'major', ''))]);
         $this->query->andFilterWhere(['like', 'Letter', ArrayHelper::getValue($params, 'Letter', '')]);
         $this->query->andFilterWhere(['like', 'Credits', ArrayHelper::getValue($params, 'Credits', '')]);
+        if (($isActivate = ArrayHelper::getValue($params, 'IsActivate', null)) !== null) {
+            $this->query->andFilterWhere(['=', "IsActivate", $isActivate]);
+        }
     }
 
     public function searchModel($params = null)

@@ -8,10 +8,11 @@
 
 /** @var \app\models\forms\DataImportForm $model */
 
-/** @var \app\components\DataImporter $importer */
+/** @var DataImporter $importer */
 
 /** @var bool $completed */
 
+use app\components\DataImporter;
 use kartik\form\ActiveForm;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Html;
@@ -36,14 +37,6 @@ use yii\helpers\Url;
             </div>
         </div>
     <?php else : ?>
-        <?php if ($completed) : ?>
-            <?= Alert::widget([
-                'closeButton' => false,
-                'body' => "<b>Import Completed</b>",
-                'options' => ['class' => 'alert-success']
-            ]) ?>
-        <?php endif; ?>
-
         <?php if ($importer->getErrors()) : ?>
             <?= Alert::widget([
                 'closeButton' => false,
@@ -51,23 +44,40 @@ use yii\helpers\Url;
                 'options' => ['class' => 'alert-danger'],
             ]) ?>
         <?php endif; ?>
+
+        <div style="margin: 8px 0">
+            <div style="text-align: center">
+                <?php foreach (DataImporter::$TEMPLATES as $key => $template): ?>
+                    <button class="btn btn-success" id="btn-<?= $key ?>" onclick="changeTemplate('<?= $key ?>')">
+                        <?= $template['name'] ?>
+                    </button>
+                <?php endforeach; ?>
+            </div>
+            <div id="template-columns" style="margin-top: 4px;">
+            </div>
+        </div>
+
         <?php $form = ActiveForm::begin() ?>
-        <?= $form->field($model, 'dataFile')->fileInput(['class' => 'inputfile']) ?>
-        <?= Html::submitButton('Submit File', ['class' => 'btn btn-success']) ?>
+        <?= $form->field($model, 'dataFile')->fileInput(['class' => 'inputfile'])->label(false) ?>
+        <?= $form->field($model, 'template')->hiddenInput(['id' => 'template-input',])->label(false) ?>
+        <div class="button-container">
+            <?= Html::submitButton('Import', ['class' => 'btn btn-success']) ?>
+        </div>
         <?php ActiveForm::end(); ?>
     <?php endif; ?>
 </div>
 
-
 <?php if ($importer->isImporting()): ?>
     <script>
         window.addEventListener('load', function (ev) {
-            INTERVALID = setInterval(refresher, 500);
+            window.INTERVALID = setInterval(refresher, 500);
         });
     </script>
 <?php endif; ?>
 
 <script>
+    var templates = <?=json_encode(\app\components\DataImporter::$TEMPLATES)?>;
+
     function refresher() {
         $.ajax({
             url: '<?=Url::to(['import/progress'])?>',
@@ -77,11 +87,11 @@ use yii\helpers\Url;
                     setProgress(data.progress);
                 }
                 if (data.status === 'completed') {
-                    clearInterval(INTERVALID);
-                    window.location = '<?=Url::to(['import/index', 'completed' => true])?>';
+                    clearInterval(window.INTERVALID);
+                    window.location = '<?=Url::to(['import/completed'])?>';
                 }
                 if (data.status === 'error') {
-                    clearInterval(INTERVALID);
+                    clearInterval(window.INTERVALID);
                     window.location = '<?=Url::to(['import/index'])?>';
                 }
             }
@@ -94,4 +104,18 @@ use yii\helpers\Url;
         progressBar.css('width', value + '%');
         progressBar.text(value + '%');
     }
+
+    function changeTemplate(tp) {
+        var columns = templates[tp]['columns'];
+        var content = columns.join(' - ');
+        content = 'Required Columns : ' + content;
+        $('#template-columns').text(content);
+        $("[id*='btn-tp']").removeClass('btn-danger').addClass('btn-success');
+        $("#btn-" + tp).removeClass('btn-success').addClass('btn-danger');
+        $('#template-input').val(tp);
+    }
+
+    window.addEventListener('load', function () {
+        changeTemplate('tp1');
+    });
 </script>

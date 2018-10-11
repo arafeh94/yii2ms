@@ -1,6 +1,7 @@
 (window).modalForm = function (element, url) {
     function update() {
         $('#form-state-alert').remove();
+        start();
         $('#dialog-form').modal('show');
         var form = document.getElementById('model-form');
         clearForm(form);
@@ -27,6 +28,11 @@
                 input.val(input.attr('data-add-value'))
             }
         });
+    }
+
+    function start() {
+        $('#modal-container-loading').css({display: 'block'});
+        $('#modal-container-form').css({display: 'none'});
     }
 
     function end() {
@@ -73,29 +79,18 @@
             url: url,
             dataType: 'json',
             success: function (data) {
-                if (data) {
+                // noinspection EqualityComparisonWithCoercionJS
+                if (data == true) {
                     gridControl.reload(true);
                 } else {
-                    toastr.error("This item can't be deleted");
+                    if (data === false || data === "false") {
+                        toastr.error("This item can't be deleted");
+                    } else {
+                        toastr.error(data);
+                    }
                 }
             }, error: function (data) {
                 toastr.error("This item can't be deleted");
-            }
-        });
-    },
-    drop: function (element, url) {
-        $.ajax({
-            type: "POST",
-            url: url,
-            dataType: 'json',
-            success: function (data) {
-                if (data) {
-                    gridControl.reload(true);
-                } else {
-                    toastr.error("This item can't be dropped");
-                }
-            }, error: function (data) {
-                toastr.error("This item can't be dropped");
             }
         });
     }

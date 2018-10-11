@@ -8,21 +8,23 @@
 
 namespace app\components;
 
-use app\components\Tools;
-use app\models\Campus;
-use app\models\Course;
-use app\models\Department;
-use app\models\Instructor;
-use app\models\Major;
-use app\models\OfferedCourse;
-use app\models\School;
-use app\models\Semester;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use yii\helpers\ArrayHelper;
 
 class DataImporter
 {
+    public static $TEMPLATES = [
+        'tp1' => [
+            'name' => 'Template 1',
+            'class' => '\app\components\importers\Template1Importer',
+            'columns' => ['Campus', 'Term', 'Instructor ID', 'Instructor', 'Instructor Email', 'Course', 'Title', 'Credits', 'CRN', 'Section']
+        ],
+        'tp2' => [
+            'name' => 'Template 2',
+            'class' => '\app\components\importers\Template2Importer',
+            'columns' => ['School', 'Department', 'Major', 'Program Name', 'Program Code'],
+        ]
+    ];
     static $INFO_CACHE_KEY = 'import_info';
     static $ERRORS_CACHE_KEY = 'import_errors';
 
@@ -34,31 +36,34 @@ class DataImporter
     private $sheet;
 
     /**
-     * @param null $file
+     * @param String $file
+     * @param String $template
      * @return DataImporter
      */
-    public static function getInstance($file = null)
+    public static function getInstance($file = null, $template = null)
     {
         $importer = new DataImporter();
-        $importer->info = \Yii::$app->cache->getOrSet(self::$INFO_CACHE_KEY, function () use ($file) {
-            return self::defaults($file);
-        });
+        $importer->info = \Yii::$app->cache
+            ->getOrSet(self::$INFO_CACHE_KEY, function () use ($file, $template) {
+                return self::createInfo($file, $template);
+            });
         $importer->errors = \Yii::$app->cache->get(self::$ERRORS_CACHE_KEY);
-        if ($file !== null) {
+        if ($file !== null && $template !== null) {
             if ($file != $importer->getFile()) {
-                $importer->reset($file);
+                $importer->reset($file, $template);
                 $importer->clearErrors();
             }
         }
         return $importer;
     }
 
-    private static function defaults($file)
+    private static function createInfo($file, $template)
     {
         return [
             'status' => 'idle',
             'progress' => '0',
             'file' => $file,
+            'template' => $template,
         ];
     }
 
@@ -68,10 +73,10 @@ class DataImporter
         $this->errors = [];
     }
 
-    public function reset($file = null)
+    public function reset($file = null, $template = null)
     {
         \Yii::$app->cache->delete(self::$INFO_CACHE_KEY);
-        $this->info = self::defaults($file);
+        $this->info = self::createInfo($file, $template);
         \Yii::$app->cache->set(self::$INFO_CACHE_KEY, $this->info);
     }
 
@@ -109,6 +114,11 @@ class DataImporter
         return $this->info['status'];
     }
 
+    public function getTemplate()
+    {
+        return $this->info['template'];
+    }
+
     public function isImporting()
     {
         return $this->info['status'] === 'importing';
@@ -125,12 +135,17 @@ class DataImporter
         return $this->info['status'] === 'idle';
     }
 
-    public function exec()
+
+    public function exec($background = true)
     {
         if ($this->isImporting()) return true;
         $this->setProgress('importing', 0);
-        $cr = new ConsoleRunner(['file' => '@app/yii']);
-        $cr->run('import/run');
+        if ($background) {
+            $cr = new ConsoleRunner(['file' => '@app/yii']);
+            $cr->run('import/run');
+        } else {
+            $this->import();
+        }
         return true;
     }
 
@@ -146,116 +161,19 @@ class DataImporter
     public function import()
     {
         try {
+            $class = self::$TEMPLATES[$this->getTemplate()]['class'];
+            /** @var ImporterInterface $importClass */
+            $importer = new $class();
             $this->clearErrors();
             $this->load();
             $this->setProgress('importing', 0);
             foreach ($this->sheet->getRowIterator(2) as $i => $row) {
-                $this->setProgress('importing', ($i / $this->sheet->getHighestRow()));
-                //campus : Campus
-                $campus = Campus::find()->where(['Name' => $this->cell('Campus', $i)])->one();
-                if (!$campus) {
-                    $campus = new Campus();
-                    $campus->Name = $this->cell('Campus', $i);
-                    $campus->save();
-                }
-//
-//                //School : School
-//                $school = School::find()->where(['Name' => $this->cell('School', $i)])->one();
-//                if (!$school) {
-//                    $school = new School();
-//                    $school->Name = $this->cell('School', $i);
-//                    $school->CreatedByUserId = 1;
-//                    $school->save();
-//                }
-//
-//                //Department : -school, Department
-//                $department = Department::find()->where(['SchoolId' => $school->SchoolId, 'Name' => $this->cell('Department', $i)])->one();
-//                if (!$department) {
-//                    $department = new Department();
-//                    $department->SchoolId = $school->SchoolId;
-//                    $department->Name = $this->cell('Department', $i);
-//                    $department->CreatedByUserId = 1;
-//                    $department->save();
-//                }
+                $progress = $i / $this->sheet->getHighestRow();
+                $this->setProgress('importing', $progress);
 
-                //Semester : Term separated by space
-                $term = explode(" ", $this->cell('Term', $i));
-                $season = $term[0];
-                $year = $term[1];
-                $semester = Semester::find()->where(['Season' => $season, 'Year' => $year])->one();
-                if (!$semester) {
-                    $semester = new Semester();
-                    $semester->Year = $year;
-                    $semester->Season = $season;
-                    $semester->StartDate = '1970-01-01';
-                    $semester->EndDate = '1970-01-01';
-                    $semester->IsCurrent = 0;
-                    $semester->CreatedByUserId = 1;
-                    $semester->save();
-                }
-                //Instructor : Instructor ID, Instructor, Instructor Rank, Instructor Email
-                $universityId = $this->cell('Instructor ID', $i) ? $this->cell('Instructor ID', $i) : '-1';
-                $instructor = Instructor::find()->where(['UniversityId' => $universityId])->one();
-                if (!$instructor) {
-                    $fullName = $this->cell('Instructor', $i) ? $this->cell('Instructor', $i) : ',';
-                    $fullName = explode(',', $fullName);
-                    $instructor = new Instructor();
-                    $instructor->UniversityId = $universityId;
-                    $instructor->FirstName = $fullName[1];
-                    $instructor->LastName = $fullName[0];
-                    $instructor->Email = $this->cell('Instructor Email', $i) ? $this->cell('Instructor Email', $i) : '';
-                    $instructor->Title = $this->cell('Instructor', $i) ? 'Mr' : '';
-                    $instructor->PhoneExtension = '';
-                    $instructor->CreatedByUserId = 1;
-                    $instructor->save(false);
-                }
+                $importRow = new ImportRow($this->getTemplate(), $this->sheet, $this->header, $i);
 
-                //major
-//                $major = Major::find()->where(['Name' => $this->cell('Department', $i)])->one();
-//                if (!$major) {
-//                    $abbr = Tools::getLetterUntilNumberFound($this->cell('Course', $i));
-//                    $department = Department::find()->where("Courses like '%{$abbr}%'")->one();
-//                    if (!$department) $department = Department::findOne(1);
-//
-//                    $major = new Major();
-//                    $major->Name = $this->cell('Department', $i);
-//                    $major->DepartmentId = $department->DepartmentId;
-//                    $major->RequiredCredits = '150';
-//                    $major->Abbreviation = '---';
-//                    $major->CreatedByUserId = 1;
-//                    $major->save();
-//                }
-
-                $abbr = Tools::getLetterUntilNumberFound($this->cell('Course', $i));
-                $major = Major::findOne(["Abbreviation" => $abbr]);
-                if (!$major) $major = Major::findOne(1);
-
-                //Course : Course, Title, Credits
-                $course = Course::find()->where(['Letter' => $this->cell('Course', $i)])->one();
-                if (!$course) {
-                    $course = new Course();
-                    $course->Letter = $this->cell('Course', $i);
-                    $course->Name = $this->cell('Title', $i);
-                    $course->Credits = $this->cell('Credits', $i);
-                    $course->MajorId = $major->MajorId;
-                    $course->CreatedByUserId = 1;
-                    $course->save();
-                }
-
-                //OfferedCourse : CRN, Section
-                $offeredCourse = OfferedCourse::find()->where([
-                    'CRN' => $this->cell('CRN', $i),
-                    'Section' => $this->cell('Section', $i)
-                ])->one();
-                if (!$offeredCourse) $offeredCourse = new OfferedCourse();
-                $offeredCourse->CRN = $this->cell('CRN', $i);
-                $offeredCourse->Section = $this->cell('Section', $i);
-                $offeredCourse->CourseId = $course->CourseId;
-                $offeredCourse->InstructorId = $instructor->InstructorId;
-                $offeredCourse->SemesterId = $semester->SemesterId;
-                $offeredCourse->CampusId = $campus->CampusId;
-                $offeredCourse->CreatedByUserId = 1;
-                $offeredCourse->save();
+                $importer->import($importRow);
             }
             $this->setProgress('completed', 1);
             return true;
@@ -268,15 +186,6 @@ class DataImporter
         }
     }
 
-    /**
-     * @param string $header
-     * @param int $row
-     * @return mixed
-     */
-    private function cell($header, $row)
-    {
-        return $this->sheet->getCell("{$this->header($header)}{$row}")->getValue();
-    }
 
     private function buildHeader()
     {
@@ -288,13 +197,48 @@ class DataImporter
         }
     }
 
-    private function header($name)
+
+}
+
+class ImportRow
+{
+    public $data = [];
+
+    /**
+     * ImportRow constructor.
+     * @param $template
+     * @param $sheet
+     * @param $header
+     * @param $pos
+     * @throws \Exception
+     */
+    public function __construct($template, $sheet, $header, $pos)
     {
-        if (isset($this->header[$name])) {
-            return $this->header[$name];
+        foreach (DataImporter::$TEMPLATES[$template]['columns'] as $column) {
+            $this->data[$column] = $sheet->getCell("{$this->fromHeader($header,$column)}{$pos}")->getValue();
+        }
+    }
+
+    private function fromHeader($header, $name)
+    {
+        if (isset($header[$name])) {
+            return $header[$name];
         }
         throw new \Exception("column <b>$name</b> does not exists<br> please check if you choose the right file");
     }
 
+    public function cell($name)
+    {
+        return $this->data[$name];
+    }
+}
+
+interface ImporterInterface
+{
+    /**
+     * @param ImportRow $row
+     * @return bool
+     */
+    function import($row);
 
 }

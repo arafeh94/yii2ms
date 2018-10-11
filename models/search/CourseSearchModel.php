@@ -18,7 +18,7 @@ class CourseSearchModel extends Course
     public function rules()
     {
         return [
-            [['Name', 'major', 'Credits', 'Letter'], 'safe']
+            [['Name', 'major', 'Credits', 'Letter', 'IsActivate'], 'safe']
         ];
     }
 }
