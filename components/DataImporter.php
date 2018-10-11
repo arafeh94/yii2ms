@@ -16,11 +16,15 @@ class DataImporter
     public static $TEMPLATES = [
         'tp1' => [
             'name' => 'Template 1',
+            'description' => '',
+            'enabled' => true,
             'class' => '\app\components\importers\Template1Importer',
             'columns' => ['Campus', 'Term', 'Instructor ID', 'Instructor', 'Instructor Email', 'Course', 'Title', 'Credits', 'CRN', 'Section']
         ],
         'tp2' => [
             'name' => 'Template 2',
+            'description' => '',
+            'enabled' => false,
             'class' => '\app\components\importers\Template2Importer',
             'columns' => ['School', 'Department', 'Major', 'Program Name', 'Program Code'],
         ]

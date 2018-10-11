@@ -48,6 +48,7 @@ use yii\helpers\Url;
         <div style="margin: 8px 0">
             <div style="text-align: center">
                 <?php foreach (DataImporter::$TEMPLATES as $key => $template): ?>
+                    <?php if (!$template['enabled']) continue; ?>
                     <button class="btn btn-success" id="btn-<?= $key ?>" onclick="changeTemplate('<?= $key ?>')">
                         <?= $template['name'] ?>
                     </button>
