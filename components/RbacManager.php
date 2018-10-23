@@ -9,6 +9,7 @@
 namespace app\components;
 
 
+use app\models\User;
 use kartik\grid\DataColumn;
 use Yii;
 use yii\bootstrap\ActiveForm;
@@ -21,9 +22,10 @@ class RbacManager extends PhpManager
     {
         parent::init();
         if (!Yii::$app->user->isGuest) {
-            $roleName = Yii::$app->user->identity->Type == 2 ? 'user' : 'admin';
-            if (!$this->assignments[Yii::$app->user->identity->UserId][$roleName]) {
-                $this->assign(new Role(['name' => $roleName]), Yii::$app->user->identity->UserId);
+            $roleName = User::get()->Type == 2 ? 'user' : 'admin';
+            if (!array_key_exists(User::get()->UserId, $this->assignments)) {
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $this->assign(new Role(['name' => $roleName]), User::get()->UserId);
             }
         }
     }
