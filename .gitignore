@@ -28,3 +28,5 @@ tests/_support/_generated
 
 # rbac assignments
 /rbac/assignments.php
+
+/composer.phar
