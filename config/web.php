@@ -22,6 +22,9 @@ $config = [
         ],
     ],
     'components' => [
+        'assetManager' => [
+            'appendTimestamp' => true,
+        ],
         'authManager' => [
             'class' => 'app\components\RbacManager',
         ],
