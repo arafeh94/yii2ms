@@ -45,6 +45,7 @@ class ArrayQueries
                 'offeredcourse.IsDeleted' => 0,
                 'studentsemesterenrollment.IsDeleted' => 0,
                 'studentcourseenrollment.IsDeleted' => 0,
+                'studentcourseenrollment.IsDropped' => 0,
             ])
             ->all();
         $result = [];
