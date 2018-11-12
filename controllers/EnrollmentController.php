@@ -26,7 +26,7 @@ class EnrollmentController extends \yii\web\Controller
 
     public function actionIndex($uid)
     {
-        $student = Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $uid])->one();
+        $student = Student::find()->with('studentSemesterEnrollmentForCurrentSemester')->where(['UniversityId' => $uid])->active()->one();
         $provider = new EnrollmentDataProvider(['student' => $student]);
         $isEnrolledInSemester = StudentSemesterEnrollment::find()
                 ->innerJoinWith('student')

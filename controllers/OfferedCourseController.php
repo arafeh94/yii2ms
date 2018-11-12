@@ -85,7 +85,7 @@ class OfferedCourseController extends \yii\web\Controller
             $enrollment['hasGrade'] = $courseEnrollment->FinalGrade != null ? "YES" : "NO";
             $enrollments[] = $enrollment;
         }
-        return $this->renderAjax('_confirm_delete_content', [
+        return $this->renderPartial('_confirm_delete_content', [
             'offeredCourse' => $offeredCourse,
             'enrollments' => $enrollments
         ]);

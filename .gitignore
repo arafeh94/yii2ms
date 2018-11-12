@@ -20,6 +20,9 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 
+# app config
+/config/config.php
+
 tests/_output/*
 tests/_support/_generated
 

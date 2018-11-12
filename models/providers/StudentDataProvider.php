@@ -32,7 +32,8 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
         $this->sort->attributes['cycle'] = [
             'asc' => ['cycle.Name' => SORT_ASC],
             'desc' => ['cycle.Name' => SORT_DESC],
-        ];$this->sort->attributes['major'] = [
+        ];
+        $this->sort->attributes['major'] = [
             'asc' => ['major.Name' => SORT_ASC],
             'desc' => ['major.Name' => SORT_DESC],
         ];
@@ -110,11 +111,18 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
                         ]);
                     },
                     'delete' => function ($key, $model, $index) {
-                        $url = Url::to(['student/delete', 'id' => $model->StudentId]);
+
+                        $url = Url::to(['student/confirm-delete', 'id' => $model->StudentId]);
                         return Html::tag('span', '', [
                             'class' => "glyphicon glyphicon-trash pointer",
-                            'onclick' => "gridControl.delete(this,'$url')",
+                            'onclick' => "modalController.show('$url')",
                         ]);
+
+//                        $url = Url::to(['student/delete', 'id' => $model->StudentId]);
+//                        return Html::tag('span', '', [
+//                            'class' => "glyphicon glyphicon-trash pointer",
+//                            'onclick' => "gridControl.delete(this,'$url')",
+//                        ]);
                     },
                 ]
             ]
@@ -127,7 +135,8 @@ class StudentDataProvider extends ActiveDataProvider implements GridConfig
         if (isset($params['cycle'])) {
             $this->query->andFilterWhere(['like', 'cycle.Name', $params['cycle']]);
             unset($params['cycle']);
-        }if (isset($params['major'])) {
+        }
+        if (isset($params['major'])) {
             $this->query->andFilterWhere(['like', 'major.Name', $params['major']]);
             unset($params['major']);
         }

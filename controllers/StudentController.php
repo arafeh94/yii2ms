@@ -62,6 +62,12 @@ class StudentController extends \yii\web\Controller
         return false;
     }
 
+    public function actionConfirmDelete($id)
+    {
+        $student = Student::findOne($id);
+        return $this->renderPartial('_delete', ['student' => $student]);
+    }
+
     public function actionDelete($id)
     {
         if (\Yii::$app->request->isAjax) {
