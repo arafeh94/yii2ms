@@ -31,7 +31,7 @@ class EnrollmentController extends \yii\web\Controller
         $isEnrolledInSemester = StudentSemesterEnrollment::find()
                 ->innerJoinWith('student')
                 ->where([
-                    'UniversityId' => $uid,
+                    'student.StudentId' => $student->StudentId,
                     'studentsemesterenrollment.IsDeleted' => 0,
                     'studentsemesterenrollment.SemesterId' => Semester::find()->current()->SemesterId,
                 ])->count() > 0;
