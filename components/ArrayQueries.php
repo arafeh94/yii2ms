@@ -28,14 +28,12 @@ class ArrayQueries
      */
     public static function studyPlan($student)
     {
-        $studyPlanRecords = StudyPlan::find()
-            ->where(['MajorId' => $student->CurrentMajor])
-            ->active()
-            ->all();
+
         $enrolledCourses = new Query();
-        $enrolledCourses = $enrolledCourses->select(['studentcourseenrollment.StudyPlanId', 'course.Name', 'course.Credits', 'major.RequiredCredits', 'StudentCourseEnrollmentId', 'studyplan.StudyPlanId', 'studyplan.Year', 'studyplan.Season', 'studyplan.CourseLetter', 'offeredcourse.Section', 'offeredcourse.Section', 'FinalGrade'])
+        $enrolledCourses = $enrolledCourses->select(['studentcourseenrollment.StudyPlanId', 'course.Name', 'course.Credits', 'major.RequiredCredits', 'StudentCourseEnrollmentId', 'studyplan.StudyPlanId', 'studyplan.Year', 'studyplan.Season', 'studyplan.CourseLetter', 'offeredcourse.Section', 'offeredcourse.Section', 'FinalGrade', 'semester.Year as SemesterYear'])
             ->from(StudentCourseEnrollment::tableName())
             ->innerJoin(StudentSemesterEnrollment::tableName(), 'studentsemesterenrollment.StudentSemesterEnrollmentId=studentcourseenrollment.StudentSemesterEnrollmentId')
+            ->innerJoin(Semester::tableName(), "semester.SemesterId=studentsemesterenrollment.SemesterId")
             ->innerJoin(OfferedCourse::tableName(), 'offeredcourse.OfferedCourseId=studentcourseenrollment.OfferedCourseId')
             ->innerJoin(Course::tableName(), 'offeredcourse.CourseId=course.CourseId')
             ->innerJoin(Major::tableName(), 'major.MajorId=' . $student->CurrentMajor)
@@ -49,6 +47,10 @@ class ArrayQueries
             ])
             ->all();
         $result = [];
+        $studyPlanRecords = StudyPlan::find()
+            ->where(['MajorId' => $student->CurrentMajor])
+            ->active()
+            ->all();
         foreach ($studyPlanRecords as $studyPlanRecord) {
             $enrolledCourseIndex = false;
             foreach ($enrolledCourses as $index => $enrolledCourse) {
@@ -69,6 +71,7 @@ class ArrayQueries
                 'FinalGrade' => $enrolledCourseIndex === false ? null : $enrolledCourses[$enrolledCourseIndex]['FinalGrade'],
                 'StudentCourseEnrollmentId' => !$enrolledCourseIndex ? null : $enrolledCourses[$enrolledCourseIndex]['StudentCourseEnrollmentId'],
                 'StudentId' => $student->StudentId,
+                'SemesterYear' => $enrolledCourses[$enrolledCourseIndex]['SemesterYear']
             ];
             if ($enrolledCourseIndex !== false) {
                 unset($enrolledCourses[$enrolledCourseIndex]);
@@ -88,6 +91,7 @@ class ArrayQueries
                 'FinalGrade' => $enrolledCourse['FinalGrade'],
                 'StudentId' => $student->StudentId,
                 'StudentCourseEnrollmentId' => $enrolledCourse['StudentCourseEnrollmentId'],
+                'SemesterYear' => $enrolledCourse['SemesterYear'],
             ];
         }
         ArrayHelper::multisort($result, ['StudyPlanYear', 'StudyPlanSeason']);

@@ -123,6 +123,10 @@ class StudyPlanReportDataProvider extends ArrayDataProvider implements GridConfi
                 },
             ],
             [
+                'label' => 'Year',
+                'class' => DataColumn::className(),
+                'attribute' => 'SemesterYear',
+            ],[
                 'label' => 'Course Number',
                 'class' => DataColumn::className(),
                 'attribute' => 'CourseLetter',

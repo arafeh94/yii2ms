@@ -175,6 +175,7 @@ class EvaluationController extends Controller
             ->andWhere(['studentsemesterenrollment.IsDeleted' => 0])
             ->andWhere(['studentcourseenrollment.IsDeleted' => 0])
             ->andWhere(['studentcourseenrollment.IsDropped' => 0])
+            ->andWhere(['student.IsDeleted' => 0])
             ->all();
         if ($evaluations) {
             $transaction = Yii::$app->db->beginTransaction();
@@ -219,7 +220,6 @@ class EvaluationController extends Controller
 
             } catch (\Exception $e) {
                 Tools::prettyPrint($e);
-
                 $transaction->rollBack();
             }
         } else {

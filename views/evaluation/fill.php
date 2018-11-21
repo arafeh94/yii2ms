@@ -257,14 +257,14 @@ use yii\data\ArrayDataProvider;
     ?>
 
     <?php if (!Yii::$app->user->isGuest): ?>
-        <?php if (Yii::$app->user->identity->Type === User::$ADMIN): ?>
+        <?php if (User::get()->Type === User::$ADMIN): ?>
             <?php $columns[] = [
                 'class' => FormInputColumn::className(),
                 'attribute' => 'AdminNote',
                 'form' => $form,
                 'contentOptions' => ['style' => 'min-width:120px'],
             ] ?>
-        <?php elseif (Yii::$app->user->identity->Type === User::$USER): ?>
+        <?php elseif (User::get()->Type === User::$USER): ?>
             <?php $columns[] = [
                 'class' => FormInputColumn::className(),
                 'attribute' => 'UserNote',
@@ -281,7 +281,9 @@ use yii\data\ArrayDataProvider;
         'showPageSummary' => false,
     ]);
     ?>
-    <?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-danger']) ?>
+    <div style="width: 100%;text-align: center">
+        <?= \yii\bootstrap\Html::submitButton('submit', ['class' => 'btn btn-danger', 'style' => 'margin-top:8px;width:135px']) ?>
+    </div>
     <?php \yii\bootstrap\ActiveForm::end(); ?>
 
 <?php endif; ?>
