@@ -19,6 +19,11 @@ $config = [
                 ],
             ],
         ],
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'scriptUrl' => $params['hostUrl'],
+            'enablePrettyUrl' => true,
+        ]
     ],
     'params' => $params,
     /*

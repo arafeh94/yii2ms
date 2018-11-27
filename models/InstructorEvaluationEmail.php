@@ -15,6 +15,7 @@ use yii\helpers\Url;
  * @property string $EvaluationCode
  * @property string $DateFilled
  * @property bool $IsDeleted
+ * @property bool $IsSent
  *
  * @property Instructor $instructor
  * @property EvaluationEmail $evaluationEmail
@@ -28,20 +29,6 @@ class InstructorEvaluationEmail extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'instructorevaluationemail';
-    }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-        if ($insert && !Yii::$app->user->isGuest && $this->instructor->Email) {
-            $message = Yii::$app->mailer
-                ->compose('evaluation/html', ['instructorEvaluationEmail' => $this, 'instructor' => $this->instructor])
-                ->setFrom(Yii::$app->params['adminEmail'])
-                ->setTo($this->instructor->Email)
-                ->setSubject('Evaluation Fill Request');
-            $res = $message->send();
-            if ($res !== true) Yii::error($res);
-        }
-        parent::afterSave($insert, $changedAttributes);
     }
 
     /**

@@ -12,7 +12,10 @@ class m181007_052034_course_add_activate extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('course','IsActivate','bit(1) default 1');
+        $table = Yii::$app->db->schema->getTableSchema('course');
+        if (!isset($table->columns['IsActivate'])) {
+            $this->addColumn('course','IsActivate','bit(1) default 1');
+        }
     }
 
     /**

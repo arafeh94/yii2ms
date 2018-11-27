@@ -17,6 +17,7 @@ use app\models\Major;
 use app\models\search\CourseSearchModel;
 use app\models\search\DepartmentSearchModel;
 use app\models\search\MajorSearchModel;
+use kartik\grid\BooleanColumn;
 use kartik\grid\DataColumn;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
@@ -53,6 +54,11 @@ class EvaluationValidateDataProvider extends ActiveDataProvider implements GridC
                 'attribute' => 'DateFilled',
             ],
             [
+                'class' => BooleanColumn::className(),
+                'attribute' => 'IsSent',
+                'label' => 'Mail Sent',
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {copy} {send}',
                 'buttons' => [
@@ -71,7 +77,7 @@ class EvaluationValidateDataProvider extends ActiveDataProvider implements GridC
                     'send' => function ($key, $model, $index) {
                         $url = Url::to(['evaluation/send', 'id' => $model->InstructorEvaluationEmailId]);
                         $ajax = "(function(){ $.ajax({type: 'POST', url: '$url', dataType: 'json', success: function (data) {data ? toastr.info('sent') : toastr.error('error');}});})()";
-                        return Html::button('send', [
+                        return Html::button('resend', [
                             'encode' => false,
                             'class' => "btn btn-info",
                             'onclick' => $ajax,

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'hostUrl' => 'http://localhost/usp/web',
     'timezone' => 'Asia/Beirut',
     'dateFormat' => 'yyyy-mm-dd',
     'timeFormat' => 'h:i:s',

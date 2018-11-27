@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\Shell;
 use app\components\Tools;
 use app\models\Course;
 use app\models\Cycle;
@@ -139,6 +140,8 @@ class EvaluationController extends Controller
             $instEvalEmail->EvaluationCode = Tools::random();
             $instEvalEmail->save();
         }
+
+        Shell::yii('mailer/send-mails');
     }
 
     public function actionFill($code)
