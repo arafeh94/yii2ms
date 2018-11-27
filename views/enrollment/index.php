@@ -55,5 +55,5 @@ endif;
 
 <br>
 <?php if ($isEnrolledInSemester) : ?>
-    <?= \app\components\GridViewBuilder::render($provider, 'Enrollments') ?>
+    <?= \app\components\GridViewBuilder::render($provider, "Enrollments for {$student->nameWithMinor}") ?>
 <?php endif; ?>

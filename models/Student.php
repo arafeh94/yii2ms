@@ -106,6 +106,7 @@ use Yii;
  * @property StudentSemesterEnrollment[] $studentSemesterEnrollments
  * @property Course[] $courses
  * @property String $name
+ * @property String $nameWithMinor
  */
 class Student extends \yii\db\ActiveRecord
 {
@@ -279,6 +280,15 @@ class Student extends \yii\db\ActiveRecord
     public function getName()
     {
         return $this->FirstName . ' ' . $this->LastName;
+    }
+
+    public function getNameWithMinor()
+    {
+        $name = $this->FirstName . ' ' . $this->LastName;
+        if ($this->EnrolledMajorMinor) {
+            $name .= '*';
+        }
+        return $name;
     }
 
     /**
