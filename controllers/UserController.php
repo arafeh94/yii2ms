@@ -89,7 +89,7 @@ class UserController extends \yii\web\Controller
 
     public function actionUpdateApplication()
     {
-        Shell::run('git pull && php composer.phar install && php yii migrate');
+        Shell::run('git pull & php composer.phar install & php yii migrate');
         $this->redirect(['user/settings', 'request' => '1']);
     }
 
