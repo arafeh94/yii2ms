@@ -19,4 +19,10 @@ class Shell extends Component
         $cr = new ConsoleRunner(['file' => '@app/yii']);
         $cr->run($command);
     }
+
+    static function run($command, $path = "@app")
+    {
+        $runner = new ConsoleRunner(['file' => $path]);
+        $runner->run($command);
+    }
 }

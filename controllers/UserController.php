@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\components\ConsoleRunner;
+use app\components\Shell;
+use app\components\Tools;
 use app\models\providers\UserDataProvider;
 use app\models\User;
 use yii\filters\AccessControl;
@@ -72,9 +75,10 @@ class UserController extends \yii\web\Controller
 
     public function actionSettings()
     {
+        $post = \Yii::$app->request->post();
         /** @var User $model */
         $model = \Yii::$app->user->identity;
-        if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load($post) && $model->validate()) {
             $model->save();
             \Yii::$app->user->logout();
             $this->goHome();
@@ -83,5 +87,10 @@ class UserController extends \yii\web\Controller
         return $this->render('settings', ['user' => $model]);
     }
 
+    public function actionUpdateApplication()
+    {
+        Shell::run('git pull && php composer.phar install && php yii migrate');
+        $this->redirect(['user/settings', 'request' => '1']);
+    }
 
 }
