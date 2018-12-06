@@ -3,7 +3,7 @@
 // comment out the following two lines when deployed to production
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
-defined('VERSION') or define('VERSION', '0.101');
+defined('VERSION') or define('VERSION', '0.102');
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
 
