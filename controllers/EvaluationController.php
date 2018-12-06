@@ -61,7 +61,10 @@ class EvaluationController extends Controller
     {
         $provider = new MailingDataProvider();
         $provider->search(\Yii::$app->request->get('MailingSearchModel', []));
-        return $this->render('mailing', ['provider' => $provider, 'semester' => Semester::find()->current()]);
+        return $this->render('mailing', [
+            'provider' => $provider,
+            'semester' => Semester::find()->current()
+        ]);
     }
 
     public function actionView($id)

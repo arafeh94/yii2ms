@@ -12,12 +12,6 @@ use app\models\InstructorEvaluationEmail;
 use Yii;
 use yii\console\Controller;
 
-/**
- * This command to control sql from terminal.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
- */
 class MailerController extends Controller
 {
     public function actionSendMails()

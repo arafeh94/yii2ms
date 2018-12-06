@@ -45,6 +45,7 @@ class EvaluationValidateDataProvider extends ActiveDataProvider implements GridC
                 'label' => 'Instructor',
                 'class' => DataColumn::className(),
                 'attribute' => 'instructor',
+                'vAlign' => 'middle',
                 'value' => function ($model) {
                     return $model->instructor->fullName;
                 }
@@ -52,11 +53,13 @@ class EvaluationValidateDataProvider extends ActiveDataProvider implements GridC
             [
                 'class' => DataColumn::className(),
                 'attribute' => 'DateFilled',
+                'vAlign' => 'middle',
             ],
             [
                 'class' => BooleanColumn::className(),
                 'attribute' => 'IsSent',
                 'label' => 'Mail Sent',
+                'vAlign' => 'middle',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -95,15 +98,6 @@ class EvaluationValidateDataProvider extends ActiveDataProvider implements GridC
 
     public function searchModel($params = null)
     {
-        if ($this->searchModel === null) {
-            $this->searchModel = new CourseSearchModel();
-        }
-
-        if ($params) {
-            $this->searchModel->load($params, '');
-        }
-
-        return $this->searchModel;
-
+        return false;
     }
 }

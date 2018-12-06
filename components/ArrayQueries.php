@@ -70,8 +70,8 @@ class ArrayQueries
                 'Section' => $enrolledCourseIndex === false ? null : $enrolledCourses[$enrolledCourseIndex]['Section'],
                 'FinalGrade' => $enrolledCourseIndex === false ? null : $enrolledCourses[$enrolledCourseIndex]['FinalGrade'],
                 'StudentCourseEnrollmentId' => !$enrolledCourseIndex ? null : $enrolledCourses[$enrolledCourseIndex]['StudentCourseEnrollmentId'],
+                'SemesterYear' => $enrolledCourseIndex === false ? null : $enrolledCourses[$enrolledCourseIndex]['SemesterYear'],
                 'StudentId' => $student->StudentId,
-                'SemesterYear' => $enrolledCourses[$enrolledCourseIndex]['SemesterYear']
             ];
             if ($enrolledCourseIndex !== false) {
                 unset($enrolledCourses[$enrolledCourseIndex]);

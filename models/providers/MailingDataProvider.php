@@ -107,15 +107,6 @@ class MailingDataProvider extends ActiveDataProvider implements GridConfig
 
     public function searchModel($params = null)
     {
-        if ($this->searchModel === null) {
-            $this->searchModel = new MajorSearchModel();
-        }
-
-        if ($params) {
-            $this->searchModel->load($params, '');
-        }
-
-        return $this->searchModel;
-
+        return false;
     }
 }

@@ -25,11 +25,10 @@ class GridViewBuilder
      */
     public static function render($provider, $title, $config = [])
     {
-        return GridView::widget([
+        $config = [
             'id' => 'gridview',
-            'options'=>['class'=>'grid-view'],
+            'options' => ['class' => 'grid-view'],
             'dataProvider' => $provider,
-            'filterModel' => $provider->searchModel(),
             'columns' => $provider->gridColumns(),
             'autoXlFormat' => true,
             'hover' => true,
@@ -60,7 +59,11 @@ class GridViewBuilder
                 'type' => 'primary',
                 'heading' => $title
             ]
-        ]);
+        ];
+        if (($searchModel = $provider->searchModel())) {
+            $config['filterModel'] = $searchModel;
+        }
+        return GridView::widget($config);
     }
 
 }
