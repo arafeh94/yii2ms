@@ -12,14 +12,6 @@ use kartik\widgets\ActiveForm;
 /** @var $user \app\models\User */
 ?>
 
-<?php if (Yii::$app->request->get('request')) : ?>
-    <div class="login-container card" style="width: 90%">
-        <h4>updating application may take time, please refresh later, when the
-            application is update the version at the
-            lower left of the page will be changed</h4>
-    </div>
-<?php endif; ?>
-
 <div class="login-container card" style="width: 90%">
     <h2>Hello <?= $user->FirstName . ' ' . $user->LastName ?></h2>
 
@@ -29,11 +21,13 @@ use kartik\widgets\ActiveForm;
     <?php ActiveForm::end() ?>
 </div>
 
-<div class="login-container card" style="width: 90%">
-    <h3>Updates</h3>
-    <div style="text-align: center">
-        <input type="submit" value="Update Application" class="btn btn-info" style="width: 100%"
-               onclick="location.href='update-application'">
+<?php if (\app\models\User::get()->Type == 1): ?>
+    <div class="login-container card" style="width: 90%">
+        <h3>Updates</h3>
+        <h4>May take time if there are major changes.</h4>
+        <div style="text-align: center">
+            <input type="submit" value="Update Application" class="btn btn-info" style="width: 100%"
+                   onclick="location.href='update-application'">
+        </div>
     </div>
-</div>
-
+<?php endif; ?>
