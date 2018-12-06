@@ -21,7 +21,6 @@ class UserController extends \yii\web\Controller
                     [
                         'allow' => true,
                         'roles' => ['admin'],
-                        'actions' => ['update-application'],
                     ],
                     [
                         'allow' => true,
