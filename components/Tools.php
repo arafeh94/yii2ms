@@ -64,6 +64,25 @@ class Tools extends Component
     }
 
 
+    static function array_keys($array)
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            $result[] = is_numeric($key) ? $value : $key;
+        }
+        return $result;
+    }
+
+    static function array_key_val($array)
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            $k = is_numeric($key) ? $value : $key;
+            $result[$k] = $value;
+        }
+        return $result;
+    }
+
     static function array_orderby()
     {
         $args = func_get_args();

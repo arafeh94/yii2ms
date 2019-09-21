@@ -11,17 +11,17 @@ class UserQuery extends \yii\db\ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere('[[user.IsDeleted]]=0');
+        return $this->andWhere('[[user.is_deleted]]=0');
     }
 
     public function filter()
     {
-        return $this->select(['UserId', 'FirstName', 'LastName', 'Username', 'DateAdded', 'Type', 'Email']);
+        return $this->select(['id', 'name', 'username', 'type', 'date_created', 'date_updated']);
     }
 
     public function id($id)
     {
-        return $this->andWhere(['UserId' => $id]);
+        return $this->andWhere(['id' => $id]);
     }
 
     /**

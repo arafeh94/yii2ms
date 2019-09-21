@@ -9,6 +9,7 @@
 namespace app\components;
 
 
+use app\components\extensions\AppDataProvider;
 use kartik\grid\GridView;
 use Yii;
 use yii\bootstrap\Html;
@@ -17,7 +18,7 @@ use yii\helpers\ArrayHelper;
 class GridViewBuilder
 {
     /**
-     * @param GridConfig $provider
+     * @param AppDataProvider $provider
      * @param $title
      * @param array $config
      * @return string
@@ -25,11 +26,11 @@ class GridViewBuilder
      */
     public static function render($provider, $title, $config = [])
     {
-        $config = [
+        $config = array_merge($config, [
             'id' => 'gridview',
             'options' => ['class' => 'grid-view'],
             'dataProvider' => $provider,
-            'columns' => $provider->gridColumns(),
+            'columns' => $provider->getColumns(),
             'autoXlFormat' => true,
             'hover' => true,
             'export' => [
@@ -59,8 +60,8 @@ class GridViewBuilder
                 'type' => 'primary',
                 'heading' => $title
             ]
-        ];
-        if (($searchModel = $provider->searchModel())) {
+        ]);
+        if (($searchModel = $provider->initSearch())) {
             $config['filterModel'] = $searchModel;
         }
         return GridView::widget($config);

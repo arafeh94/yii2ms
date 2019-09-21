@@ -5,13 +5,11 @@
 /* @var $content string */
 
 use app\assets\ToastrAsset;
-use app\widgets\Alert;
+use app\models\User;
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
 use yii\helpers\Url;
-use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use \yii\helpers\ArrayHelper;
 
 AppAsset::register($this);
 ToastrAsset::register($this);
@@ -32,35 +30,38 @@ ToastrAsset::register($this);
 
 
 <?php
-$navigation = [
-    ['label' => 'Users', 'url' => ['user/index'], 'type' => 1],
-    ['label' => 'Cycle', 'url' => ['cycle/index'], 'type' => 1],
-    ['label' => 'School', 'url' => ['school/index'], 'type' => 1],
-    ['label' => 'Department', 'url' => ['department/index'], 'type' => 1],
-    ['label' => 'Major', 'url' => ['major/index'], 'type' => 1],
-    ['label' => 'Course', 'url' => ['course/index'], 'type' => 1],
-    ['label' => 'Instructor', 'url' => ['instructor/index'], 'type' => 1],
-    ['label' => 'Terms', 'url' => ['term/index'], 'type' => 1],
-    ['label' => 'Students', 'url' => ['student/index'], 'type' => 2],
-    ['label' => 'Offered Courses', 'url' => ['offered-course/index'], 'type' => 2],
-    ['label' => 'Evaluations', 'url' => ['evaluation/index'], 'type' => 2],
-    ['label' => 'Mails', 'url' => ['evaluation/mailing'], 'type' => 1],
-    ['label' => 'Import', 'url' => ['import/index'], 'type' => 1],
+$navigationItems = [
+    ['label' => 'Projects', 'url' => ['project/index'], 'type' => 1],
+    ['label' => 'Customers', 'url' => ['customer/index'], 'type' => 1],
+    ['label' => 'Invoices', 'url' => ['invoice/index'], 'type' => 1],
+    ['label' => 'Projects Payments', 'url' => ['project-payment/index'], 'type' => 1],
+    ['label' => 'Employees', 'url' => ['employee/index'], 'type' => 1],
+    ['label' => 'Procurements', 'url' => ['procurement/index'], 'type' => 1],
+    ['label' => 'Projects Expenses', 'url' => ['project-expense/index'], 'type' => 1],
+    ['label' => 'Suppliers', 'url' => ['supplier/index'], 'type' => 1],
+    ['label' => 'Releases', 'url' => ['release/index'], 'type' => 1],
 ];
+
+$currentAction = Yii::$app->controller->id . '/' . Yii::$app->controller->action->id;
+$urls = array_map(function ($item) {
+    return $item['url'][0];
+}, $navigationItems);
+if (!in_array($currentAction, $urls)) {
+    $navigationItems [] = ['label' => Yii::$app->requestedRoute, 'url' => [$currentAction], 'type' => 1, 'options' => ['style' => 'position:absolute;right:10px']];
+}
 ?>
 
 <div class="wrap">
 
     <div id="header">
         <div id="title">
-
             <div id="nav">
                 <?php if (!Yii::$app->user->isGuest): ?>
                     <li class="rightItems"><?php echo Html::a(Html::img('@web/images/header/settings.svg', ['class' => 'img', 'alt' => ' Settings']) . ' Settings', Url::to(['/user/settings'])) ?>
                     </li>
                     <li class="rightItems">
                         <?php echo Html::beginForm(['/site/logout'], 'post')
-                            . Html::submitButton(Html::img('@web/images/header/logout.svg', ['class' => 'img', 'alt' => 'Logout']) . ' Logout' . ' (' . Yii::$app->user->identity->Username . ')'
+                            . Html::submitButton(Html::img('@web/images/header/logout.svg', ['class' => 'img', 'alt' => 'Logout']) . ' Logout' . ' (' . User::get()->username . ')'
                                 . Html::endForm()); ?>
                     </li>
                 <?php endif; ?>
@@ -68,24 +69,23 @@ $navigation = [
             <div id="mainTitle">
                 <?php echo Yii::$app->name; ?>
             </div>
-            <div id="subTitle">
-                <?php echo Yii::t('app', 'University Scholarship Program') ?>
-            </div>
         </div>
         <div id="nav">
-            <ul>
+            <ul style="margin-right: 50px">
                 <?php if (!Yii::$app->user->isGuest): ?>
-                    <?php foreach ($navigation as $n) : ?>
-                        <?php if ($n['type'] >= Yii::$app->user->identity->Type): ?>
-                            <?php $o = $this->context->route == $n['url'][0] ? 'activeLink' : '';
-                            $li1 = "<li class='$o'>"; ?>
-                            <?= Html::a($li1 . $n['label'] . '</li>', Url::to($n['url'])) ?>
+                    <?php foreach ($navigationItems as $item) : ?>
+                        <?php if ($item['type'] >= User::get()->type): ?>
+                            <?php $active = $this->context->route == $item['url'][0] ? 'active-link' : ''; ?>
+                            <?= Html::a("<li class='$active'>$item[label]</li>", Url::to($item['url']), ArrayHelper::getValue($item, 'options', [])) ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
 
                 <?php if (Yii::$app->user->isGuest): ?>
-                    <li><?php echo Html::a(Html::img('@web/images/header/login.svg', ['class' => 'img', 'alt' => 'Login']) . ' Login', Url::to(['/site/login'])) ?></li>
+                    <li>
+                        <?php $text = Html::img('@web/images/header/login.svg', ['class' => 'img', 'alt' => 'Login']) . ' Login' ?>
+                        <?= Html::a($text, Url::to(['/site/login'])) ?>
+                    </li>
                 <?php endif; ?>
 
 
@@ -100,7 +100,7 @@ $navigation = [
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; LAU <?= date('Y') . ' - V' . VERSION?></p>
+        <p class="pull-left">&copy;ARF <?= date('Y') . ' - V' . VERSION ?></p>
 
         <p class="pull-right"></p>
     </div>

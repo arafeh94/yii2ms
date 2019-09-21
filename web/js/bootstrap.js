@@ -1,6 +1,6 @@
 if (!String.prototype.format) {
     String.prototype.format = function () {
-        var args = arguments;
+        let args = arguments;
         return this.replace(/{(\d+)}/g, function (match, number) {
             return typeof args[number] !== 'undefined' ? args[number] : match;
         });
@@ -8,8 +8,8 @@ if (!String.prototype.format) {
 }
 
 function attribute(of) {
-    var reg = "(\\[(.*?)\\])";
-    var matches = of.name.match(reg);
+    let reg = "(\\[(.*?)\\])";
+    let matches = of.name.match(reg);
     if (matches) return matches[2];
     return false;
 }
@@ -18,11 +18,11 @@ function reloadTable() {
     $.pjax({container: '#gridview-pjax'});
 }
 
-function clearForm(form) {
-    var elements = form.elements;
+function reload(form) {
+    let elements = form.elements;
     form.reset();
-    for (var i = 0; i < elements.length; i++) {
-        var field_type = elements[i].type.toLowerCase();
+    for (let i = 0; i < elements.length; i++) {
+        let field_type = elements[i].type.toLowerCase();
         switch (field_type) {
             case "text":
             case "number":
@@ -38,7 +38,7 @@ function clearForm(form) {
             case "select-one":
             case "select-multi":
                 elements[i].selectedIndex = -1;
-                var el = $(elements[i]);
+                let el = $(elements[i]);
                 if (el.data('select2')) {
                     el.trigger('change.select2');
                 }
@@ -57,12 +57,12 @@ window.addEventListener('load', function (ev) {
 });
 
 function copy(text) {
-    var textarea = document.createElement('textarea');
+    let textarea = document.createElement('textarea');
     textarea.textContent = text;
     document.body.appendChild(textarea);
 
-    var selection = document.getSelection();
-    var range = document.createRange();
+    let selection = document.getSelection();
+    let range = document.createRange();
     range.selectNode(textarea);
     selection.removeAllRanges();
     selection.addRange(range);

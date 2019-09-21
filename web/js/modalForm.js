@@ -3,8 +3,8 @@
         $('#form-state-alert').remove();
         start();
         $('#dialog-form').modal('show');
-        var form = document.getElementById('model-form');
-        clearForm(form);
+        let form = document.getElementById('model-form');
+        reload(form);
         if (!url) {
             onAdd();
             end();
@@ -23,7 +23,7 @@
 
     function onAdd() {
         $('#dialog-form').find('input, select').each(function () {
-            var input = $(this);
+            let input = $(this);
             if (input.is('[data-add-value]')) {
                 input.val(input.attr('data-add-value'))
             }
@@ -42,9 +42,9 @@
 
     function load(data) {
         $('#dialog-form').find('input, select').each(function () {
-            var att = attribute(this);
+            let att = attribute(this);
             if (att && typeof data[att] !== 'undefined') {
-                var el = $(this);
+                let el = $(this);
                 el.val(map(data[att]));
                 if (el.data('select2')) {
                     el.trigger('change.select2');
@@ -106,12 +106,12 @@
 };
 (window).modalEvent = {
     pjaxSend: function (event) {
-        var button = $('#modal-form-submit');
+        let button = $('#modal-form-submit');
         button.find('i').removeClass('hidden');
         button.prop('disabled', true);
     },
     pjaxComplet: function (event) {
-        var button = $('#modal-form-submit');
+        let button = $('#modal-form-submit');
         button.find('i').addClass('hidden');
         button.prop('disabled', false);
     }
@@ -128,5 +128,8 @@ window.addEventListener('load', function () {
     $(document).on('pjax:complete', function (e) {
         if (e.target && e.target.id === 'modal-form-pjax') modalEvent.pjaxComplet((event));
     });
+    if (window.location.href.toLocaleLowerCase().indexOf('#add') !== -1) {
+        window.modalForm();
+    }
 });
 

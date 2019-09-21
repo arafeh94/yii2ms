@@ -22,10 +22,10 @@ class RbacManager extends PhpManager
     {
         parent::init();
         if (!Yii::$app->user->isGuest) {
-            $roleName = User::get()->Type == 2 ? 'user' : 'admin';
-            if (!array_key_exists(User::get()->UserId, $this->assignments)) {
+            $roleName = User::get()->type == 2 ? 'user' : 'admin';
+            if (!array_key_exists(User::get()->id, $this->assignments)) {
                 /** @noinspection PhpUnhandledExceptionInspection */
-                $this->assign(new Role(['name' => $roleName]), User::get()->UserId);
+                $this->assign(new Role(['name' => $roleName]), User::get()->id);
             }
         }
     }

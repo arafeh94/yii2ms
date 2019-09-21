@@ -21,7 +21,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 
-class SiteController extends AppController
+class SiteController extends Controller
 {
     /**
      * @inheritdoc
@@ -72,7 +72,7 @@ class SiteController extends AppController
      */
     public function actionIndex()
     {
-        return $this->redirect(['student/index']);
+        return $this->redirect(['project/index']);
     }
 
     /**
@@ -82,27 +82,18 @@ class SiteController extends AppController
      */
     public function actionLogin()
     {
-//        $s = Instructor::find()->all()[0];
-//        $s->Email = "arafeh198@gmail.com";
-//        $res = Yii::$app->mailer
-//            ->compose('test/html')
-//            ->setFrom('ahmad.hammoud08@lau.edu')
-//            ->setTo('arafeh198@gmail.com')
-//            ->setSubject('Evaluation Fill Request')
-//            ->send();
-//        Tools::forcePrint($res);
-
-        if (!Yii::$app->user->isGuest) {
+        if (!Yii::$app->user->isGuest && false) {
             return $this->goHome();
-        }
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->validate()) {
-                $model->login();
-                return $this->goHome();
+        } else {
+            $model = new LoginForm();
+            if ($model->load(Yii::$app->request->post())) {
+                if ($model->validate()) {
+                    $model->login();
+                    return $this->goHome();
+                }
             }
+            return $this->render('login', ['model' => $model]);
         }
-        return $this->render('login', ['model' => $model]);
     }
 
     /**

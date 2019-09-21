@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\components\GridConfig;
+use phpDocumentor\Reflection\Types\Object_;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
@@ -10,16 +11,14 @@ use yii\web\IdentityInterface;
 /**
  * This is the model class for table "user".
  *
- * @property int $UserId
- * @property string $Username
- * @property string $Password
- * @property string $Email
- * @property string $FirstName
- * @property string $LastName
- * @property int $Type
- * @property bool $IsDeleted
- * @property int $CreatedByUserId
- * @property string $DateAdded
+ * @property int $id
+ * @property string $username
+ * @property string $password
+ * @property string $name
+ * @property int $type
+ * @property bool $is_deleted
+ * @property string $date_created
+ * @property string $date_updated
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -27,7 +26,7 @@ class User extends ActiveRecord implements IdentityInterface
     public static $USER = 2;
 
     /**
-     * @return User
+     * @return IdentityInterface|User
      */
     public static function get()
     {
@@ -50,40 +49,22 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['Username', 'Password', 'Email', 'FirstName', 'LastName', 'Type'], 'required'],
-            [['Type', 'CreatedByUserId'], 'integer'],
-            [['IsDeleted'], 'boolean'],
-            [['DateAdded'], 'safe'],
-            [['Username'], 'unique', 'targetAttribute' => ['Username'], 'filter' => ['IsDeleted' => 0]],
-            [['Username', 'Password', 'Email', 'FirstName', 'LastName'], 'string', 'max' => 255],
+            [['username', 'password', 'name', 'type'], 'required'],
+            [['type'], 'integer'],
+            [['is_deleted'], 'boolean'],
+            [['date_added', 'date_updated'], 'date'],
+            [['username', 'password', 'name'], 'string', 'max' => 255],
+            [['username'], 'unique', 'targetAttribute' => ['username'], 'filter' => ['is_deleted' => 0]],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'UserId' => Yii::t('app', 'User ID'),
-            'Username' => Yii::t('app', 'Username'),
-            'Password' => Yii::t('app', 'Password'),
-            'Email' => Yii::t('app', 'Email'),
-            'FirstName' => Yii::t('app', 'First Name'),
-            'LastName' => Yii::t('app', 'Last Name'),
-            'Type' => Yii::t('app', 'Type'),
-            'IsDeleted' => Yii::t('app', 'Is Deleted'),
-            'CreatedByUserId' => Yii::t('app', 'Created By User ID'),
-            'DateAdded' => Yii::t('app', 'Date Added'),
-        ];
-    }
 
     /**
      * @inheritdoc
      */
     public static function findIdentity($id)
     {
-        return self::findOne(['UserId' => $id, 'IsDeleted' => 0]);
+        return self::findOne(['id' => $id, 'is_deleted' => 0]);
     }
 
     /**
@@ -102,7 +83,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return User::findOne(['Username' => $username, 'IsDeleted' => 0]);
+        return User::findOne(['username' => $username, 'is_deleted' => 0]);
     }
 
     /**
@@ -110,7 +91,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-        return $this->UserId;
+        return $this->id;
     }
 
     /**
@@ -137,7 +118,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->Password === $password;
+        return $this->password === $password;
     }
 
     /**

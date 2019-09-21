@@ -27,7 +27,8 @@ use yii\widgets\Pjax;
     <div id="modal-container-loading" class="modal-container-loading">
         <div class="loader"></div>
     </div>
-    <div id="modal-container-form" class="modal-container-form" style="display: none">
+    <div id="modal-container-form" data-form-path="<?= Yii::$app->urlManager->createAbsoluteUrl($widget->formPath) ?>"
+         class="modal-container-form" style="display: none">
         <?php Pjax::begin(['enablePushState' => false, 'id' => 'modal-form-pjax']) ?>
         <?= $this->render($widget->formPath, $widget->formParams); ?>
         <?php Pjax::end() ?>

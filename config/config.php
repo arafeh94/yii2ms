@@ -10,7 +10,7 @@ return [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=usp',
+            'dsn' => 'mysql:host=localhost;dbname=erp',
             'username' => 'root',
             'password' => '',
             'charset' => 'utf8',

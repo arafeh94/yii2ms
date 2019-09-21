@@ -1,5 +1,4 @@
 @font-face {
-    font-family: 'eurostileregular';
     /*src: url('../fonts/eurosti-webfont.woff2') format('woff2'),*/
     /*url('../fonts/eurosti-webfont.woff') format('woff');*/
     font-weight: normal;
@@ -7,7 +6,11 @@
 }
 
 * {
-    font-family: eurostileregular, "arial", serif;
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+}
+
+.grid-view td {
+    white-space: nowrap;
 }
 
 html,
@@ -55,7 +58,7 @@ a.asc:after, a.desc:after {
     position: relative;
     top: 1px;
     display: inline-block;
-    font-family: 'Glyphicons Halflings';
+    font-family: 'Glyphicons Halflings', serif;
     font-style: normal;
     font-weight: normal;
     line-height: 1;
@@ -177,7 +180,11 @@ a.desc:after {
 }
 
 #header #nav {
-    margin-top: 40px;
+    font-size: 30px;
+}
+
+#title {
+    margin-bottom: 8px;
 }
 
 #header li {
@@ -200,7 +207,7 @@ a.desc:after {
     text-transform: inherit;
 }
 
-#header li:hover, #header .activeLink {
+#header li:hover, #header .active-link {
     font-style: normal;
     text-decoration: none;
     border-bottom: 6px solid #00b3ee;
@@ -258,7 +265,7 @@ thead th {
 
 /*gridview style*/
 .grid-view {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 .panel-primary {
