@@ -16,7 +16,7 @@ class UserQuery extends \yii\db\ActiveQuery
 
     public function filter()
     {
-        return $this->select(['id', 'name', 'username', 'type', 'date_created', 'date_updated']);
+        return [];
     }
 
     public function id($id)

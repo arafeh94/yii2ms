@@ -29,12 +29,11 @@ if (!isset($model)) $model = new User();
     'action' => ['user/update'],
     'options' => ['data-pjax' => '']
 ]) ?>
-<?= $form->field($model, 'UserId')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'FirstName')->textInput() ?>
-<?= $form->field($model, 'LastName')->textInput() ?>
-<?= $form->field($model, 'Username')->textInput() ?>
-<?= $form->field($model, 'Email')->textInput() ?>
-<?= $form->field($model, 'Type')->dropDownList([1 => 'admin', 2 => 'user']) ?>
+<?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
+<?= $form->field($model, 'name')->textInput() ?>
+<?= $form->field($model, 'username')->textInput() ?>
+<?= $form->field($model, 'email')->textInput() ?>
+<?= $form->field($model, 'type')->dropDownList([1 => 'admin', 2 => 'user']) ?>
 <div class="button-container">
     <?= Html::submitButton(Html::tag('i', '', ['class' => 'glyphicon glyphicon-refresh spin hidden']) . ' submit', ['class' => 'btn btn-success', 'id' => 'modal-form-submit']) ?>
     <?= Html::button('close', ['data-dismiss' => "modal", 'class' => 'btn btn-danger']) ?>
