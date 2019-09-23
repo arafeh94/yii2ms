@@ -46,7 +46,7 @@ class CategoryDataProvider extends AppDataProvider
      */
     function columns()
     {
-        return ['name'];
+        return [['attribute' => 'name', 'as' => 'editable']];
     }
 
     /**

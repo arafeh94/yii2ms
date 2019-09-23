@@ -9,31 +9,19 @@
 namespace app\components\extensions;
 
 
-use app\components\GridConfig;
 use app\components\Tools;
-use app\models\Course;
-use app\models\Department;
-use app\models\Major;
-use app\models\search\CourseSearchModel;
-use app\models\search\DepartmentSearchModel;
-use app\models\search\MajorSearchModel;
-use kartik\grid\BooleanColumn;
-use kartik\grid\DataColumn;
+use kartik\editable\Editable;
 use kartik\grid\GridView;
-use phpDocumentor\Reflection\Types\Boolean;
-use yii\base\DynamicModel;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveQueryInterface;
-use yii\db\QueryBuilder;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 abstract class AppDataProvider extends ActiveDataProvider
 {
     public $searchModel;
-    public $includesActions = true;
     public $columns = null;
+    public $expandable = false;
 
     public function init()
     {
@@ -63,8 +51,11 @@ abstract class AppDataProvider extends ActiveDataProvider
 
             $this->initActions();
 
+            $this->initExpandable();
+
             $callback = 'app\components\extensions\AppDataProvider::autoIncludes';
             $this->columns = array_map($callback, $this->columns);
+
         }
 
         return $this->columns;
@@ -73,52 +64,90 @@ abstract class AppDataProvider extends ActiveDataProvider
     private function initColumns()
     {
         $this->columns = $this->columns();
+
+        $this->columns = array_map(function ($column) {
+            if (!is_array($column)) {
+                $column = ['attribute' => $column];
+            }
+            if (!isset($column['vAlign'])) {
+                $column['vAlign'] = 'middle';
+            }
+            return $column;
+        }, $this->columns);
+
     }
 
     private function initActions()
     {
-        if (!$this->includesActions) return;
+        if ($this->actions() != null) {
+            $this->columns = array_merge($this->columns, [$this->actions()]);
+        }
+    }
 
-        $this->columns = array_merge($this->columns, [[
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
-                'buttons' => [
-                    'update' => function ($key, $model, $index) {
-                        $url = Url::to([\Yii::$app->controller->id . "/view", 'id' => $model->id]);
-                        return Html::tag('span', '', [
-                            'class' => "glyphicon glyphicon-pencil pointer",
-                            'onclick' => "modalForm(this,'$url')",
-                        ]);
-                    },
-                    'delete' => function ($key, $model, $index) {
-                        $url = Url::to([\Yii::$app->controller->id . '/delete', 'id' => $model->id]);
-                        return Html::tag('span', '', [
-                            'class' => "glyphicon glyphicon-trash pointer",
-                            'onclick' => "gridControl.delete(this,'$url')",
-                        ]);
-                    },
-                ]
-            ]]
-        );
+    public function actions()
+    {
+        return [
+            'class' => 'kartik\grid\ActionColumn',
+            'template' => '{update} {delete}',
+            'options' => ['style' => 'asd'],
+            'buttons' => [
+                'update' => function ($key, $model, $index) {
+                    $url = Url::to([\Yii::$app->controller->id . "/view", 'id' => $model->id]);
+                    return Html::tag('span', '', [
+                        'class' => "glyphicon glyphicon-pencil pointer",
+                        'onclick' => "modalForm(this,'$url')",
+                    ]);
+                },
+                'delete' => function ($key, $model, $index) {
+                    $url = Url::to([\Yii::$app->controller->id . '/delete', 'id' => $model->id]);
+                    return Html::tag('span', '', [
+                        'class' => "glyphicon glyphicon-trash pointer",
+                        'onclick' => "gridControl.delete(this,'$url')",
+                    ]);
+                },
+            ]
+        ];
     }
 
     static function autoIncludes($column)
     {
-        if (!isset($column['include'])) return $column;
+        if (!isset($column['as'])) return $column;
 
-        $include = $column['include'];
-        unset($column['include']);
+        $include = $column['as'];
+        unset($column['as']);
 
+        if (is_array($include)) {
+            foreach ($include as $inc) {
+                $column = self::setupInclude($column, $inc);
+            }
+            return $column;
+        } else {
+            return self::setupInclude($column, $include);
+        }
+    }
+
+    private static function setupInclude($column, $include)
+    {
         switch ($include) {
             case 'date':
                 return array_merge($column, AppDefaultColumn::$columns['date']);
+            case 'editable':
+                $config = AppDefaultColumn::$columns['editable'];
+                if (isset($column['format']) && $column['format'] == 'date') {
+                    $config['editableOptions']['inputType'] = Editable::INPUT_DATE;
+                    $config['editableOptions']['options']['pluginOptions']['format'] = 'yyyy-m-dd';
+                }
+                $config['editableOptions']['formOptions'] = ['action' => [\Yii::$app->controller->id . '/' . 'edit']];
+                return array_merge($column, $config);
+            case 'checkbox':
+                return array_merge($column, AppDefaultColumn::$columns['checkbox']);
             default:
                 return $column;
         }
     }
 
     /**
-     * ['name'=>'course.Name','major'=>'major.Name','Letter']
+     * ['course.Name','Letter']
      * @return array
      */
     abstract function searchFields();
@@ -157,6 +186,10 @@ abstract class AppDataProvider extends ActiveDataProvider
      */
     public function initSearch()
     {
+        if ($this->searchFields() == false || sizeof($this->searchFields()) == 0) {
+            return null;
+        }
+
         if ($this->searchModel === null) {
             $this->searchModel = new Search(Tools::array_keys($this->searchFields()));
             $this->searchModel->addRule(Tools::array_keys($this->searchFields()), 'safe');
@@ -165,5 +198,20 @@ abstract class AppDataProvider extends ActiveDataProvider
         $this->searchModel->load(\Yii::$app->request->get('Search', []), '');
         return $this->searchModel;
 
+    }
+
+    private function initExpandable()
+    {
+        if ($this->expandable) {
+            $config = [
+                'class' => '\kartik\grid\ExpandRowColumn',
+                'value' => function ($model, $key, $index, $column) {
+                    return GridView::ROW_COLLAPSED;
+                },
+                'detailUrl' => \Yii::$app->urlManager->createUrl([\Yii::$app->controller->id . '/detail']),
+            ];
+
+            $this->columns = array_merge($this->columns, [$config]);
+        }
     }
 }

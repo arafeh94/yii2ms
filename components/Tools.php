@@ -8,6 +8,7 @@
 
 namespace app\components;
 
+use Yii;
 use yii\base\Component;
 use yii\db\Connection;
 use yii\helpers\Json;
@@ -41,6 +42,11 @@ class Tools extends Component
     {
         $time = new \DateTime('now', new \DateTimeZone(\Yii::$app->params['timezone']));
         return $time->format(\Yii::$app->params['dateTimeFormat']);
+    }
+
+    public static function actionExists($controller, $action)
+    {
+        return Yii::$app->createController($controller . $action) != false;
     }
 
     public static function random($length = 8)
@@ -98,6 +104,22 @@ class Tools extends Component
         $args[] = &$data;
         call_user_func_array('array_multisort', $args);
         return array_pop($args);
+    }
+
+    static function str_starts_with($haystack, $needle)
+    {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+    static function str_ends_with($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
     }
 
 }

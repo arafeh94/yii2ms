@@ -17,6 +17,7 @@ use app\models\Major;
 use app\models\search\CourseSearchModel;
 use app\models\search\DepartmentSearchModel;
 use app\models\search\MajorSearchModel;
+use kartik\editable\Editable;
 use kartik\grid\BooleanColumn;
 use kartik\grid\DataColumn;
 use kartik\grid\GridView;
@@ -42,6 +43,15 @@ class AppDefaultColumn
                     'todayHighlight' => true,
                 ]
             ],
+        ],
+        'editable' => [
+            'class' => 'kartik\grid\EditableColumn',
+            'editableOptions' => [
+                'inputType' => Editable::INPUT_TEXT,
+            ],
+        ],
+        'checkbox' => [
+            'class' => '\kartik\grid\CheckboxColumn',
         ]
     ];
 }

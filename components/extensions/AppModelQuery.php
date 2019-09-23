@@ -9,30 +9,21 @@
 namespace app\components\extensions;
 
 
+use app\components\Tools;
 use yii\db\ActiveQuery;
 
 class AppModelQuery extends ActiveQuery
 {
-    /**
-     * @return ActiveQuery
-     */
     public function active()
     {
         return $this->andWhere('[[' . $this->getPrimaryTableName() . '.is_deleted]]=0');
     }
 
-    /**
-     * @param $id
-     * @return ActiveQuery
-     */
     public function id($id)
     {
         return $this->andWhere('[[' . $this->getPrimaryTableName() . '.id]]=' . $id);
     }
 
-    /**
-     * @return ActiveQuery
-     */
     public function filter()
     {
         return $this;
